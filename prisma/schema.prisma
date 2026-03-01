@@ -1,0 +1,142 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String    @id @default(cuid())
+  githubId    Int       @unique
+  username    String    @unique
+  displayName String?
+  email       String?   @unique
+  avatarUrl   String?
+  bio         String?   @db.VarChar(500)
+  role        Role      @default(USER)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  packages    Package[]
+  stars       Star[]
+  comments    Comment[]
+  sessions    Session[]
+  accounts    Account[]
+
+  @@index([username])
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+enum PackageStatus {
+  ACTIVE
+  FLAGGED
+  REMOVED
+}
+
+model Package {
+  id            String        @id @default(cuid())
+  authorId      String
+  name          String        @unique
+  slug          String        @unique
+  description   String        @db.VarChar(500)
+  tags          String[]
+  status        PackageStatus @default(ACTIVE)
+  starCount     Int           @default(0)
+  downloadCount Int           @default(0)
+  searchVector  Unsupported("tsvector")?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  author        User          @relation(fields: [authorId], references: [id])
+  versions      Version[]
+  stars         Star[]
+  comments      Comment[]
+
+  @@index([slug])
+  @@index([authorId])
+  @@index([searchVector], type: Gin)
+}
+
+model Version {
+  id        String   @id @default(cuid())
+  packageId String
+  semver    String
+  changelog String?  @db.Text
+  filePath  String
+  fileSize  Int
+  sha256    String
+
+  riskLevel   String?
+  permissions Json?
+  inputFields Json?
+  outputSpec  Json?
+  fileSpecs   Json?
+
+  createdAt DateTime @default(now())
+  package   Package  @relation(fields: [packageId], references: [id], onDelete: Cascade)
+
+  @@unique([packageId, semver])
+  @@index([packageId])
+}
+
+model Star {
+  id        String   @id @default(cuid())
+  userId    String
+  packageId String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  package   Package  @relation(fields: [packageId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, packageId])
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  userId    String
+  packageId String
+  body      String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  package   Package  @relation(fields: [packageId], references: [id], onDelete: Cascade)
+
+  @@index([packageId])
+}
