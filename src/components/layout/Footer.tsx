@@ -77,7 +77,7 @@ export function Footer() {
         </div>
         <div className="mt-8 border-t border-glass-border pt-6">
           <p className="text-center text-xs text-text-secondary">
-            &copy; {new Date().getFullYear()} DojOps. Open source under MIT License.
+            &copy; {new Date().getFullYear()} DojOps. MIT License.
           </p>
         </div>
       </div>
