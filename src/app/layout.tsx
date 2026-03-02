@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   description:
     "Discover, publish, and install .dops DevOps tools for DojOps. The community marketplace for AI-powered infrastructure automation.",
   keywords: ["DojOps", "DevOps", "tools", "marketplace", "automation", "infrastructure"],
-  icons: { icon: "/icon.png" },
+  icons: { icon: "/dojops-favicon.png" },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
