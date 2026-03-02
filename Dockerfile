@@ -28,9 +28,9 @@ RUN adduser --system --uid 1001 --home /home/nextjs nextjs
 
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
-COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
+
+# Full node_modules for Prisma CLI migrations (runs as root before USER switch)
+COPY --from=deps /app/node_modules ./prisma-migrate/node_modules
 
 # Standalone output
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
@@ -39,11 +39,10 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 # Uploads directory
 RUN mkdir -p /app/uploads && chown nextjs:nodejs /app/uploads
 
-USER nextjs
-
 EXPOSE 3000
 
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-CMD ["sh", "-c", "node node_modules/prisma/build/index.js migrate deploy && node server.js"]
+# Run migrations as root (needs full deps), then drop to nextjs user for the app
+CMD ["sh", "-c", "node prisma-migrate/node_modules/prisma/build/index.js migrate deploy --schema=./prisma/schema.prisma && su -s /bin/sh nextjs -c 'node server.js'"]
