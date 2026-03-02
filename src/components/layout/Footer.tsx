@@ -41,7 +41,7 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="https://docs.dojops.ai"
+                  href="https://doc.dojops.ai"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-sm text-text-secondary hover:text-text-primary"
