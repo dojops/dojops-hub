@@ -54,8 +54,11 @@ body {
 }
 
 .ambient-glow {
-  background-image:
-    radial-gradient(ellipse 80% 50% at 50% 0%, rgba(0, 229, 255, 0.035), transparent 70%);
+  background-image: radial-gradient(
+    ellipse 80% 50% at 50% 0%,
+    rgba(0, 229, 255, 0.035),
+    transparent 70%
+  );
 }
 
 .noise-overlay::after {
@@ -73,23 +76,42 @@ body {
 /* ======== ANIMATIONS ======== */
 
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(24px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes shimmer {
-  0% { background-position: -200% center; }
-  100% { background-position: 200% center; }
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
 }
 
 @keyframes pulse-border {
-  0%, 100% { border-color: rgba(0, 229, 255, 0.1); }
-  50% { border-color: rgba(0, 229, 255, 0.3); }
+  0%,
+  100% {
+    border-color: rgba(0, 229, 255, 0.1);
+  }
+  50% {
+    border-color: rgba(0, 229, 255, 0.3);
+  }
 }
 
 .animate-fade-in-up {
@@ -107,15 +129,22 @@ body {
 }
 
 @keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
 }
 
 /* ======== GLOW CARD ======== */
 
 .glow-card {
   position: relative;
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+  transition:
+    transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.3s ease;
 }
 
 .glow-card::before {
@@ -130,7 +159,9 @@ body {
     rgba(0, 229, 255, 0.12) 50%,
     transparent 80%
   );
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
   mask-composite: exclude;
   -webkit-mask-composite: xor;
   opacity: 0;
@@ -214,7 +245,8 @@ body {
 
 /* ======== ACTIVE STATES ======== */
 
-button:active, a:active {
+button:active,
+a:active {
   transform: scale(0.97);
 }
 
@@ -229,16 +261,35 @@ button:active, a:active {
 }
 
 @keyframes slideDown {
-  from { opacity: 0; transform: translateY(-8px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ======== REDUCED MOTION ======== */
 
 @media (prefers-reduced-motion: reduce) {
-  .badge-shimmer { animation: none !important; }
-  .cursor-blink::after { animation: none !important; }
-  .animate-fade-in-up, .animate-fade-in { animation: none !important; opacity: 1 !important; }
-  .mobile-drawer-enter { animation: none !important; opacity: 1 !important; }
-  * { transition-duration: 0.01ms !important; }
+  .badge-shimmer {
+    animation: none !important;
+  }
+  .cursor-blink::after {
+    animation: none !important;
+  }
+  .animate-fade-in-up,
+  .animate-fade-in {
+    animation: none !important;
+    opacity: 1 !important;
+  }
+  .mobile-drawer-enter {
+    animation: none !important;
+    opacity: 1 !important;
+  }
+  * {
+    transition-duration: 0.01ms !important;
+  }
 }

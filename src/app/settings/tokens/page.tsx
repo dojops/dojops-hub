@@ -28,7 +28,8 @@ export default async function TokensPage() {
       <div className="mb-8">
         <h1 className="text-2xl font-semibold text-text-primary">API Tokens</h1>
         <p className="mt-1 text-sm text-text-secondary">
-          Generate tokens for CLI authentication. Tokens follow the GitHub PAT model — shown once at creation, stored as hashes.
+          Generate tokens for CLI authentication. Tokens follow the GitHub PAT model — shown once at
+          creation, stored as hashes.
         </p>
       </div>
       <TokenManager

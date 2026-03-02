@@ -4,10 +4,7 @@ import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
 import { getAuthenticatedUser } from "@/lib/api-auth";
 
 // GET /api/packages/:slug/comments
-export async function GET(
-  _req: NextRequest,
-  { params }: { params: Promise<{ slug: string }> },
-) {
+export async function GET(_req: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
 
   const pkg = await prisma.package.findUnique({ where: { slug }, select: { id: true } });
@@ -25,10 +22,7 @@ export async function GET(
 }
 
 // POST /api/packages/:slug/comments
-export async function POST(
-  req: NextRequest,
-  { params }: { params: Promise<{ slug: string }> },
-) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   const user = await getAuthenticatedUser(req);
   if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

@@ -39,9 +39,7 @@ export default async function UserStarsPage({ params }: Props) {
 
   if (!user) notFound();
 
-  const starredPackages = user.stars
-    .map((s) => s.package)
-    .filter((p) => p.status === "ACTIVE");
+  const starredPackages = user.stars.map((s) => s.package).filter((p) => p.status === "ACTIVE");
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">

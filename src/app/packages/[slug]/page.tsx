@@ -14,7 +14,10 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const pkg = await prisma.package.findUnique({ where: { slug }, select: { name: true, description: true } });
+  const pkg = await prisma.package.findUnique({
+    where: { slug },
+    select: { name: true, description: true },
+  });
   if (!pkg) return { title: "Not Found" };
   return { title: pkg.name, description: pkg.description };
 }
@@ -66,26 +69,26 @@ export default async function PackagePage({ params }: Props) {
     <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
       <PackageDetail
         pkg={pkg}
-        latestVersion={latestVersion ? {
-          semver: latestVersion.semver,
-          fileSize: latestVersion.fileSize,
-          sha256: latestVersion.sha256,
-          riskLevel: latestVersion.riskLevel,
-          permissions: latestVersion.permissions as Record<string, string> | null,
-          inputFields: latestVersion.inputFields as Record<string, unknown> | null,
-          outputSpec: latestVersion.outputSpec as Record<string, unknown> | null,
-          fileSpecs: latestVersion.fileSpecs as unknown[] | null,
-          createdAt: latestVersion.createdAt,
-        } : null}
+        latestVersion={
+          latestVersion
+            ? {
+                semver: latestVersion.semver,
+                fileSize: latestVersion.fileSize,
+                sha256: latestVersion.sha256,
+                riskLevel: latestVersion.riskLevel,
+                permissions: latestVersion.permissions as Record<string, string> | null,
+                inputFields: latestVersion.inputFields as Record<string, unknown> | null,
+                outputSpec: latestVersion.outputSpec as Record<string, unknown> | null,
+                fileSpecs: latestVersion.fileSpecs as unknown[] | null,
+                createdAt: latestVersion.createdAt,
+              }
+            : null
+        }
         totalVersions={pkg.versions.length}
       />
 
       <div className="mt-6">
-        <StarButton
-          slug={pkg.slug}
-          initialStarred={isStarred}
-          initialCount={pkg.starCount}
-        />
+        <StarButton slug={pkg.slug} initialStarred={isStarred} initialCount={pkg.starCount} />
       </div>
 
       {sections && (

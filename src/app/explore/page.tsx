@@ -82,7 +82,9 @@ export default async function ExplorePage({ searchParams }: Props) {
         <div className="mb-8 flex flex-wrap gap-2">
           {tag && (
             <Link href="/explore">
-              <Button variant="ghost" size="sm">Clear filter</Button>
+              <Button variant="ghost" size="sm">
+                Clear filter
+              </Button>
             </Link>
           )}
           {popularTags.map((t) => (
@@ -90,10 +92,7 @@ export default async function ExplorePage({ searchParams }: Props) {
               key={t.name}
               href={`/explore?${new URLSearchParams({ ...baseSearchParams, tag: t.name, page: "1" }).toString()}`}
             >
-              <Button
-                variant={tag === t.name ? "primary" : "secondary"}
-                size="sm"
-              >
+              <Button variant={tag === t.name ? "primary" : "secondary"} size="sm">
                 {t.name} ({t.count})
               </Button>
             </Link>

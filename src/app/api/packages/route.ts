@@ -95,7 +95,9 @@ export async function POST(req: NextRequest) {
     sha256: hash,
     riskLevel: parsed.frontmatter.risk?.level ?? null,
     permissions: (parsed.frontmatter.permissions ?? undefined) as Prisma.InputJsonValue | undefined,
-    inputFields: (parsed.frontmatter.input?.fields ?? undefined) as Prisma.InputJsonValue | undefined,
+    inputFields: (parsed.frontmatter.input?.fields ?? undefined) as
+      | Prisma.InputJsonValue
+      | undefined,
     outputSpec: (parsed.frontmatter.output ?? undefined) as Prisma.InputJsonValue | undefined,
     fileSpecs: (parsed.frontmatter.files ?? undefined) as Prisma.InputJsonValue | undefined,
   };

@@ -13,7 +13,7 @@ export function parseDopsString(content: string): DopsModule {
   try {
     frontmatterData = yaml.load(frontmatterRaw);
   } catch (err) {
-    throw new Error(`Invalid YAML in frontmatter: ${(err as Error).message}`);
+    throw new Error(`Invalid YAML in frontmatter: ${(err as Error).message}`, { cause: err });
   }
 
   const parseResult = DopsFrontmatterSchema.safeParse(frontmatterData);

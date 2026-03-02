@@ -95,9 +95,7 @@ export function PublishForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div>
-        <label className="block text-sm font-medium text-text-primary mb-2">
-          .dops File
-        </label>
+        <label className="block text-sm font-medium text-text-primary mb-2">.dops File</label>
         <div
           onClick={() => fileRef.current?.click()}
           className="cursor-pointer rounded-lg border-2 border-dashed border-glass-border bg-surface p-8 text-center transition-colors hover:border-glass-border-hover"
@@ -112,9 +110,7 @@ export function PublishForm() {
           {file ? (
             <div>
               <p className="font-mono text-sm text-neon-cyan">{file.name}</p>
-              <p className="mt-1 text-xs text-text-secondary">
-                {(file.size / 1024).toFixed(1)} KB
-              </p>
+              <p className="mt-1 text-xs text-text-secondary">{(file.size / 1024).toFixed(1)} KB</p>
             </div>
           ) : (
             <div>

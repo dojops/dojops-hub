@@ -14,9 +14,7 @@ export interface AuthenticatedUser {
  * Authenticates a request via Bearer token (API token) or session cookie.
  * Bearer tokens are checked first; session cookie is the fallback.
  */
-export async function getAuthenticatedUser(
-  req: NextRequest,
-): Promise<AuthenticatedUser | null> {
+export async function getAuthenticatedUser(req: NextRequest): Promise<AuthenticatedUser | null> {
   // 1. Check for Bearer token
   const authHeader = req.headers.get("authorization");
   if (authHeader?.startsWith("Bearer ")) {

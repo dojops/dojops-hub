@@ -33,14 +33,24 @@ export default async function HomePage() {
             <br />
             <span className="text-text-primary">Marketplace</span>
           </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-text-secondary animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
-            Discover, publish, and install <code className="font-mono text-neon-cyan-dim">.dops</code> tools
-            for DojOps. Community-driven DevOps automation.
+          <p
+            className="mx-auto mt-6 max-w-2xl text-lg text-text-secondary animate-fade-in-up"
+            style={{ animationDelay: "0.1s" }}
+          >
+            Discover, publish, and install{" "}
+            <code className="font-mono text-neon-cyan-dim">.dops</code> tools for DojOps.
+            Community-driven DevOps automation.
           </p>
-          <div className="mx-auto mt-8 max-w-md animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
+          <div
+            className="mx-auto mt-8 max-w-md animate-fade-in-up"
+            style={{ animationDelay: "0.2s" }}
+          >
             <SearchBar />
           </div>
-          <div className="mt-6 flex items-center justify-center gap-4 animate-fade-in-up" style={{ animationDelay: "0.3s" }}>
+          <div
+            className="mt-6 flex items-center justify-center gap-4 animate-fade-in-up"
+            style={{ animationDelay: "0.3s" }}
+          >
             <Link href="/explore">
               <Button variant="primary" size="lg">
                 Explore Tools

@@ -9,7 +9,12 @@ interface PaginationProps {
   searchParams?: Record<string, string>;
 }
 
-export function Pagination({ currentPage, totalPages, basePath, searchParams = {} }: PaginationProps) {
+export function Pagination({
+  currentPage,
+  totalPages,
+  basePath,
+  searchParams = {},
+}: PaginationProps) {
   if (totalPages <= 1) return null;
 
   function buildHref(page: number) {

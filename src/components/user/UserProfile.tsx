@@ -36,10 +36,7 @@ export function UserProfile({ user, starCount }: UserProfileProps) {
         <p className="text-text-secondary">@{user.username}</p>
         {user.bio && <p className="mt-2 max-w-lg text-sm text-text-secondary">{user.bio}</p>}
         <div className="mt-3 flex items-center gap-4 text-sm text-text-secondary">
-          <Link
-            href={`/users/${user.username}/stars`}
-            className="hover:text-text-primary"
-          >
+          <Link href={`/users/${user.username}/stars`} className="hover:text-text-primary">
             {starCount} starred
           </Link>
           <span>

@@ -22,7 +22,11 @@ interface CommentThreadProps {
   isAuthenticated: boolean;
 }
 
-export function CommentThread({ slug, comments: initialComments, isAuthenticated }: CommentThreadProps) {
+export function CommentThread({
+  slug,
+  comments: initialComments,
+  isAuthenticated,
+}: CommentThreadProps) {
   const [comments, setComments] = useState(initialComments);
   const [body, setBody] = useState("");
   const [loading, setLoading] = useState(false);
@@ -59,9 +63,7 @@ export function CommentThread({ slug, comments: initialComments, isAuthenticated
 
   return (
     <div>
-      <h2 className="text-lg font-semibold text-text-primary mb-4">
-        Comments ({comments.length})
-      </h2>
+      <h2 className="text-lg font-semibold text-text-primary mb-4">Comments ({comments.length})</h2>
 
       {isAuthenticated && (
         <form onSubmit={handleSubmit} className="mb-6">

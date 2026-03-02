@@ -9,12 +9,18 @@ export function Footer() {
             <h3 className="text-sm font-semibold text-text-primary">Hub</h3>
             <ul className="mt-3 space-y-2">
               <li>
-                <Link href="/explore" className="text-sm text-text-secondary hover:text-text-primary">
+                <Link
+                  href="/explore"
+                  className="text-sm text-text-secondary hover:text-text-primary"
+                >
                   Explore Tools
                 </Link>
               </li>
               <li>
-                <Link href="/publish" className="text-sm text-text-secondary hover:text-text-primary">
+                <Link
+                  href="/publish"
+                  className="text-sm text-text-secondary hover:text-text-primary"
+                >
                   Publish
                 </Link>
               </li>

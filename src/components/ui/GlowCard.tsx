@@ -8,9 +8,7 @@ interface GlowCardProps {
 
 export function GlowCard({ children, className = "", as: Tag = "div" }: GlowCardProps) {
   return (
-    <Tag
-      className={`glow-card rounded-xl border border-glass-border bg-surface p-6 ${className}`}
-    >
+    <Tag className={`glow-card rounded-xl border border-glass-border bg-surface p-6 ${className}`}>
       {children}
     </Tag>
   );

@@ -20,10 +20,18 @@ export function Sidebar({ open, onClose }: SidebarProps) {
           </svg>
         </button>
         <nav className="flex flex-col gap-4">
-          <Link href="/explore" className="text-text-secondary hover:text-text-primary" onClick={onClose}>
+          <Link
+            href="/explore"
+            className="text-text-secondary hover:text-text-primary"
+            onClick={onClose}
+          >
             Explore
           </Link>
-          <Link href="/publish" className="text-text-secondary hover:text-text-primary" onClick={onClose}>
+          <Link
+            href="/publish"
+            className="text-text-secondary hover:text-text-primary"
+            onClick={onClose}
+          >
             Publish
           </Link>
         </nav>

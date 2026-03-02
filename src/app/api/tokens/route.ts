@@ -65,7 +65,9 @@ export async function POST(req: Request) {
   const count = await prisma.apiToken.count({ where: { userId: session.user.id } });
   if (count >= MAX_TOKENS_PER_USER) {
     return NextResponse.json(
-      { error: `Maximum of ${MAX_TOKENS_PER_USER} tokens per user. Revoke an existing token first.` },
+      {
+        error: `Maximum of ${MAX_TOKENS_PER_USER} tokens per user. Revoke an existing token first.`,
+      },
       { status: 400 },
     );
   }

@@ -27,7 +27,18 @@ export async function searchPackages(
 
   const [packages, countResult] = await Promise.all([
     prisma.$queryRaw<
-      Array<{ id: string; name: string; slug: string; description: string; tags: string[]; starCount: number; downloadCount: number; createdAt: Date; authorId: string; rank: number }>
+      Array<{
+        id: string;
+        name: string;
+        slug: string;
+        description: string;
+        tags: string[];
+        starCount: number;
+        downloadCount: number;
+        createdAt: Date;
+        authorId: string;
+        rank: number;
+      }>
     >`
       SELECT "id", "name", "slug", "description", "tags", "starCount", "downloadCount", "createdAt", "authorId",
         ts_rank("searchVector", to_tsquery('english', ${tsquery})) as rank
@@ -54,7 +65,11 @@ export async function searchPackages(
 
   const packagesWithAuthors = packages.map((p) => ({
     ...p,
-    author: authorMap.get(p.authorId) || { username: "unknown", displayName: null, avatarUrl: null },
+    author: authorMap.get(p.authorId) || {
+      username: "unknown",
+      displayName: null,
+      avatarUrl: null,
+    },
   }));
 
   return { packages: packagesWithAuthors, total, page, pageSize };
