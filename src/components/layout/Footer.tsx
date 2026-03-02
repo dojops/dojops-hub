@@ -77,7 +77,15 @@ export function Footer() {
         </div>
         <div className="mt-8 border-t border-glass-border pt-6">
           <p className="text-center text-xs text-text-secondary">
-            &copy; {new Date().getFullYear()} DojOps. MIT License.
+            &copy; {new Date().getFullYear()} DojOps. MIT License. Created by{" "}
+            <a
+              href="https://github.com/MHChlagou"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-text-secondary hover:text-neon-cyan transition-colors duration-200"
+            >
+              Mohamed Hedi CHLAGOU
+            </a>
           </p>
         </div>
       </div>

@@ -42,7 +42,7 @@ export default async function HomePage() {
             Community-driven DevOps automation.
           </p>
           <div
-            className="mx-auto mt-8 max-w-md animate-fade-in-up"
+            className="relative z-10 mx-auto mt-8 max-w-md animate-fade-in-up"
             style={{ animationDelay: "0.2s" }}
           >
             <SearchBar />
