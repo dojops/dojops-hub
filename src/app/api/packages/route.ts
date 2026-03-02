@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { parseDopsString } from "@/lib/dops-parser";
 import { saveDopsFile } from "@/lib/storage";
 import { slugify, sha256 } from "@/lib/utils";
 import { listPackages } from "@/lib/search";
 import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
+import { getAuthenticatedUser } from "@/lib/api-auth";
 import type { Prisma } from "@prisma/client";
 
 // GET /api/packages — list packages
@@ -29,12 +28,12 @@ export async function GET(req: NextRequest) {
 
 // POST /api/packages — publish new package
 export async function POST(req: NextRequest) {
-  const session = await getServerSession(authOptions);
-  if (!session) {
+  const user = await getAuthenticatedUser(req);
+  if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { allowed } = checkRateLimit(`publish:${session.user.id}`, RATE_LIMITS.publish);
+  const { allowed } = checkRateLimit(`publish:${user.id}`, RATE_LIMITS.publish);
   if (!allowed) {
     return NextResponse.json({ error: "Rate limit exceeded. Try again later." }, { status: 429 });
   }
@@ -106,7 +105,7 @@ export async function POST(req: NextRequest) {
 
   if (existingPkg) {
     // Must be same author
-    if (existingPkg.authorId !== session.user.id) {
+    if (existingPkg.authorId !== user.id) {
       return NextResponse.json(
         { error: "A package with this name already exists and belongs to another user" },
         { status: 403 },
@@ -152,7 +151,7 @@ export async function POST(req: NextRequest) {
 
   await prisma.package.create({
     data: {
-      authorId: session.user.id,
+      authorId: user.id,
       name: meta.name,
       slug,
       description: meta.description,

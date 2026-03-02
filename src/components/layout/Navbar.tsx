@@ -57,6 +57,12 @@ export function Navbar() {
                 )}
                 {session.user.username}
               </Link>
+              <Link
+                href="/settings/tokens"
+                className="text-sm text-text-secondary transition-colors hover:text-text-primary"
+              >
+                Settings
+              </Link>
               {session.user.role === "ADMIN" && (
                 <Link
                   href="/admin"
@@ -122,6 +128,13 @@ export function Navbar() {
                   onClick={() => setMobileOpen(false)}
                 >
                   Profile
+                </Link>
+                <Link
+                  href="/settings/tokens"
+                  className="text-sm text-text-secondary"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  Settings
                 </Link>
                 <button
                   onClick={() => signOut()}

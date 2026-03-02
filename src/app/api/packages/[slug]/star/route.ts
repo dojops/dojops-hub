@@ -1,20 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
+import { getAuthenticatedUser } from "@/lib/api-auth";
 
 // POST /api/packages/:slug/star — toggle star
 export async function POST(
-  _req: NextRequest,
+  req: NextRequest,
   { params }: { params: Promise<{ slug: string }> },
 ) {
-  const session = await getServerSession(authOptions);
-  if (!session) {
+  const user = await getAuthenticatedUser(req);
+  if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { allowed } = checkRateLimit(`star:${session.user.id}`, RATE_LIMITS.star);
+  const { allowed } = checkRateLimit(`star:${user.id}`, RATE_LIMITS.star);
   if (!allowed) {
     return NextResponse.json({ error: "Rate limit exceeded" }, { status: 429 });
   }
@@ -26,7 +25,7 @@ export async function POST(
   }
 
   const existing = await prisma.star.findUnique({
-    where: { userId_packageId: { userId: session.user.id, packageId: pkg.id } },
+    where: { userId_packageId: { userId: user.id, packageId: pkg.id } },
   });
 
   if (existing) {
@@ -43,7 +42,7 @@ export async function POST(
     // Star
     await prisma.$transaction([
       prisma.star.create({
-        data: { userId: session.user.id, packageId: pkg.id },
+        data: { userId: user.id, packageId: pkg.id },
       }),
       prisma.package.update({
         where: { id: pkg.id },

@@ -24,6 +24,7 @@ model User {
   comments    Comment[]
   sessions    Session[]
   accounts    Account[]
+  apiTokens   ApiToken[]
 
   @@index([username])
 }
@@ -127,6 +128,21 @@ model Star {
   package   Package  @relation(fields: [packageId], references: [id], onDelete: Cascade)
 
   @@unique([userId, packageId])
+}
+
+model ApiToken {
+  id          String    @id @default(cuid())
+  userId      String
+  name        String
+  tokenHash   String    @unique
+  tokenPrefix String
+  expiresAt   DateTime?
+  lastUsedAt  DateTime?
+  createdAt   DateTime  @default(now())
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([tokenHash])
 }
 
 model Comment {

@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
+import { getAuthenticatedUser } from "@/lib/api-auth";
 
 // GET /api/packages/:slug/comments
 export async function GET(
@@ -30,12 +29,12 @@ export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ slug: string }> },
 ) {
-  const session = await getServerSession(authOptions);
-  if (!session) {
+  const user = await getAuthenticatedUser(req);
+  if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { allowed } = checkRateLimit(`comment:${session.user.id}`, RATE_LIMITS.comment);
+  const { allowed } = checkRateLimit(`comment:${user.id}`, RATE_LIMITS.comment);
   if (!allowed) {
     return NextResponse.json({ error: "Rate limit exceeded" }, { status: 429 });
   }
@@ -58,7 +57,7 @@ export async function POST(
 
   const comment = await prisma.comment.create({
     data: {
-      userId: session.user.id,
+      userId: user.id,
       packageId: pkg.id,
       body: text,
     },
