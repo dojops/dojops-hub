@@ -153,6 +153,7 @@ body {
   inset: 0;
   border-radius: inherit;
   padding: 1px;
+  pointer-events: none;
   background: linear-gradient(
     135deg,
     transparent 20%,

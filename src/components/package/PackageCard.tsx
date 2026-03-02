@@ -39,7 +39,18 @@ export function PackageCard({ pkg }: PackageCardProps) {
           )}
 
           <div className="mt-auto flex items-center justify-between pt-2 text-xs text-text-secondary">
-            <span>by {pkg.author.displayName || pkg.author.username}</span>
+            <span className="flex items-center gap-1.5">
+              {pkg.author.avatarUrl && (
+                <img
+                  src={pkg.author.avatarUrl}
+                  alt=""
+                  width={16}
+                  height={16}
+                  className="rounded-full"
+                />
+              )}
+              {pkg.author.displayName || pkg.author.username}
+            </span>
             <div className="flex items-center gap-3">
               <span className="flex items-center gap-1">
                 <svg
