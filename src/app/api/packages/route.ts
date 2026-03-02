@@ -42,6 +42,7 @@ export async function POST(req: NextRequest) {
   const formData = await req.formData();
   const file = formData.get("file") as File | null;
   const changelog = (formData.get("changelog") as string) || null;
+  const clientHash = (formData.get("sha256") as string) || null;
 
   if (!file) {
     return NextResponse.json({ error: "No file provided" }, { status: 400 });
@@ -59,6 +60,23 @@ export async function POST(req: NextRequest) {
   const buffer = Buffer.from(await file.arrayBuffer());
   const content = buffer.toString("utf-8");
 
+  // Compute server-side hash and verify against client-provided hash
+  const serverHash = sha256(buffer);
+
+  if (clientHash && clientHash !== serverHash) {
+    return NextResponse.json(
+      {
+        error: "Integrity check failed: SHA-256 hash from client does not match uploaded file.",
+        expected: clientHash,
+        actual: serverHash,
+      },
+      { status: 400 },
+    );
+  }
+
+  // Use the client-provided hash as the publisher attestation (or fall back to server-computed)
+  const hash = clientHash || serverHash;
+
   // Parse and validate
   let parsed;
   try {
@@ -69,7 +87,6 @@ export async function POST(req: NextRequest) {
 
   const { meta } = parsed.frontmatter;
   const slug = slugify(meta.name);
-  const hash = sha256(buffer);
 
   const versionData = {
     semver: meta.version,

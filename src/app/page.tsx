@@ -29,7 +29,7 @@ export default async function HomePage() {
       <section className="relative overflow-hidden px-4 pb-16 pt-24 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-4xl text-center">
           <h1 className="animate-fade-in-up text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-            <span className="text-gradient-cyan">DevOps Tools</span>
+            <span className="text-gradient-cyan">DojOps Tools</span>
             <br />
             <span className="text-text-primary">Marketplace</span>
           </h1>

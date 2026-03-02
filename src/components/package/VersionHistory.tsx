@@ -27,8 +27,8 @@ export function VersionHistory({ versions }: { versions: Version[] }) {
             <p className="mt-2 text-sm text-text-secondary">{v.changelog}</p>
           )}
           <div className="mt-2">
-            <code className="text-xs text-text-secondary/60 font-mono">
-              sha256:{v.sha256.slice(0, 16)}...
+            <code className="text-xs text-text-secondary/60 font-mono" title={v.sha256}>
+              sha256:{v.sha256}
             </code>
           </div>
         </div>

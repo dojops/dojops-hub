@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/Badge";
 import { RiskBadge } from "./RiskBadge";
 import { PermissionBadges } from "./PermissionBadges";
 import { InstallCommand } from "./InstallCommand";
+import { IntegrityHash } from "./IntegrityHash";
 import { formatDate, formatBytes } from "@/lib/utils";
 
 interface PackageDetailProps {
@@ -141,10 +142,10 @@ export function PackageDetail({ pkg, latestVersion, totalVersions }: PackageDeta
             >
               {totalVersions} version{totalVersions !== 1 ? "s" : ""}
             </Link>
-            <code className="text-xs text-text-secondary/50 font-mono">
-              sha256:{latestVersion.sha256.slice(0, 16)}...
-            </code>
           </div>
+
+          {/* Integrity hash — publisher attestation */}
+          <IntegrityHash hash={latestVersion.sha256} />
         </div>
       )}
     </div>
