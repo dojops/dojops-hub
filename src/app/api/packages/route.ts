@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { parseDopsString } from "@/lib/dops-parser";
+import { parseDopsStringAny } from "@/lib/dops-parser";
+import { isV2Module } from "@/lib/dops-schema";
 import { saveDopsFile } from "@/lib/storage";
 import { slugify, sha256 } from "@/lib/utils";
 import { listPackages } from "@/lib/search";
@@ -76,16 +77,17 @@ export async function POST(req: NextRequest) {
   // Use the client-provided hash as the publisher attestation (or fall back to server-computed)
   const hash = clientHash || serverHash;
 
-  // Parse and validate
+  // Parse and validate (supports both v1 and v2 formats)
   let parsed;
   try {
-    parsed = parseDopsString(content);
+    parsed = parseDopsStringAny(content);
   } catch (err) {
     return NextResponse.json({ error: (err as Error).message }, { status: 400 });
   }
 
   const { meta } = parsed.frontmatter;
   const slug = slugify(meta.name);
+  const isV2 = isV2Module(parsed);
 
   const versionData = {
     semver: meta.version,
@@ -95,12 +97,23 @@ export async function POST(req: NextRequest) {
     sha256: hash,
     riskLevel: parsed.frontmatter.risk?.level ?? null,
     permissions: (parsed.frontmatter.permissions ?? undefined) as Prisma.InputJsonValue | undefined,
-    inputFields: (parsed.frontmatter.input?.fields ?? undefined) as
-      | Prisma.InputJsonValue
-      | undefined,
-    outputSpec: (parsed.frontmatter.output ?? undefined) as Prisma.InputJsonValue | undefined,
     fileSpecs: (parsed.frontmatter.files ?? undefined) as Prisma.InputJsonValue | undefined,
+    dopsVersion: isV2 ? "v2" : "v1",
+    inputFields: undefined as Prisma.InputJsonValue | undefined,
+    outputSpec: undefined as Prisma.InputJsonValue | undefined,
+    contextBlock: undefined as Prisma.InputJsonValue | undefined,
   };
+
+  if (isV2) {
+    // v2: store context block, no input/output
+    const fm = parsed.frontmatter as { context: unknown };
+    versionData.contextBlock = fm.context as Prisma.InputJsonValue;
+  } else {
+    // v1: store input/output as before
+    const fm = parsed.frontmatter as { input?: { fields: unknown }; output?: unknown };
+    versionData.inputFields = (fm.input?.fields ?? undefined) as Prisma.InputJsonValue | undefined;
+    versionData.outputSpec = (fm.output ?? undefined) as Prisma.InputJsonValue | undefined;
+  }
 
   // Check if package exists
   const existingPkg = await prisma.package.findUnique({ where: { slug } });

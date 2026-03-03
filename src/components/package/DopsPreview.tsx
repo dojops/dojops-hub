@@ -1,6 +1,7 @@
 interface DopsPreviewProps {
   sections: {
     prompt?: string;
+    updatePrompt?: string;
     examples?: string;
     constraints?: string;
     keywords?: string;
@@ -10,6 +11,7 @@ interface DopsPreviewProps {
 export function DopsPreview({ sections }: DopsPreviewProps) {
   const parts = [
     { title: "Prompt", content: sections.prompt },
+    { title: "Update Prompt", content: sections.updatePrompt },
     { title: "Examples", content: sections.examples },
     { title: "Constraints", content: sections.constraints },
     { title: "Keywords", content: sections.keywords },

@@ -189,6 +189,46 @@ export const DopsFrontmatterSchema = z.object({
 
 export type DopsFrontmatter = z.infer<typeof DopsFrontmatterSchema>;
 
+// ══════════════════════════════════════════════════════
+// v2 schemas
+// ══════════════════════════════════════════════════════
+
+export const Context7LibraryRefSchema = z.object({
+  name: z.string().min(1),
+  query: z.string().min(1),
+});
+
+export const ContextBlockSchema = z.object({
+  technology: z.string().min(1),
+  fileFormat: z.enum(["yaml", "hcl", "json", "raw", "ini", "toml"]),
+  outputGuidance: z.string().min(1),
+  bestPractices: z.array(z.string().min(1)).min(1),
+  context7Libraries: z.array(Context7LibraryRefSchema).optional(),
+});
+
+export const FileSpecV2Schema = z.object({
+  path: z.string().min(1),
+  format: z.literal("raw").default("raw"),
+  conditional: z.boolean().optional(),
+});
+
+export const DopsFrontmatterV2Schema = z.object({
+  dops: z.literal("v2"),
+  kind: z.enum(["tool"]).default("tool"),
+  meta: MetaSchema,
+  context: ContextBlockSchema,
+  files: z.array(FileSpecV2Schema).min(1),
+  detection: DetectionConfigSchema.optional(),
+  verification: VerificationConfigSchema.optional(),
+  permissions: PermissionsSchema.optional(),
+  scope: ScopeSchema.optional(),
+  risk: RiskSchema.optional(),
+  execution: ExecutionSchema.optional(),
+  update: UpdateSchema.optional(),
+});
+
+export type DopsFrontmatterV2 = z.infer<typeof DopsFrontmatterV2Schema>;
+
 // Markdown sections
 export interface MarkdownSections {
   prompt: string;
@@ -198,9 +238,21 @@ export interface MarkdownSections {
   keywords: string;
 }
 
-// Complete module
+// Complete modules
 export interface DopsModule {
   frontmatter: DopsFrontmatter;
   sections: MarkdownSections;
   raw: string;
+}
+
+export interface DopsModuleV2 {
+  frontmatter: DopsFrontmatterV2;
+  sections: MarkdownSections;
+  raw: string;
+}
+
+export type DopsModuleAny = DopsModule | DopsModuleV2;
+
+export function isV2Module(mod: DopsModuleAny): mod is DopsModuleV2 {
+  return mod.frontmatter.dops === "v2";
 }

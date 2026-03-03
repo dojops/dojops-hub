@@ -32,6 +32,13 @@ interface PackageDetailProps {
     inputFields: Record<string, unknown> | null;
     outputSpec: Record<string, unknown> | null;
     fileSpecs: unknown[] | null;
+    dopsVersion: string | null;
+    contextBlock: {
+      technology?: string;
+      fileFormat?: string;
+      bestPractices?: string[];
+      context7Libraries?: Array<{ name: string; query: string }>;
+    } | null;
     createdAt: Date;
   } | null;
   totalVersions: number;
@@ -114,6 +121,9 @@ export function PackageDetail({ pkg, latestVersion, totalVersions }: PackageDeta
         <div className="rounded-lg border border-glass-border bg-surface p-4 space-y-3">
           <div className="flex items-center gap-3">
             <Badge variant="cyan">v{latestVersion.semver}</Badge>
+            {latestVersion.dopsVersion && (
+              <Badge variant="default">{latestVersion.dopsVersion}</Badge>
+            )}
             {latestVersion.riskLevel && <RiskBadge level={latestVersion.riskLevel} />}
             <span className="text-xs text-text-secondary">
               {formatBytes(latestVersion.fileSize)}
@@ -127,18 +137,62 @@ export function PackageDetail({ pkg, latestVersion, totalVersions }: PackageDeta
             permissions={latestVersion.permissions as Record<string, string> | null}
           />
 
-          {latestVersion.inputFields && Object.keys(latestVersion.inputFields).length > 0 && (
-            <div>
-              <h3 className="text-xs font-semibold text-text-secondary mb-1">Input Fields</h3>
-              <div className="flex flex-wrap gap-1">
-                {Object.keys(latestVersion.inputFields).map((field) => (
-                  <Badge key={field} variant="default">
-                    {field}
-                  </Badge>
-                ))}
+          {/* v2: Context block */}
+          {latestVersion.contextBlock && (
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <h3 className="text-xs font-semibold text-text-secondary">Technology</h3>
+                <Badge variant="default">{latestVersion.contextBlock.technology}</Badge>
+                {latestVersion.contextBlock.fileFormat && (
+                  <Badge variant="default">{latestVersion.contextBlock.fileFormat}</Badge>
+                )}
               </div>
+              {latestVersion.contextBlock.bestPractices &&
+                latestVersion.contextBlock.bestPractices.length > 0 && (
+                  <div>
+                    <h3 className="text-xs font-semibold text-text-secondary mb-1">
+                      Best Practices
+                    </h3>
+                    <ul className="list-disc list-inside text-xs text-text-secondary space-y-0.5">
+                      {latestVersion.contextBlock.bestPractices.map((bp, i) => (
+                        <li key={i}>{bp}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              {latestVersion.contextBlock.context7Libraries &&
+                latestVersion.contextBlock.context7Libraries.length > 0 && (
+                  <div>
+                    <h3 className="text-xs font-semibold text-text-secondary mb-1">
+                      Documentation Sources
+                    </h3>
+                    <div className="flex flex-wrap gap-1">
+                      {latestVersion.contextBlock.context7Libraries.map((lib) => (
+                        <Badge key={lib.name} variant="default">
+                          {lib.name}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                )}
             </div>
           )}
+
+          {/* v1: Input Fields */}
+          {!latestVersion.contextBlock &&
+            latestVersion.inputFields &&
+            Object.keys(latestVersion.inputFields).length > 0 && (
+              <div>
+                <h3 className="text-xs font-semibold text-text-secondary mb-1">Input Fields</h3>
+                <div className="flex flex-wrap gap-1">
+                  {Object.keys(latestVersion.inputFields).map((field) => (
+                    <Badge key={field} variant="default">
+                      {field}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            )}
 
           {latestVersion.fileSpecs &&
             (latestVersion.fileSpecs as Array<{ path: string }>).length > 0 && (

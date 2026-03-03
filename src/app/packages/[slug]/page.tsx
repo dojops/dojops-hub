@@ -56,9 +56,9 @@ export default async function PackagePage({ params }: Props) {
   if (latestVersion) {
     try {
       const { readDopsFile } = await import("@/lib/storage");
-      const { parseDopsString } = await import("@/lib/dops-parser");
+      const { parseDopsStringAny } = await import("@/lib/dops-parser");
       const content = await readDopsFile(pkg.slug, latestVersion.semver);
-      const parsed = parseDopsString(content.toString("utf-8"));
+      const parsed = parseDopsStringAny(content.toString("utf-8"));
       sections = parsed.sections;
     } catch {
       // File might not exist or be unparseable
@@ -80,6 +80,15 @@ export default async function PackagePage({ params }: Props) {
                 inputFields: latestVersion.inputFields as Record<string, unknown> | null,
                 outputSpec: latestVersion.outputSpec as Record<string, unknown> | null,
                 fileSpecs: latestVersion.fileSpecs as unknown[] | null,
+                dopsVersion: (latestVersion as Record<string, unknown>).dopsVersion as
+                  | string
+                  | null,
+                contextBlock: (latestVersion as Record<string, unknown>).contextBlock as {
+                  technology?: string;
+                  fileFormat?: string;
+                  bestPractices?: string[];
+                  context7Libraries?: Array<{ name: string; query: string }>;
+                } | null,
                 createdAt: latestVersion.createdAt,
               }
             : null

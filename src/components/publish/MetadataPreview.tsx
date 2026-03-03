@@ -9,6 +9,10 @@ interface MetadataPreviewProps {
     tags: string[];
     riskLevel: string | null;
     permissions: Record<string, string> | null;
+    dopsVersion?: string;
+    technology?: string;
+    bestPractices?: string[];
+    context7Libraries?: Array<{ name: string }>;
   };
 }
 
@@ -20,6 +24,7 @@ export function MetadataPreview({ meta }: MetadataPreviewProps) {
         <div className="flex items-center gap-2">
           <span className="font-mono text-sm font-semibold text-neon-cyan">{meta.name}</span>
           <Badge variant="cyan">v{meta.version}</Badge>
+          {meta.dopsVersion && <Badge variant="default">{meta.dopsVersion}</Badge>}
           {meta.riskLevel && <RiskBadge level={meta.riskLevel} />}
         </div>
         <p className="text-sm text-text-secondary">{meta.description}</p>
@@ -27,6 +32,22 @@ export function MetadataPreview({ meta }: MetadataPreviewProps) {
           <div className="flex flex-wrap gap-1">
             {meta.tags.map((tag) => (
               <Badge key={tag}>{tag}</Badge>
+            ))}
+          </div>
+        )}
+        {meta.technology && (
+          <div className="flex items-center gap-1 text-xs text-text-secondary">
+            <span>Technology:</span>
+            <Badge variant="default">{meta.technology}</Badge>
+          </div>
+        )}
+        {meta.context7Libraries && meta.context7Libraries.length > 0 && (
+          <div className="flex items-center gap-1 text-xs text-text-secondary">
+            <span>Docs:</span>
+            {meta.context7Libraries.map((lib) => (
+              <Badge key={lib.name} variant="default">
+                {lib.name}
+              </Badge>
             ))}
           </div>
         )}

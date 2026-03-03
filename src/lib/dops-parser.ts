@@ -1,10 +1,17 @@
 import * as yaml from "js-yaml";
-import { DopsFrontmatterSchema, type DopsModule, type MarkdownSections } from "./dops-schema";
+import {
+  DopsFrontmatterSchema,
+  DopsFrontmatterV2Schema,
+  type DopsModule,
+  type DopsModuleV2,
+  type DopsModuleAny,
+  type MarkdownSections,
+} from "./dops-schema";
 
 const FRONTMATTER_DELIMITER = "---";
 
 /**
- * Parse a .dops file from string content.
+ * Parse a .dops file from string content (v1 only, for backward compatibility).
  */
 export function parseDopsString(content: string): DopsModule {
   const { frontmatterRaw, body } = splitFrontmatter(content);
@@ -31,6 +38,41 @@ export function parseDopsString(content: string): DopsModule {
   };
 }
 
+/**
+ * Parse a .dops file from string content, auto-detecting v1 or v2 format.
+ */
+export function parseDopsStringAny(content: string): DopsModuleAny {
+  const { frontmatterRaw, body } = splitFrontmatter(content);
+
+  let frontmatterData: unknown;
+  try {
+    frontmatterData = yaml.load(frontmatterRaw);
+  } catch (err) {
+    throw new Error(`Invalid YAML in frontmatter: ${(err as Error).message}`, { cause: err });
+  }
+
+  const version = (frontmatterData as Record<string, unknown>)?.dops;
+
+  if (version === "v2") {
+    const parseResult = DopsFrontmatterV2Schema.safeParse(frontmatterData);
+    if (!parseResult.success) {
+      const errors = parseResult.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`);
+      throw new Error(`Invalid DOPS v2 frontmatter:\n  ${errors.join("\n  ")}`);
+    }
+    const sections = parseMarkdownSections(body);
+    return { frontmatter: parseResult.data, sections, raw: content } as DopsModuleV2;
+  }
+
+  // Default: v1
+  const parseResult = DopsFrontmatterSchema.safeParse(frontmatterData);
+  if (!parseResult.success) {
+    const errors = parseResult.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`);
+    throw new Error(`Invalid DOPS frontmatter:\n  ${errors.join("\n  ")}`);
+  }
+  const sections = parseMarkdownSections(body);
+  return { frontmatter: parseResult.data, sections, raw: content } as DopsModule;
+}
+
 function splitFrontmatter(content: string): {
   frontmatterRaw: string;
   body: string;
@@ -41,14 +83,18 @@ function splitFrontmatter(content: string): {
     throw new Error("DOPS file must start with --- frontmatter delimiter");
   }
 
-  const secondDelimiterIndex = trimmed.indexOf(FRONTMATTER_DELIMITER, FRONTMATTER_DELIMITER.length);
+  // Find the closing --- on its own line (or at end of string)
+  const closingPattern = /\n---\s*(?:\n|$)/;
+  const remainder = trimmed.slice(FRONTMATTER_DELIMITER.length);
+  const match = closingPattern.exec(remainder);
 
-  if (secondDelimiterIndex === -1) {
+  if (!match) {
     throw new Error("DOPS file missing closing --- frontmatter delimiter");
   }
 
+  const secondDelimiterIndex = FRONTMATTER_DELIMITER.length + match.index;
   const frontmatterRaw = trimmed.slice(FRONTMATTER_DELIMITER.length, secondDelimiterIndex).trim();
-  const body = trimmed.slice(secondDelimiterIndex + FRONTMATTER_DELIMITER.length).trim();
+  const body = trimmed.slice(secondDelimiterIndex + match[0].length).trim();
 
   return { frontmatterRaw, body };
 }

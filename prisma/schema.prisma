@@ -106,11 +106,13 @@ model Version {
   fileSize  Int
   sha256    String
 
-  riskLevel   String?
-  permissions Json?
-  inputFields Json?
-  outputSpec  Json?
-  fileSpecs   Json?
+  riskLevel    String?
+  permissions  Json?
+  inputFields  Json?
+  outputSpec   Json?
+  fileSpecs    Json?
+  dopsVersion  String?  // "v1" or "v2"
+  contextBlock Json?    // v2 context block metadata
 
   createdAt DateTime @default(now())
   package   Package  @relation(fields: [packageId], references: [id], onDelete: Cascade)
