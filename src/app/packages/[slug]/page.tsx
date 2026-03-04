@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { sortVersionsDesc } from "@/lib/utils";
 import { PackageDetail } from "@/components/package/PackageDetail";
 import { DopsPreview } from "@/components/package/DopsPreview";
 import { StarButton } from "@/components/community/StarButton";
@@ -30,7 +31,7 @@ export default async function PackagePage({ params }: Props) {
     where: { slug, status: "ACTIVE" },
     include: {
       author: { select: { username: true, displayName: true, avatarUrl: true } },
-      versions: { orderBy: { createdAt: "desc" } },
+      versions: true,
       comments: {
         orderBy: { createdAt: "desc" },
         include: { user: { select: { username: true, displayName: true, avatarUrl: true } } },
@@ -40,6 +41,7 @@ export default async function PackagePage({ params }: Props) {
 
   if (!pkg) notFound();
 
+  sortVersionsDesc(pkg.versions);
   const latestVersion = pkg.versions[0] || null;
 
   // Check if user has starred

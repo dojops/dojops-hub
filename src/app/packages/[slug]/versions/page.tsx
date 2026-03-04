@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+import { sortVersionsDesc } from "@/lib/utils";
 import { VersionHistory } from "@/components/package/VersionHistory";
 import Link from "next/link";
 import type { Metadata } from "next";
@@ -19,11 +20,13 @@ export default async function VersionsPage({ params }: Props) {
   const pkg = await prisma.package.findUnique({
     where: { slug, status: "ACTIVE" },
     include: {
-      versions: { orderBy: { createdAt: "desc" } },
+      versions: true,
     },
   });
 
   if (!pkg) notFound();
+
+  sortVersionsDesc(pkg.versions);
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-12 sm:px-6 lg:px-8">

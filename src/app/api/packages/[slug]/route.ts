@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { sortVersionsDesc } from "@/lib/utils";
 
 // GET /api/packages/:slug — package detail + latest version
 export async function GET(_req: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
@@ -9,7 +10,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ slu
     where: { slug, status: "ACTIVE" },
     include: {
       author: { select: { username: true, displayName: true, avatarUrl: true } },
-      versions: { orderBy: { createdAt: "desc" }, take: 1 },
+      versions: true,
     },
   });
 
@@ -17,9 +18,11 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ slu
     return NextResponse.json({ error: "Package not found" }, { status: 404 });
   }
 
+  const sorted = sortVersionsDesc(pkg.versions);
+
   return NextResponse.json({
     ...pkg,
-    latestVersion: pkg.versions[0] || null,
+    latestVersion: sorted[0] || null,
     versions: undefined,
   });
 }
