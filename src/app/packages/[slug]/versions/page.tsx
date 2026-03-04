@@ -5,6 +5,8 @@ import { VersionHistory } from "@/components/package/VersionHistory";
 import Link from "next/link";
 import type { Metadata } from "next";
 
+export const dynamic = "force-dynamic";
+
 interface Props {
   params: Promise<{ slug: string }>;
 }

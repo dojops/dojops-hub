@@ -9,6 +9,8 @@ import { StarButton } from "@/components/community/StarButton";
 import { CommentThread } from "@/components/community/CommentThread";
 import type { Metadata } from "next";
 
+export const dynamic = "force-dynamic";
+
 interface Props {
   params: Promise<{ slug: string }>;
 }
