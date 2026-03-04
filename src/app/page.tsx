@@ -29,7 +29,7 @@ export default async function HomePage() {
       <section className="relative overflow-hidden px-4 pb-16 pt-24 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-4xl text-center">
           <h1 className="animate-fade-in-up text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-            <span className="text-gradient-cyan">DojOps Tools</span>
+            <span className="text-gradient-cyan">DojOps Modules</span>
             <br />
             <span className="text-text-primary">Marketplace</span>
           </h1>
@@ -38,7 +38,7 @@ export default async function HomePage() {
             style={{ animationDelay: "0.1s" }}
           >
             Discover, publish, and install{" "}
-            <code className="font-mono text-neon-cyan-dim">.dops</code> tools for DojOps.
+            <code className="font-mono text-neon-cyan-dim">.dops</code> modules for DojOps.
             Community-driven DevOps automation.
           </p>
           <div
@@ -53,18 +53,18 @@ export default async function HomePage() {
           >
             <Link href="/explore">
               <Button variant="primary" size="lg">
-                Explore Tools
+                Explore Modules
               </Button>
             </Link>
             <Link href="/publish">
               <Button variant="secondary" size="lg">
-                Publish a Tool
+                Publish a Module
               </Button>
             </Link>
           </div>
           <div className="mt-8 animate-fade-in-up" style={{ animationDelay: "0.4s" }}>
             <code className="rounded-lg border border-glass-border bg-surface px-4 py-2 font-mono text-sm text-text-secondary">
-              $ dojops tools install &lt;tool-name&gt;
+              $ dojops modules install &lt;module-name&gt;
             </code>
           </div>
         </div>
@@ -75,7 +75,7 @@ export default async function HomePage() {
       {/* Featured */}
       {featuredPackages.length > 0 && (
         <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-          <SectionHeading title="Featured Tools" subtitle="Most starred by the community" />
+          <SectionHeading title="Featured Modules" subtitle="Most starred by the community" />
           <PackageGrid packages={featuredPackages} />
           <div className="mt-8 text-center">
             <Link href="/explore?sort=stars">
@@ -88,7 +88,7 @@ export default async function HomePage() {
       {/* Recent */}
       {recentPackages.length > 0 && (
         <section className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
-          <SectionHeading title="Recently Published" subtitle="Latest tools from the community" />
+          <SectionHeading title="Recently Published" subtitle="Latest modules from the community" />
           <PackageGrid packages={recentPackages} />
           <div className="mt-8 text-center">
             <Link href="/explore?sort=recent">
@@ -102,12 +102,12 @@ export default async function HomePage() {
       {featuredPackages.length === 0 && recentPackages.length === 0 && (
         <section className="mx-auto max-w-7xl px-4 py-16 text-center sm:px-6 lg:px-8">
           <div className="rounded-xl border border-glass-border bg-surface p-12">
-            <h2 className="text-xl font-semibold text-text-primary">No tools yet</h2>
+            <h2 className="text-xl font-semibold text-text-primary">No modules yet</h2>
             <p className="mt-2 text-text-secondary">
-              Be the first to publish a .dops tool to the marketplace.
+              Be the first to publish a .dops module to the marketplace.
             </p>
             <Link href="/publish" className="mt-4 inline-block">
-              <Button>Publish your first tool</Button>
+              <Button>Publish your first module</Button>
             </Link>
           </div>
         </section>

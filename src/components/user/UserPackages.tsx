@@ -21,7 +21,7 @@ interface UserPackagesProps {
 
 export function UserPackages({ packages }: UserPackagesProps) {
   if (packages.length === 0) {
-    return <EmptyState title="No tools published yet" />;
+    return <EmptyState title="No modules published yet" />;
   }
   return <PackageGrid packages={packages} />;
 }

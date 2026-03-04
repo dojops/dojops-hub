@@ -38,13 +38,13 @@ export default async function UserPage({ params }: Props) {
 
       <div className="mt-12">
         <SectionHeading
-          title="Published Tools"
-          subtitle={`${user.packages.length} tool${user.packages.length !== 1 ? "s" : ""}`}
+          title="Published Modules"
+          subtitle={`${user.packages.length} module${user.packages.length !== 1 ? "s" : ""}`}
         />
         {user.packages.length > 0 ? (
           <PackageGrid packages={user.packages} />
         ) : (
-          <EmptyState title="No tools published yet" />
+          <EmptyState title="No modules published yet" />
         )}
       </div>
     </div>

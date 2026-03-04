@@ -21,7 +21,7 @@ interface UserStarsProps {
 
 export function UserStars({ packages }: UserStarsProps) {
   if (packages.length === 0) {
-    return <EmptyState title="No starred tools yet" />;
+    return <EmptyState title="No starred modules yet" />;
   }
   return <PackageGrid packages={packages} />;
 }

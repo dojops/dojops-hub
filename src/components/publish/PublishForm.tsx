@@ -154,7 +154,7 @@ export function PublishForm() {
       )}
 
       <Button type="submit" disabled={!file || loading} className="w-full">
-        {loading ? "Publishing..." : "Publish Tool"}
+        {loading ? "Publishing..." : "Publish Module"}
       </Button>
     </form>
   );

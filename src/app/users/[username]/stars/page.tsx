@@ -50,14 +50,14 @@ export default async function UserStarsPage({ params }: Props) {
       </div>
 
       <SectionHeading
-        title="Starred Tools"
-        subtitle={`${starredPackages.length} tool${starredPackages.length !== 1 ? "s" : ""}`}
+        title="Starred Modules"
+        subtitle={`${starredPackages.length} module${starredPackages.length !== 1 ? "s" : ""}`}
       />
 
       {starredPackages.length > 0 ? (
         <PackageGrid packages={starredPackages} />
       ) : (
-        <EmptyState title="No starred tools yet" />
+        <EmptyState title="No starred modules yet" />
       )}
     </div>
   );

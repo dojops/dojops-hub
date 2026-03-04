@@ -20,12 +20,12 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL("https://hub.dojops.ai"),
   title: {
-    default: "DojOps Hub — Tool Marketplace",
+    default: "DojOps Hub — Module Marketplace",
     template: "%s | DojOps Hub",
   },
   description:
-    "Discover, publish, and install .dops DevOps tools for DojOps. The community marketplace for AI-powered infrastructure automation.",
-  keywords: ["DojOps", "DevOps", "tools", "marketplace", "automation", "infrastructure"],
+    "Discover, publish, and install .dops DevOps modules for DojOps. The community marketplace for AI-powered infrastructure automation.",
+  keywords: ["DojOps", "DevOps", "modules", "marketplace", "automation", "infrastructure"],
   icons: { icon: "/dojops-favicon.png" },
 };
 

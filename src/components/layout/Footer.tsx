@@ -13,7 +13,7 @@ export function Footer() {
                   href="/explore"
                   className="text-sm text-text-secondary hover:text-text-primary"
                 >
-                  Explore Tools
+                  Explore Modules
                 </Link>
               </li>
               <li>

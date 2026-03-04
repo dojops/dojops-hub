@@ -75,7 +75,7 @@ export function SearchBar({ className = "" }: { className?: string }) {
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search tools..."
+            placeholder="Search modules..."
             className="w-full rounded-lg border border-glass-border bg-surface py-2 pl-10 pr-4 text-sm text-text-primary placeholder:text-text-secondary/50 focus:border-neon-cyan/30 focus:outline-none focus:ring-1 focus:ring-neon-cyan/20"
           />
         </div>

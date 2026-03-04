@@ -54,9 +54,9 @@ export default async function ExplorePage({ searchParams }: Props) {
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-text-primary">Explore Tools</h1>
+        <h1 className="text-2xl font-bold text-text-primary">Explore Modules</h1>
         <p className="mt-1 text-text-secondary">
-          Browse {result.total} tool{result.total !== 1 ? "s" : ""} from the community
+          Browse {result.total} module{result.total !== 1 ? "s" : ""} from the community
         </p>
       </div>
 
@@ -114,16 +114,16 @@ export default async function ExplorePage({ searchParams }: Props) {
         </>
       ) : (
         <EmptyState
-          title={query ? "No results found" : "No tools yet"}
+          title={query ? "No results found" : "No modules yet"}
           description={
             query
-              ? `No tools match "${query}". Try a different search term.`
-              : "Be the first to publish a .dops tool."
+              ? `No modules match "${query}". Try a different search term.`
+              : "Be the first to publish a .dops module."
           }
           action={
             !query && (
               <Link href="/publish">
-                <Button>Publish a Tool</Button>
+                <Button>Publish a Module</Button>
               </Link>
             )
           }

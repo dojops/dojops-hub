@@ -106,7 +106,7 @@ export default async function PackagePage({ params }: Props) {
 
       {sections && (
         <div className="mt-8">
-          <h2 className="text-lg font-semibold text-text-primary mb-4">Tool Specification</h2>
+          <h2 className="text-lg font-semibold text-text-primary mb-4">Module Specification</h2>
           <DopsPreview sections={sections} />
         </div>
       )}

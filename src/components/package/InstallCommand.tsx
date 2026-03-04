@@ -4,7 +4,7 @@ import { useState } from "react";
 
 export function InstallCommand({ name }: { name: string }) {
   const [copied, setCopied] = useState(false);
-  const command = `dojops tools install ${name}`;
+  const command = `dojops modules install ${name}`;
 
   async function handleCopy() {
     await navigator.clipboard.writeText(command);

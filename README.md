@@ -5,8 +5,8 @@
 <h1 align="center">DojOps Hub</h1>
 
 <p align="center">
-  <strong>Tool marketplace for <a href="https://github.com/dojops/dojops">DojOps</a>.</strong><br />
-  Discover, publish, and install <code>.dops</code> DevOps tools for the AI DevOps Automation Engine.
+  <strong>Module marketplace for <a href="https://github.com/dojops/dojops">DojOps</a>.</strong><br />
+  Discover, publish, and install <code>.dops</code> DevOps modules for the AI DevOps Automation Engine.
 </p>
 
 <p align="center">
@@ -32,7 +32,7 @@
 
 ## Features
 
-- **Package registry** — Publish, version, and download `.dops` tool files
+- **Package registry** — Publish, version, and download `.dops` module files
 - **Full-text search** — PostgreSQL `tsvector` + GIN index with `ts_rank` ranking
 - **GitHub OAuth** — Sign in with GitHub, role-based access (USER / ADMIN)
 - **API tokens** — `dojops_` prefixed tokens with SHA-256 hashing, max 10 per user
@@ -40,7 +40,7 @@
 - **Community** — Star packages, post comments, user profiles
 - **Admin moderation** — Flag or remove packages
 - **Rate limiting** — In-memory rate limiter on publish, star, comment, search, and token creation
-- **CLI integration** — `dojops tools publish` / `dojops tools install` authenticate via Bearer token
+- **CLI integration** — `dojops modules publish` / `dojops modules install` authenticate via Bearer token
 
 ## Pages
 
@@ -50,7 +50,7 @@
 | `/explore`                 | Browse all packages (sort, filter by tag) |
 | `/packages/:slug`          | Package detail + latest version           |
 | `/packages/:slug/versions` | Full version history                      |
-| `/publish`                 | Publish a new `.dops` tool                |
+| `/publish`                 | Publish a new `.dops` module              |
 | `/tags/:tag`               | Packages by tag                           |
 | `/users/:username`         | User profile                              |
 | `/settings/tokens`         | API token management                      |
