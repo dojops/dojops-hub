@@ -56,7 +56,7 @@ export default async function ExplorePage({ searchParams }: Props) {
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-text-primary">Explore Modules</h1>
         <p className="mt-1 text-text-secondary">
-          Browse {result.total} module{result.total !== 1 ? "s" : ""} from the community
+          Browse {result.total} module{result.total === 1 ? "" : "s"} from the community
         </p>
       </div>
 

@@ -42,7 +42,7 @@ describe("search query sanitization", () => {
   });
 
   it("returns empty for all-special input", () => {
-    expect(sanitizeSearchQuery("'\"\\;!*()")).toBe("");
+    expect(sanitizeSearchQuery(`'"\\;!*()`)).toBe("");
   });
 });
 

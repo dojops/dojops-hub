@@ -39,7 +39,7 @@ export default async function UserPage({ params }: Props) {
       <div className="mt-12">
         <SectionHeading
           title="Published Modules"
-          subtitle={`${user.packages.length} module${user.packages.length !== 1 ? "s" : ""}`}
+          subtitle={`${user.packages.length} module${user.packages.length === 1 ? "" : "s"}`}
         />
         {user.packages.length === 0 ? (
           <EmptyState title="No modules published yet" />

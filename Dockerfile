@@ -38,10 +38,8 @@ COPY --from=deps /app/node_modules ./prisma-migrate/node_modules
 # Standalone output (read-only for app user)
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
-RUN chown -R nextjs:nodejs .next && chmod -R 555 .next
-
-# Uploads directory
-RUN mkdir -p /app/uploads && chown nextjs:nodejs /app/uploads
+RUN chown -R nextjs:nodejs .next && chmod -R 555 .next && \
+    mkdir -p /app/uploads && chown nextjs:nodejs /app/uploads
 
 EXPOSE 3000
 

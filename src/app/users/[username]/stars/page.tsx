@@ -51,7 +51,7 @@ export default async function UserStarsPage({ params }: Props) {
 
       <SectionHeading
         title="Starred Modules"
-        subtitle={`${starredPackages.length} module${starredPackages.length !== 1 ? "s" : ""}`}
+        subtitle={`${starredPackages.length} module${starredPackages.length === 1 ? "" : "s"}`}
       />
 
       {starredPackages.length === 0 ? (
