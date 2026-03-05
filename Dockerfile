@@ -12,7 +12,7 @@ RUN npm ci
 FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
-COPY package.json package-lock.json next.config.mjs tsconfig.json postcss.config.mjs tailwind.config.ts ./
+COPY package.json package-lock.json next.config.mjs tsconfig.json postcss.config.mjs ./
 COPY prisma ./prisma/
 COPY public ./public/
 COPY src ./src/
