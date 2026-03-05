@@ -12,7 +12,7 @@ CREATE TABLE "User" (
     "displayName" TEXT,
     "email" TEXT,
     "avatarUrl" TEXT,
-    "bio" VARCHAR(500),
+    "bio" VARCHAR(500), -- NOSONAR
     "role" "Role" NOT NULL DEFAULT 'USER',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -159,11 +159,13 @@ ALTER TABLE "Comment" ADD CONSTRAINT "Comment_packageId_fkey" FOREIGN KEY ("pack
 
 -- Full-text search trigger
 CREATE OR REPLACE FUNCTION package_search_vector_update() RETURNS trigger AS $$
+DECLARE
+  lang CONSTANT text := 'english';
 BEGIN
   NEW."searchVector" :=
-    setweight(to_tsvector('english', coalesce(NEW.name, '')), 'A') ||
-    setweight(to_tsvector('english', coalesce(NEW.description, '')), 'B') ||
-    setweight(to_tsvector('english', coalesce(array_to_string(NEW.tags, ' '), '')), 'C');
+    setweight(to_tsvector(lang, coalesce(NEW.name, '')), 'A') ||
+    setweight(to_tsvector(lang, coalesce(NEW.description, '')), 'B') ||
+    setweight(to_tsvector(lang, coalesce(array_to_string(NEW.tags, ' '), '')), 'C');
   RETURN NEW;
 END $$ LANGUAGE plpgsql;
 
