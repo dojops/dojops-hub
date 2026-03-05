@@ -46,5 +46,7 @@ EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-# Run migrations as root (needs full deps), then drop to nextjs user for the app
-CMD ["sh", "-c", "node prisma-migrate/node_modules/prisma/build/index.js migrate deploy --schema=./prisma/schema.prisma && su -s /bin/sh nextjs -c 'node server.js'"]
+USER nextjs
+
+# Run migrations then start app (both as nextjs user — migrate deploy only needs DB access, not FS writes)
+CMD ["sh", "-c", "node prisma-migrate/node_modules/prisma/build/index.js migrate deploy --schema=./prisma/schema.prisma && node server.js"]

@@ -26,37 +26,39 @@ vi.mock("next/server", () => {
 import { getClientIp, checkRateLimit } from "../rate-limit";
 import { NextRequest } from "next/server";
 
+// Test IP addresses (documentation range per RFC 5737, safe for testing)
+const IP_A = "192.0.2.1"; // NOSONAR
+const IP_B = "192.0.2.2"; // NOSONAR
+const IP_C = "198.51.100.1"; // NOSONAR
+const IP_REAL = "203.0.113.5"; // NOSONAR
+
+function makeReq(headers: Record<string, string>) {
+  return new NextRequest("http://localhost", { headers });
+}
+
 describe("getClientIp", () => {
   it("extracts first hop from x-forwarded-for", () => {
-    const req = new NextRequest("http://localhost", {
-      headers: { "x-forwarded-for": "1.2.3.4, 5.6.7.8" },
-    });
-    expect(getClientIp(req)).toBe("1.2.3.4");
+    const req = makeReq({ "x-forwarded-for": `${IP_A}, ${IP_B}` });
+    expect(getClientIp(req)).toBe(IP_A);
   });
 
   it("handles single IP in x-forwarded-for", () => {
-    const req = new NextRequest("http://localhost", {
-      headers: { "x-forwarded-for": "10.0.0.1" },
-    });
-    expect(getClientIp(req)).toBe("10.0.0.1");
+    const req = makeReq({ "x-forwarded-for": IP_C });
+    expect(getClientIp(req)).toBe(IP_C);
   });
 
   it("trims whitespace from XFF entries", () => {
-    const req = new NextRequest("http://localhost", {
-      headers: { "x-forwarded-for": "  1.2.3.4  , 5.6.7.8" },
-    });
-    expect(getClientIp(req)).toBe("1.2.3.4");
+    const req = makeReq({ "x-forwarded-for": `  ${IP_A}  , ${IP_B}` });
+    expect(getClientIp(req)).toBe(IP_A);
   });
 
   it("falls back to x-real-ip", () => {
-    const req = new NextRequest("http://localhost", {
-      headers: { "x-real-ip": "9.8.7.6" },
-    });
-    expect(getClientIp(req)).toBe("9.8.7.6");
+    const req = makeReq({ "x-real-ip": IP_REAL });
+    expect(getClientIp(req)).toBe(IP_REAL);
   });
 
   it('returns "unknown" when no headers present', () => {
-    const req = new NextRequest("http://localhost");
+    const req = makeReq({});
     expect(getClientIp(req)).toBe("unknown");
   });
 });

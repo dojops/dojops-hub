@@ -1,6 +1,11 @@
 import { describe, it, expect } from "vitest";
 import { slugify, sha256, compareSemver, sortVersionsDesc, formatBytes, timeAgo } from "../utils";
 
+// Time helpers
+const minutesAgo = (n: number) => new Date(Date.now() - n * 60 * 1000);
+const hoursAgo = (n: number) => new Date(Date.now() - n * 3600 * 1000);
+const daysAgo = (n: number) => new Date(Date.now() - n * 86400 * 1000);
+
 describe("slugify", () => {
   it("converts a basic name to slug", () => {
     expect(slugify("My Tool")).toBe("my-tool");
@@ -73,28 +78,18 @@ describe("sortVersionsDesc", () => {
   });
 
   it("handles single-element array", () => {
-    const versions = [{ semver: "1.0.0" }];
-    expect(sortVersionsDesc(versions)).toEqual([{ semver: "1.0.0" }]);
+    expect(sortVersionsDesc([{ semver: "1.0.0" }])).toEqual([{ semver: "1.0.0" }]);
   });
 });
 
 describe("formatBytes", () => {
-  it("formats 0 bytes", () => {
-    expect(formatBytes(0)).toBe("0 B");
-  });
-
-  it("formats bytes below 1KB", () => {
-    expect(formatBytes(512)).toBe("512 B");
-  });
-
+  it("formats 0 bytes", () => expect(formatBytes(0)).toBe("0 B"));
+  it("formats bytes below 1KB", () => expect(formatBytes(512)).toBe("512 B"));
   it("formats kilobytes", () => {
     expect(formatBytes(1024)).toBe("1 KB");
     expect(formatBytes(1536)).toBe("1.5 KB");
   });
-
-  it("formats megabytes", () => {
-    expect(formatBytes(1048576)).toBe("1 MB");
-  });
+  it("formats megabytes", () => expect(formatBytes(1048576)).toBe("1 MB"));
 });
 
 describe("timeAgo", () => {
@@ -103,17 +98,14 @@ describe("timeAgo", () => {
   });
 
   it("returns minutes ago", () => {
-    const fiveMinAgo = new Date(Date.now() - 5 * 60 * 1000);
-    expect(timeAgo(fiveMinAgo)).toBe("5m ago");
+    expect(timeAgo(minutesAgo(5))).toBe("5m ago");
   });
 
   it("returns hours ago", () => {
-    const threeHoursAgo = new Date(Date.now() - 3 * 3600 * 1000);
-    expect(timeAgo(threeHoursAgo)).toBe("3h ago");
+    expect(timeAgo(hoursAgo(3))).toBe("3h ago");
   });
 
   it("returns days ago", () => {
-    const twoDaysAgo = new Date(Date.now() - 2 * 86400 * 1000);
-    expect(timeAgo(twoDaysAgo)).toBe("2d ago");
+    expect(timeAgo(daysAgo(2))).toBe("2d ago");
   });
 });
