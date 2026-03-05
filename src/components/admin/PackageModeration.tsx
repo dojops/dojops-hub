@@ -15,7 +15,9 @@ interface PackageRow {
   _count: { versions: number; comments: number };
 }
 
-export function PackageModeration({ packages: initialPackages }: { packages: PackageRow[] }) {
+export function PackageModeration({
+  packages: initialPackages,
+}: Readonly<{ packages: PackageRow[] }>) {
   const [packages, setPackages] = useState(initialPackages);
 
   async function updateStatus(id: string, status: string) {

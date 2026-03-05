@@ -26,7 +26,7 @@ export function Button({
   children,
   className = "",
   ...props
-}: ButtonProps) {
+}: Readonly<ButtonProps>) {
   return (
     <button
       className={`inline-flex items-center justify-center transition-all ${variants[variant]} ${sizes[size]} disabled:opacity-50 disabled:cursor-not-allowed ${className}`}

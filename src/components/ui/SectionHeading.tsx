@@ -3,7 +3,7 @@ interface SectionHeadingProps {
   subtitle?: string;
 }
 
-export function SectionHeading({ title, subtitle }: SectionHeadingProps) {
+export function SectionHeading({ title, subtitle }: Readonly<SectionHeadingProps>) {
   return (
     <div className="mb-8">
       <h2 className="text-2xl font-bold tracking-tight text-text-primary">{title}</h2>

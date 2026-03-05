@@ -10,7 +10,7 @@ const icons: Record<string, string> = {
   network: "Net",
 };
 
-export function PermissionBadges({ permissions }: PermissionBadgesProps) {
+export function PermissionBadges({ permissions }: Readonly<PermissionBadgesProps>) {
   if (!permissions) return null;
 
   return (

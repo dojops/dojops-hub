@@ -14,7 +14,7 @@ interface UserProfileProps {
   starCount: number;
 }
 
-export function UserProfile({ user, starCount }: UserProfileProps) {
+export function UserProfile({ user, starCount }: Readonly<UserProfileProps>) {
   return (
     <div className="flex items-start gap-6">
       {user.avatarUrl && (

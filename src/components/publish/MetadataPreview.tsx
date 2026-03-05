@@ -16,7 +16,7 @@ interface MetadataPreviewProps {
   };
 }
 
-export function MetadataPreview({ meta }: MetadataPreviewProps) {
+export function MetadataPreview({ meta }: Readonly<MetadataPreviewProps>) {
   return (
     <div className="rounded-lg border border-glass-border bg-surface p-4">
       <h3 className="text-sm font-medium text-text-secondary mb-3">Preview</h3>

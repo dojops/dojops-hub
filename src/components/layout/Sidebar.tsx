@@ -7,18 +7,18 @@ interface SidebarProps {
   onClose: () => void;
 }
 
-export function Sidebar({ open, onClose }: SidebarProps) {
+export function Sidebar({ open, onClose }: Readonly<SidebarProps>) {
   if (!open) return null;
 
   return (
     <div className="fixed inset-0 z-50 md:hidden">
-      <div
+      <button
+        type="button"
         className="absolute inset-0 bg-black/60"
         onClick={onClose}
         onKeyDown={(e) => {
           if (e.key === "Escape") onClose();
         }}
-        role="button"
         tabIndex={0}
         aria-label="Close menu"
       />

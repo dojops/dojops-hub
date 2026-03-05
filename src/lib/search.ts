@@ -10,7 +10,7 @@ export async function searchPackages(
   { page = 1, pageSize = 20 }: { page?: number; pageSize?: number } = {},
 ) {
   // Sanitize: remove special tsquery characters and injection vectors
-  const sanitized = query.replace(/[&|!():*<>'"\\;\0]/g, " ").trim();
+  const sanitized = query.replaceAll(/[&|!():*<>'"\\;\0]/g, " ").trim();
   if (!sanitized) return { packages: [], total: 0, page, pageSize };
 
   // Convert to tsquery format: word1 & word2

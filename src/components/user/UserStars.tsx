@@ -19,7 +19,7 @@ interface UserStarsProps {
   }>;
 }
 
-export function UserStars({ packages }: UserStarsProps) {
+export function UserStars({ packages }: Readonly<UserStarsProps>) {
   if (packages.length === 0) {
     return <EmptyState title="No starred modules yet" />;
   }

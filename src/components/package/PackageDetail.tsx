@@ -44,7 +44,7 @@ interface PackageDetailProps {
   totalVersions: number;
 }
 
-export function PackageDetail({ pkg, latestVersion, totalVersions }: PackageDetailProps) {
+export function PackageDetail({ pkg, latestVersion, totalVersions }: Readonly<PackageDetailProps>) {
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -133,9 +133,7 @@ export function PackageDetail({ pkg, latestVersion, totalVersions }: PackageDeta
             </span>
           </div>
 
-          <PermissionBadges
-            permissions={latestVersion.permissions as Record<string, string> | null}
-          />
+          <PermissionBadges permissions={latestVersion.permissions} />
 
           {/* v2: Context block */}
           {latestVersion.contextBlock && (
@@ -216,7 +214,7 @@ export function PackageDetail({ pkg, latestVersion, totalVersions }: PackageDeta
               href={`/packages/${pkg.slug}/versions`}
               className="text-xs text-neon-cyan hover:underline"
             >
-              {totalVersions} version{totalVersions !== 1 ? "s" : ""}
+              {totalVersions} version{totalVersions === 1 ? "" : "s"}
             </Link>
           </div>
 

@@ -38,8 +38,8 @@ export async function GET(
     .update({ where: { id: pkg.id }, data: { downloadCount: { increment: 1 } } })
     .catch(() => {});
 
-  const safeName = pkg.name.replace(/[^\w.-]/g, "_");
-  const safeVersion = ver.semver.replace(/[^\w.-]/g, "_");
+  const safeName = pkg.name.replaceAll(/[^\w.-]/g, "_");
+  const safeVersion = ver.semver.replaceAll(/[^\w.-]/g, "_");
 
   return new NextResponse(new Uint8Array(content), {
     headers: {

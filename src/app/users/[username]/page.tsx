@@ -7,7 +7,7 @@ import { EmptyState } from "@/components/ui/EmptyState";
 import type { Metadata } from "next";
 
 interface Props {
-  params: Promise<{ username: string }>;
+  readonly params: Promise<{ username: string }>;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -41,10 +41,10 @@ export default async function UserPage({ params }: Props) {
           title="Published Modules"
           subtitle={`${user.packages.length} module${user.packages.length !== 1 ? "s" : ""}`}
         />
-        {user.packages.length > 0 ? (
-          <PackageGrid packages={user.packages} />
-        ) : (
+        {user.packages.length === 0 ? (
           <EmptyState title="No modules published yet" />
+        ) : (
+          <PackageGrid packages={user.packages} />
         )}
       </div>
     </div>

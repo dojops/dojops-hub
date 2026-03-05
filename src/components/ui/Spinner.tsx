@@ -1,4 +1,4 @@
-export function Spinner({ className = "" }: { className?: string }) {
+export function Spinner({ className = "" }: Readonly<{ className?: string }>) {
   return (
     <output
       className={`block h-5 w-5 animate-spin rounded-full border-2 border-glass-border border-t-neon-cyan ${className}`}

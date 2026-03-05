@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { getServerSession } from "next-auth";
-import { createHash } from "crypto";
+import { createHash } from "node:crypto";
 import { authOptions } from "./auth";
 import { prisma } from "./prisma";
 

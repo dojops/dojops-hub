@@ -8,7 +8,7 @@ interface DopsPreviewProps {
   };
 }
 
-export function DopsPreview({ sections }: DopsPreviewProps) {
+export function DopsPreview({ sections }: Readonly<DopsPreviewProps>) {
   const parts = [
     { title: "Prompt", content: sections.prompt },
     { title: "Update Prompt", content: sections.updatePrompt },

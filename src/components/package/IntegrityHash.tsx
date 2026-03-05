@@ -6,7 +6,7 @@ interface IntegrityHashProps {
   hash: string;
 }
 
-export function IntegrityHash({ hash }: IntegrityHashProps) {
+export function IntegrityHash({ hash }: Readonly<IntegrityHashProps>) {
   const [copied, setCopied] = useState(false);
   const [expanded, setExpanded] = useState(false);
 

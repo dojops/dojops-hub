@@ -98,7 +98,7 @@ export const MetaSchema = z.object({
   version: z
     .string()
     .min(1)
-    .regex(/^[0-9]+\.[0-9]+\.[0-9]+([.\-+][a-zA-Z0-9.\-+]*)?$/, "Must be valid semver"),
+    .regex(/^\d+\.\d+\.\d+([.\-+][a-zA-Z0-9.\-+]*)?$/, "Must be valid semver"),
   description: z.string().min(1).max(500),
   author: z.string().optional(),
   license: z.string().optional(),

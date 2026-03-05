@@ -6,7 +6,7 @@ const riskVariants = {
   HIGH: "red",
 } as const;
 
-export function RiskBadge({ level }: { level: string }) {
+export function RiskBadge({ level }: Readonly<{ level: string }>) {
   const variant = riskVariants[level as keyof typeof riskVariants] || "default";
   return <Badge variant={variant}>{level}</Badge>;
 }

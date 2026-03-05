@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 // Must mock next/server before importing module
 vi.mock("next/server", () => {
   class MockHeaders {
-    private map: Map<string, string>;
+    private readonly map: Map<string, string>;
     constructor(init?: Record<string, string>) {
       this.map = new Map(Object.entries(init ?? {}));
     }

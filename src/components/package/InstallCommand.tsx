@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-export function InstallCommand({ name }: { name: string }) {
+export function InstallCommand({ name }: Readonly<{ name: string }>) {
   const [copied, setCopied] = useState(false);
   const command = `dojops modules install ${name}`;
 

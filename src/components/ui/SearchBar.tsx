@@ -10,7 +10,7 @@ interface SearchResult {
   description: string;
 }
 
-export function SearchBar({ className = "" }: { className?: string }) {
+export function SearchBar({ className = "" }: Readonly<{ className?: string }>) {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<SearchResult[]>([]);
   const [open, setOpen] = useState(false);

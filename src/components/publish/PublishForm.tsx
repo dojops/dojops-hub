@@ -98,17 +98,10 @@ export function PublishForm() {
         <label htmlFor="dops-file" className="block text-sm font-medium text-text-primary mb-2">
           .dops File
         </label>
-        <div
+        <button
+          type="button"
           onClick={() => fileRef.current?.click()}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              fileRef.current?.click();
-            }
-          }}
-          role="button"
-          tabIndex={0}
-          className="cursor-pointer rounded-lg border-2 border-dashed border-glass-border bg-surface p-8 text-center transition-colors hover:border-glass-border-hover"
+          className="w-full cursor-pointer rounded-lg border-2 border-dashed border-glass-border bg-surface p-8 text-center transition-colors hover:border-glass-border-hover"
         >
           <input
             ref={fileRef}
@@ -139,7 +132,7 @@ export function PublishForm() {
               <p className="text-sm text-text-secondary">Click to upload a .dops file</p>
             </div>
           )}
-        </div>
+        </button>
       </div>
 
       {preview && <MetadataPreview meta={preview} />}

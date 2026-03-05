@@ -11,7 +11,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = { title: "Explore" };
 
 interface Props {
-  searchParams: Promise<{ [key: string]: string | undefined }>;
+  readonly searchParams: Promise<{ [key: string]: string | undefined }>;
 }
 
 export default async function ExplorePage({ searchParams }: Props) {
@@ -100,19 +100,7 @@ export default async function ExplorePage({ searchParams }: Props) {
         </div>
       )}
 
-      {result.packages.length > 0 ? (
-        <>
-          <PackageGrid packages={result.packages} />
-          <div className="mt-8">
-            <Pagination
-              currentPage={page}
-              totalPages={totalPages}
-              basePath="/explore"
-              searchParams={baseSearchParams}
-            />
-          </div>
-        </>
-      ) : (
+      {result.packages.length === 0 ? (
         <EmptyState
           title={query ? "No results found" : "No modules yet"}
           description={
@@ -128,6 +116,18 @@ export default async function ExplorePage({ searchParams }: Props) {
             )
           }
         />
+      ) : (
+        <>
+          <PackageGrid packages={result.packages} />
+          <div className="mt-8">
+            <Pagination
+              currentPage={page}
+              totalPages={totalPages}
+              basePath="/explore"
+              searchParams={baseSearchParams}
+            />
+          </div>
+        </>
       )}
     </div>
   );

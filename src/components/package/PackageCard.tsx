@@ -20,7 +20,7 @@ interface PackageCardProps {
   };
 }
 
-export function PackageCard({ pkg }: PackageCardProps) {
+export function PackageCard({ pkg }: Readonly<PackageCardProps>) {
   return (
     <Link href={`/packages/${pkg.slug}`}>
       <GlowCard as="article" className="h-full">

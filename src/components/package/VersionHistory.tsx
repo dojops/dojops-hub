@@ -10,7 +10,7 @@ interface Version {
   createdAt: Date;
 }
 
-export function VersionHistory({ versions }: { versions: Version[] }) {
+export function VersionHistory({ versions }: Readonly<{ versions: Version[] }>) {
   return (
     <div className="space-y-3">
       {versions.map((v, i) => (

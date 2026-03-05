@@ -18,7 +18,7 @@ interface PackageGridProps {
   }>;
 }
 
-export function PackageGrid({ packages }: PackageGridProps) {
+export function PackageGrid({ packages }: Readonly<PackageGridProps>) {
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {packages.map((pkg) => (

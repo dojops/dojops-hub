@@ -3,7 +3,7 @@ import { describe, it, expect } from "vitest";
 // Extract the sanitization logic from searchPackages for unit testing.
 // The regex is: /[&|!():*<>'"\\;\0]/g
 function sanitizeSearchQuery(query: string): string {
-  return query.replace(/[&|!():*<>'"\\;\0]/g, " ").trim();
+  return query.replaceAll(/[&|!():*<>'"\\;\0]/g, " ").trim();
 }
 
 function toTsquery(sanitized: string): string {

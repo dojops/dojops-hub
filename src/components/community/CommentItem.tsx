@@ -17,7 +17,7 @@ interface CommentItemProps {
   };
 }
 
-export function CommentItem({ comment }: CommentItemProps) {
+export function CommentItem({ comment }: Readonly<CommentItemProps>) {
   return (
     <div className="rounded-lg border border-glass-border bg-surface p-4">
       <div className="flex items-center gap-2 mb-2">

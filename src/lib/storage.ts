@@ -1,6 +1,6 @@
-import { writeFile, readFile, mkdir } from "fs/promises";
-import { existsSync } from "fs";
-import path from "path";
+import { writeFile, readFile, mkdir } from "node:fs/promises";
+import { existsSync } from "node:fs";
+import path from "node:path";
 
 const UPLOADS_DIR = path.join(process.cwd(), "uploads");
 

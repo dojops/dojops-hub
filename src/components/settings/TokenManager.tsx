@@ -17,7 +17,7 @@ interface TokenManagerProps {
   initialTokens: Token[];
 }
 
-export function TokenManager({ initialTokens }: TokenManagerProps) {
+export function TokenManager({ initialTokens }: Readonly<TokenManagerProps>) {
   const [tokens, setTokens] = useState<Token[]>(initialTokens);
   const [name, setName] = useState("");
   const [expiration, setExpiration] = useState("3months");

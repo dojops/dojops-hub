@@ -6,7 +6,7 @@ interface GlowCardProps {
   as?: "div" | "article";
 }
 
-export function GlowCard({ children, className = "", as: Tag = "div" }: GlowCardProps) {
+export function GlowCard({ children, className = "", as: Tag = "div" }: Readonly<GlowCardProps>) {
   return (
     <Tag className={`glow-card rounded-xl border border-glass-border bg-surface p-6 ${className}`}>
       {children}

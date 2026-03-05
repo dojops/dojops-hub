@@ -26,7 +26,7 @@ export function CommentThread({
   slug,
   comments: initialComments,
   isAuthenticated,
-}: CommentThreadProps) {
+}: Readonly<CommentThreadProps>) {
   const [comments, setComments] = useState(initialComments);
   const [body, setBody] = useState("");
   const [loading, setLoading] = useState(false);

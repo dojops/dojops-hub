@@ -107,7 +107,7 @@ function parseMarkdownSections(body: string): MarkdownSections {
   let currentContent: string[] = [];
 
   for (const line of lines) {
-    const headingMatch = line.match(/^## (\S.*)$/);
+    const headingMatch = /^## (\S.*)$/.exec(line);
     if (headingMatch) {
       if (currentSection) {
         sectionMap.set(currentSection.toLowerCase(), currentContent.join("\n").trim());

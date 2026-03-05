@@ -6,8 +6,8 @@ import { Pagination } from "@/components/ui/Pagination";
 import type { Metadata } from "next";
 
 interface Props {
-  params: Promise<{ tag: string }>;
-  searchParams: Promise<{ page?: string }>;
+  readonly params: Promise<{ tag: string }>;
+  readonly searchParams: Promise<{ page?: string }>;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -42,15 +42,15 @@ export default async function TagPage({ params, searchParams }: Props) {
         subtitle={`${total} module${total !== 1 ? "s" : ""} tagged with "${tag}"`}
       />
 
-      {packages.length > 0 ? (
+      {packages.length === 0 ? (
+        <EmptyState title="No modules with this tag" />
+      ) : (
         <>
           <PackageGrid packages={packages} />
           <div className="mt-8">
             <Pagination currentPage={page} totalPages={totalPages} basePath={`/tags/${rawTag}`} />
           </div>
         </>
-      ) : (
-        <EmptyState title="No modules with this tag" />
       )}
     </div>
   );

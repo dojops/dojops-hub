@@ -14,7 +14,7 @@ export function Pagination({
   totalPages,
   basePath,
   searchParams = {},
-}: PaginationProps) {
+}: Readonly<PaginationProps>) {
   if (totalPages <= 1) return null;
 
   function buildHref(page: number) {
@@ -27,7 +27,7 @@ export function Pagination({
   for (let i = 1; i <= totalPages; i++) {
     if (i === 1 || i === totalPages || Math.abs(i - currentPage) <= 1) {
       items.push({ type: "page", value: i });
-    } else if (items.length === 0 || items[items.length - 1].type !== "dots") {
+    } else if (items.length === 0 || items.at(-1)?.type !== "dots") {
       items.push({ type: "dots", key: `dots-before-${i}` });
     }
   }

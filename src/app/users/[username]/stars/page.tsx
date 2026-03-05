@@ -7,7 +7,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 interface Props {
-  params: Promise<{ username: string }>;
+  readonly params: Promise<{ username: string }>;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -54,10 +54,10 @@ export default async function UserStarsPage({ params }: Props) {
         subtitle={`${starredPackages.length} module${starredPackages.length !== 1 ? "s" : ""}`}
       />
 
-      {starredPackages.length > 0 ? (
-        <PackageGrid packages={starredPackages} />
-      ) : (
+      {starredPackages.length === 0 ? (
         <EmptyState title="No starred modules yet" />
+      ) : (
+        <PackageGrid packages={starredPackages} />
       )}
     </div>
   );

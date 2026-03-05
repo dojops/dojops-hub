@@ -12,7 +12,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://hub.dojops.ai";
 
   return [
-    { url: baseUrl, lastModified: new Date(), changeFrequency: "daily", priority: 1.0 },
+    { url: baseUrl, lastModified: new Date(), changeFrequency: "daily", priority: 1 },
     {
       url: `${baseUrl}/explore`,
       lastModified: new Date(),

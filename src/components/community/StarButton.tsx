@@ -10,7 +10,7 @@ interface StarButtonProps {
   initialCount: number;
 }
 
-export function StarButton({ slug, initialStarred, initialCount }: StarButtonProps) {
+export function StarButton({ slug, initialStarred, initialCount }: Readonly<StarButtonProps>) {
   const { data: session } = useSession();
   const [starred, setStarred] = useState(initialStarred);
   const [count, setCount] = useState(initialCount);

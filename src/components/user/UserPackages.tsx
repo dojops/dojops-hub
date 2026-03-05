@@ -19,7 +19,7 @@ interface UserPackagesProps {
   }>;
 }
 
-export function UserPackages({ packages }: UserPackagesProps) {
+export function UserPackages({ packages }: Readonly<UserPackagesProps>) {
   if (packages.length === 0) {
     return <EmptyState title="No modules published yet" />;
   }

@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import path from "path";
+import path from "node:path";
 import { getDopsFilePath, saveDopsFile, readDopsFile } from "../storage";
 
 describe("storage - path traversal prevention", () => {
@@ -45,7 +45,7 @@ describe("storage - round-trip", () => {
       const read = await readDopsFile(testSlug, testVersion);
       expect(read.toString()).toBe(testContent.toString());
     } finally {
-      const fs = await import("fs/promises");
+      const fs = await import("node:fs/promises");
       const uploadPath = path.join(process.cwd(), "uploads", testSlug);
       await fs.rm(uploadPath, { recursive: true, force: true }).catch(() => {});
     }
