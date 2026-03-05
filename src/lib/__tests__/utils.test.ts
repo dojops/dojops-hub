@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { slugify, sha256, compareSemver, sortVersionsDesc, formatBytes, timeAgo } from "../utils";
+import { slugify, compareSemver, sortVersionsDesc, formatBytes, timeAgo } from "../utils";
+import { sha256 } from "../storage";
 
 // Time helpers
 const minutesAgo = (n: number) => new Date(Date.now() - n * 60 * 1000);

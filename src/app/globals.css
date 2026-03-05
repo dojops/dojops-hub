@@ -49,7 +49,7 @@ body {
 }
 
 ::selection {
-  background: rgba(0, 140, 180, 0.85);
+  background: #005070;
   color: #fff;
 }
 

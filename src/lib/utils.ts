@@ -1,15 +1,9 @@
-import { createHash } from "crypto";
-
 export function slugify(name: string): string {
   return name
     .toLowerCase()
     .replaceAll(/[^a-z0-9-]/g, "-")
     .replaceAll(/-+/g, "-")
     .replaceAll(/^-|-$/g, "");
-}
-
-export function sha256(buffer: Buffer): string {
-  return createHash("sha256").update(buffer).digest("hex");
 }
 
 export function formatBytes(bytes: number): string {

@@ -1,5 +1,6 @@
 import { writeFile, readFile, mkdir } from "node:fs/promises";
 import { existsSync } from "node:fs";
+import { createHash } from "node:crypto";
 import path from "node:path";
 
 const UPLOADS_DIR = path.join(process.cwd(), "uploads");
@@ -45,4 +46,8 @@ export function getDopsFilePath(slug: string, version: string): string {
   const filePath = path.join(UPLOADS_DIR, slug, `${version}.dops`);
   assertWithinUploads(filePath);
   return filePath;
+}
+
+export function sha256(buffer: Buffer): string {
+  return createHash("sha256").update(buffer).digest("hex");
 }
