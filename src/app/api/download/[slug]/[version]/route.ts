@@ -38,10 +38,13 @@ export async function GET(
     .update({ where: { id: pkg.id }, data: { downloadCount: { increment: 1 } } })
     .catch(() => {});
 
+  const safeName = pkg.name.replace(/[^\w.-]/g, "_");
+  const safeVersion = ver.semver.replace(/[^\w.-]/g, "_");
+
   return new NextResponse(new Uint8Array(content), {
     headers: {
       "Content-Type": "application/octet-stream",
-      "Content-Disposition": `attachment; filename="${pkg.name}-${version}.dops"`,
+      "Content-Disposition": `attachment; filename="${safeName}-${safeVersion}.dops"`,
       "X-Checksum-Sha256": ver.sha256,
     },
   });

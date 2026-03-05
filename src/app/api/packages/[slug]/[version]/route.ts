@@ -19,6 +19,22 @@ export async function GET(
 
   const ver = await prisma.version.findUnique({
     where: { packageId_semver: { packageId: pkg.id, semver: version } },
+    select: {
+      id: true,
+      semver: true,
+      changelog: true,
+      fileSize: true,
+      sha256: true,
+      riskLevel: true,
+      permissions: true,
+      inputFields: true,
+      outputSpec: true,
+      fileSpecs: true,
+      dopsVersion: true,
+      contextBlock: true,
+      createdAt: true,
+      packageId: true,
+    },
   });
 
   if (!ver) {

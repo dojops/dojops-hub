@@ -20,6 +20,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   const pkg = await prisma.package.update({
     where: { id },
     data: { status },
+    select: { id: true, name: true, slug: true, status: true, updatedAt: true },
   });
 
   return NextResponse.json(pkg);

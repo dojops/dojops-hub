@@ -18,7 +18,7 @@ export function parseDopsString(content: string): DopsModule {
 
   let frontmatterData: unknown;
   try {
-    frontmatterData = yaml.load(frontmatterRaw);
+    frontmatterData = yaml.load(frontmatterRaw, { schema: yaml.JSON_SCHEMA });
   } catch (err) {
     throw new Error(`Invalid YAML in frontmatter: ${(err as Error).message}`, { cause: err });
   }
@@ -46,7 +46,7 @@ export function parseDopsStringAny(content: string): DopsModuleAny {
 
   let frontmatterData: unknown;
   try {
-    frontmatterData = yaml.load(frontmatterRaw);
+    frontmatterData = yaml.load(frontmatterRaw, { schema: yaml.JSON_SCHEMA });
   } catch (err) {
     throw new Error(`Invalid YAML in frontmatter: ${(err as Error).message}`, { cause: err });
   }

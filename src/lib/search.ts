@@ -9,8 +9,8 @@ export async function searchPackages(
   query: string,
   { page = 1, pageSize = 20 }: { page?: number; pageSize?: number } = {},
 ) {
-  // Sanitize: remove special tsquery characters
-  const sanitized = query.replace(/[&|!():*<>]/g, " ").trim();
+  // Sanitize: remove special tsquery characters and injection vectors
+  const sanitized = query.replace(/[&|!():*<>'"\\;\0]/g, " ").trim();
   if (!sanitized) return { packages: [], total: 0, page, pageSize };
 
   // Convert to tsquery format: word1 & word2
@@ -64,7 +64,15 @@ export async function searchPackages(
   const authorMap = new Map(authors.map((a) => [a.id, a]));
 
   const packagesWithAuthors = packages.map((p) => ({
-    ...p,
+    id: p.id,
+    name: p.name,
+    slug: p.slug,
+    description: p.description,
+    tags: p.tags,
+    starCount: p.starCount,
+    downloadCount: p.downloadCount,
+    createdAt: p.createdAt,
+    rank: p.rank,
     author: authorMap.get(p.authorId) || {
       username: "unknown",
       displayName: null,
