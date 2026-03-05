@@ -21,6 +21,13 @@
   <img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="License" />
 </p>
 
+<p align="center">
+  <a href="https://sonarcloud.io/summary/new_code?id=dojops_dojops-hub"><img src="https://sonarcloud.io/api/project_badges/measure?project=dojops_dojops-hub&metric=alert_status" alt="Quality Gate Status" /></a>
+  <a href="https://sonarcloud.io/summary/overall?id=dojops_dojops-hub"><img src="https://sonarcloud.io/api/project_badges/measure?project=dojops_dojops-hub&metric=bugs" alt="Bugs" /></a>
+  <a href="https://sonarcloud.io/summary/overall?id=dojops_dojops-hub"><img src="https://sonarcloud.io/api/project_badges/measure?project=dojops_dojops-hub&metric=vulnerabilities" alt="Vulnerabilities" /></a>
+  <a href="https://sonarcloud.io/summary/overall?id=dojops_dojops-hub"><img src="https://sonarcloud.io/api/project_badges/measure?project=dojops_dojops-hub&metric=code_smells" alt="Code Smells" /></a>
+</p>
+
 ## Tech Stack
 
 - **Next.js 15.2** (App Router, standalone output)
