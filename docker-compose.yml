@@ -2,15 +2,15 @@ services:
   db:
     image: postgres:16-alpine
     environment:
-      POSTGRES_USER: dojops
-      POSTGRES_PASSWORD: dojops_dev
-      POSTGRES_DB: dojops_hub
+      POSTGRES_USER: ${POSTGRES_USER:-dojops}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: ${POSTGRES_DB:-dojops_hub}
     volumes:
       - pgdata:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U dojops -d dojops_hub"]
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-dojops} -d $${POSTGRES_DB:-dojops_hub}"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -20,7 +20,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      DATABASE_URL: postgresql://dojops:dojops_dev@db:5432/dojops_hub
+      DATABASE_URL: postgresql://${POSTGRES_USER:-dojops}:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}@db:5432/${POSTGRES_DB:-dojops_hub}
       NEXTAUTH_URL: http://localhost:3000
       NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
       GITHUB_ID: ${GITHUB_ID}

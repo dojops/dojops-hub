@@ -154,8 +154,8 @@ export function PackageDetail({ pkg, latestVersion, totalVersions }: PackageDeta
                       Best Practices
                     </h3>
                     <ul className="list-disc list-inside text-xs text-text-secondary space-y-0.5">
-                      {latestVersion.contextBlock.bestPractices.map((bp, i) => (
-                        <li key={i}>{bp}</li>
+                      {latestVersion.contextBlock.bestPractices.map((bp) => (
+                        <li key={bp}>{bp}</li>
                       ))}
                     </ul>
                   </div>

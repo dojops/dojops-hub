@@ -9,7 +9,7 @@ export const metadata: Metadata = { title: "Admin" };
 
 export default async function AdminPage() {
   const session = await getServerSession(authOptions);
-  if (!session || session.user.role !== "ADMIN") redirect("/");
+  if (session?.user?.role !== "ADMIN") redirect("/");
 
   const packages = await prisma.package.findMany({
     orderBy: { updatedAt: "desc" },

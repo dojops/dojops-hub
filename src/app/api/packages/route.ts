@@ -89,80 +89,21 @@ export async function POST(req: NextRequest) {
   const slug = slugify(meta.name);
   const isV2 = isV2Module(parsed);
 
-  const versionData = {
-    semver: meta.version,
+  const versionData = buildVersionData(parsed, isV2, {
     changelog,
-    filePath: "", // set below
-    fileSize: buffer.length,
-    sha256: hash,
-    riskLevel: parsed.frontmatter.risk?.level ?? null,
-    permissions: (parsed.frontmatter.permissions ?? undefined) as Prisma.InputJsonValue | undefined,
-    fileSpecs: (parsed.frontmatter.files ?? undefined) as Prisma.InputJsonValue | undefined,
-    dopsVersion: isV2 ? "v2" : "v1",
-    inputFields: undefined as Prisma.InputJsonValue | undefined,
-    outputSpec: undefined as Prisma.InputJsonValue | undefined,
-    contextBlock: undefined as Prisma.InputJsonValue | undefined,
-  };
-
-  if (isV2) {
-    // v2: store context block, no input/output
-    const fm = parsed.frontmatter as { context: unknown };
-    versionData.contextBlock = fm.context as Prisma.InputJsonValue;
-  } else {
-    // v1: store input/output as before
-    const fm = parsed.frontmatter as { input?: { fields: unknown }; output?: unknown };
-    versionData.inputFields = (fm.input?.fields ?? undefined) as Prisma.InputJsonValue | undefined;
-    versionData.outputSpec = (fm.output ?? undefined) as Prisma.InputJsonValue | undefined;
-  }
+    bufferLength: buffer.length,
+    hash,
+  });
 
   // Check if package exists
   const existingPkg = await prisma.package.findUnique({ where: { slug } });
 
   if (existingPkg) {
-    // Must be same author
-    if (existingPkg.authorId !== user.id) {
-      return NextResponse.json(
-        { error: "A package with this name already exists and belongs to another user" },
-        { status: 403 },
-      );
-    }
-
-    // Check version doesn't already exist
-    const existingVersion = await prisma.version.findUnique({
-      where: { packageId_semver: { packageId: existingPkg.id, semver: meta.version } },
-    });
-    if (existingVersion) {
-      return NextResponse.json(
-        { error: `Version ${meta.version} already exists` },
-        { status: 409 },
-      );
-    }
-
-    // Save file and create new version
-    const filePath = await saveDopsFile(slug, meta.version, buffer);
-    versionData.filePath = filePath;
-
-    await prisma.$transaction([
-      prisma.version.create({
-        data: { packageId: existingPkg.id, ...versionData },
-      }),
-      prisma.package.update({
-        where: { id: existingPkg.id },
-        data: {
-          description: meta.description,
-          tags: meta.tags || [],
-        },
-      }),
-    ]);
-
-    return NextResponse.json({ slug, version: meta.version, updated: true });
+    return handleExistingPackage(existingPkg, user.id, slug, meta, buffer, versionData);
   }
 
   // Create new package + version
-  if (!versionData.filePath) {
-    const filePath = await saveDopsFile(slug, meta.version, buffer);
-    versionData.filePath = filePath;
-  }
+  versionData.filePath = await saveDopsFile(slug, meta.version, buffer);
 
   await prisma.package.create({
     data: {
@@ -176,4 +117,76 @@ export async function POST(req: NextRequest) {
   });
 
   return NextResponse.json({ slug, version: meta.version, created: true }, { status: 201 });
+}
+
+function buildVersionData(
+  parsed: ReturnType<typeof parseDopsStringAny>,
+  isV2: boolean,
+  opts: { changelog: string | null; bufferLength: number; hash: string },
+) {
+  const data = {
+    semver: parsed.frontmatter.meta.version,
+    changelog: opts.changelog,
+    filePath: "",
+    fileSize: opts.bufferLength,
+    sha256: opts.hash,
+    riskLevel: parsed.frontmatter.risk?.level ?? null,
+    permissions: (parsed.frontmatter.permissions ?? undefined) as Prisma.InputJsonValue | undefined,
+    fileSpecs: (parsed.frontmatter.files ?? undefined) as Prisma.InputJsonValue | undefined,
+    dopsVersion: isV2 ? "v2" : "v1",
+    inputFields: undefined as Prisma.InputJsonValue | undefined,
+    outputSpec: undefined as Prisma.InputJsonValue | undefined,
+    contextBlock: undefined as Prisma.InputJsonValue | undefined,
+  };
+
+  if (isV2) {
+    const fm = parsed.frontmatter as { context: unknown };
+    data.contextBlock = fm.context as Prisma.InputJsonValue;
+  } else {
+    const fm = parsed.frontmatter as { input?: { fields: unknown }; output?: unknown };
+    data.inputFields = (fm.input?.fields ?? undefined) as Prisma.InputJsonValue | undefined;
+    data.outputSpec = (fm.output ?? undefined) as Prisma.InputJsonValue | undefined;
+  }
+
+  return data;
+}
+
+async function handleExistingPackage(
+  existingPkg: { id: string; authorId: string },
+  userId: string,
+  slug: string,
+  meta: { version: string; description: string; tags?: string[] },
+  buffer: Buffer,
+  versionData: ReturnType<typeof buildVersionData>,
+) {
+  if (existingPkg.authorId !== userId) {
+    return NextResponse.json(
+      { error: "A package with this name already exists and belongs to another user" },
+      { status: 403 },
+    );
+  }
+
+  const existingVersion = await prisma.version.findUnique({
+    where: { packageId_semver: { packageId: existingPkg.id, semver: meta.version } },
+  });
+  if (existingVersion) {
+    return NextResponse.json({ error: `Version ${meta.version} already exists` }, { status: 409 });
+  }
+
+  versionData.filePath = await saveDopsFile(slug, meta.version, buffer);
+
+  await prisma.$transaction([
+    prisma.version.create({
+      data: { packageId: existingPkg.id, ...versionData },
+    }),
+    prisma.package.update({
+      where: { id: existingPkg.id },
+      data: {
+        description: meta.description,
+        tags: meta.tags || [],
+      },
+    }),
+  ]);
+
+  return NextResponse.json({ slug, version: meta.version, updated: true });
 }

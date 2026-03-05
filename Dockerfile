@@ -12,7 +12,10 @@ RUN npm ci
 FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
-COPY . .
+COPY package.json package-lock.json next.config.mjs tsconfig.json postcss.config.mjs tailwind.config.ts ./
+COPY prisma ./prisma/
+COPY public ./public/
+COPY src ./src/
 RUN npx prisma generate
 RUN npm run build
 
@@ -32,9 +35,10 @@ COPY --from=builder /app/prisma ./prisma
 # Full node_modules for Prisma CLI migrations (runs as root before USER switch)
 COPY --from=deps /app/node_modules ./prisma-migrate/node_modules
 
-# Standalone output
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+# Standalone output (read-only for app user)
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+RUN chown -R nextjs:nodejs .next && chmod -R 555 .next
 
 # Uploads directory
 RUN mkdir -p /app/uploads && chown nextjs:nodejs /app/uploads

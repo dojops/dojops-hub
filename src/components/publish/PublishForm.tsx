@@ -41,9 +41,9 @@ export function PublishForm() {
       const fmMatch = text.match(/^---\n([\s\S]*?)\n---/);
       if (fmMatch) {
         // Simple extraction for preview - the server does full validation
-        const nameMatch = fmMatch[1].match(/name:\s*(.+)/);
-        const versionMatch = fmMatch[1].match(/version:\s*["']?(.+?)["']?\s*$/m);
-        const descMatch = fmMatch[1].match(/description:\s*["']?(.+?)["']?\s*$/m);
+        const nameMatch = fmMatch[1].match(/name:\s*(\S+)/);
+        const versionMatch = fmMatch[1].match(/version:\s*["']?([^\s"']+)/);
+        const descMatch = fmMatch[1].match(/description:\s*["']?([^\n"']+)/);
         const riskMatch = fmMatch[1].match(/level:\s*(LOW|MEDIUM|HIGH)/);
 
         setPreview({
@@ -95,13 +95,24 @@ export function PublishForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div>
-        <label className="block text-sm font-medium text-text-primary mb-2">.dops File</label>
+        <label htmlFor="dops-file" className="block text-sm font-medium text-text-primary mb-2">
+          .dops File
+        </label>
         <div
           onClick={() => fileRef.current?.click()}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              fileRef.current?.click();
+            }
+          }}
+          role="button"
+          tabIndex={0}
           className="cursor-pointer rounded-lg border-2 border-dashed border-glass-border bg-surface p-8 text-center transition-colors hover:border-glass-border-hover"
         >
           <input
             ref={fileRef}
+            id="dops-file"
             type="file"
             accept=".dops"
             onChange={handleFileChange}

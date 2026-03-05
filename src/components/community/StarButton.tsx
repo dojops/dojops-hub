@@ -20,9 +20,13 @@ export function StarButton({ slug, initialStarred, initialCount }: StarButtonPro
     if (!session) return;
     setLoading(true);
 
+    // Capture previous values for revert
+    const prevStarred = starred;
+    const prevCount = count;
+
     // Optimistic update
-    setStarred(!starred);
-    setCount(starred ? count - 1 : count + 1);
+    setStarred(!prevStarred);
+    setCount(prevStarred ? prevCount - 1 : prevCount + 1);
 
     try {
       const res = await fetch(`/api/packages/${slug}/star`, { method: "POST" });
@@ -32,12 +36,12 @@ export function StarButton({ slug, initialStarred, initialCount }: StarButtonPro
         setCount(data.starCount);
       } else {
         // Revert on failure
-        setStarred(starred);
-        setCount(count);
+        setStarred(prevStarred);
+        setCount(prevCount);
       }
     } catch {
-      setStarred(starred);
-      setCount(count);
+      setStarred(prevStarred);
+      setCount(prevCount);
     } finally {
       setLoading(false);
     }

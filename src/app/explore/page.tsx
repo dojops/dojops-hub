@@ -70,7 +70,7 @@ export default async function ExplorePage({ searchParams }: Props) {
               href={`/explore?${new URLSearchParams({ ...baseSearchParams, sort: s, page: "1" }).toString()}`}
             >
               <Button variant={sort === s ? "primary" : "ghost"} size="sm">
-                {s === "recent" ? "Recent" : s === "stars" ? "Most Stars" : "Most Downloads"}
+                {{ recent: "Recent", stars: "Most Stars", downloads: "Most Downloads" }[s]}
               </Button>
             </Link>
           ))}

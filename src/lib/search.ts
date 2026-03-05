@@ -99,12 +99,12 @@ export async function listPackages({
     where.tags = { has: tag };
   }
 
-  const orderBy: Prisma.PackageOrderByWithRelationInput =
-    sort === "stars"
-      ? { starCount: "desc" }
-      : sort === "downloads"
-        ? { downloadCount: "desc" }
-        : { createdAt: "desc" };
+  const sortMap: Record<string, Prisma.PackageOrderByWithRelationInput> = {
+    stars: { starCount: "desc" },
+    downloads: { downloadCount: "desc" },
+    recent: { createdAt: "desc" },
+  };
+  const orderBy = sortMap[sort] ?? sortMap.recent;
 
   const [packages, total] = await Promise.all([
     prisma.package.findMany({

@@ -23,12 +23,12 @@ export function Pagination({
     return `${basePath}?${params.toString()}`;
   }
 
-  const pages: (number | "...")[] = [];
+  const items: Array<{ type: "page"; value: number } | { type: "dots"; key: string }> = [];
   for (let i = 1; i <= totalPages; i++) {
     if (i === 1 || i === totalPages || Math.abs(i - currentPage) <= 1) {
-      pages.push(i);
-    } else if (pages[pages.length - 1] !== "...") {
-      pages.push("...");
+      items.push({ type: "page", value: i });
+    } else if (items.length === 0 || items[items.length - 1].type !== "dots") {
+      items.push({ type: "dots", key: `dots-before-${i}` });
     }
   }
 
@@ -42,22 +42,22 @@ export function Pagination({
           Prev
         </Link>
       )}
-      {pages.map((p, i) =>
-        p === "..." ? (
-          <span key={`dots-${i}`} className="px-2 text-text-secondary">
+      {items.map((item) =>
+        item.type === "dots" ? (
+          <span key={item.key} className="px-2 text-text-secondary">
             ...
           </span>
         ) : (
           <Link
-            key={p}
-            href={buildHref(p)}
+            key={item.value}
+            href={buildHref(item.value)}
             className={`rounded-md px-3 py-1.5 text-sm transition-colors ${
-              p === currentPage
+              item.value === currentPage
                 ? "border border-neon-cyan/30 bg-neon-cyan/10 text-neon-cyan"
                 : "border border-glass-border text-text-secondary hover:border-glass-border-hover hover:text-text-primary"
             }`}
           >
-            {p}
+            {item.value}
           </Link>
         ),
       )}

@@ -30,8 +30,12 @@ export function PackageModeration({ packages: initialPackages }: { packages: Pac
     }
   }
 
-  const statusVariant = (s: string) =>
-    s === "ACTIVE" ? "green" : s === "FLAGGED" ? "amber" : "red";
+  const statusVariantMap: Record<string, string> = {
+    ACTIVE: "green",
+    FLAGGED: "amber",
+    REMOVED: "red",
+  };
+  const statusVariant = (s: string) => statusVariantMap[s] ?? "red";
 
   return (
     <div className="overflow-x-auto">
