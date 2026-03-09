@@ -113,6 +113,12 @@ model Version {
   fileSpecs    Json?
   dopsVersion  String?  // "v1" or "v2"
   contextBlock Json?    // v2 context block metadata
+  detection    Json?    // detection config (paths, updateMode)
+  verification Json?    // verification config (structural, binary, severity)
+  scope        Json?    // write scope (allowed path globs)
+  execution    Json?    // execution config (mode, deterministic, idempotent)
+  updateConfig Json?    // update config (strategy, inputSource, injectAs)
+  capabilities Json?    // capabilities (sideEffects, runtime)
 
   createdAt DateTime @default(now())
   package   Package  @relation(fields: [packageId], references: [id], onDelete: Cascade)

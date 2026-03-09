@@ -8,6 +8,8 @@ import {
   ContextBlockSchema,
   PermissionsSchema,
   FileSpecSchema,
+  CapabilitiesSchema,
+  OutputSchemaSchema,
 } from "../dops-schema";
 
 // Helpers to reduce repetition
@@ -26,13 +28,11 @@ describe("MetaSchema", () => {
     expectValid(MetaSchema, { ...validMeta, version: "1.0.0-beta.1" }));
   it("accepts semver with build metadata", () =>
     expectValid(MetaSchema, { ...validMeta, version: "2.1.0+build" }));
-  it("rejects path traversal in version", () =>
-    expectInvalid(MetaSchema, { ...validMeta, version: "../../etc" }));
+  it("accepts non-semver version strings", () =>
+    expectValid(MetaSchema, { ...validMeta, version: "latest" }));
+  it("accepts partial version (1.0)", () =>
+    expectValid(MetaSchema, { ...validMeta, version: "1.0" }));
   it("rejects empty version", () => expectInvalid(MetaSchema, { ...validMeta, version: "" }));
-  it("rejects non-semver version (alpha)", () =>
-    expectInvalid(MetaSchema, { ...validMeta, version: "abc" }));
-  it("rejects partial semver (1.0)", () =>
-    expectInvalid(MetaSchema, { ...validMeta, version: "1.0" }));
   it("accepts valid slug name", () =>
     expectValid(MetaSchema, { ...validMeta, name: "terraform-aws" }));
   it("rejects name with uppercase", () =>
@@ -41,6 +41,10 @@ describe("MetaSchema", () => {
     expectInvalid(MetaSchema, { ...validMeta, name: "1tool" }));
   it("rejects name with special chars", () =>
     expectInvalid(MetaSchema, { ...validMeta, name: "my_tool" }));
+  it("accepts HTTPS icon URL", () =>
+    expectValid(MetaSchema, { ...validMeta, icon: "https://example.com/icon.png" }));
+  it("rejects HTTP icon URL", () =>
+    expectInvalid(MetaSchema, { ...validMeta, icon: "http://example.com/icon.png" }));
 });
 
 describe("RiskSchema", () => {
@@ -148,4 +152,41 @@ describe("FileSpecSchema", () => {
   it("accepts valid file spec", () =>
     expectValid(FileSpecSchema, { path: "output.yaml", format: "yaml" }));
   it("rejects empty path", () => expectInvalid(FileSpecSchema, { path: "", format: "yaml" }));
+});
+
+describe("CapabilitiesSchema", () => {
+  it("accepts valid capabilities", () =>
+    expectValid(CapabilitiesSchema, { sideEffects: "filesystem", runtime: "short" }));
+  it("accepts network side effects", () =>
+    expectValid(CapabilitiesSchema, { sideEffects: "network", runtime: "long" }));
+  it("uses defaults for empty object", () => {
+    const result = CapabilitiesSchema.safeParse({});
+    expect(result.success).toBe(true);
+    expect(result.data?.sideEffects).toBe("filesystem");
+    expect(result.data?.runtime).toBe("short");
+  });
+  it("rejects invalid sideEffects", () =>
+    expectInvalid(CapabilitiesSchema, { sideEffects: "database" }));
+});
+
+describe("OutputSchemaSchema", () => {
+  it("accepts schema with enum and format", () =>
+    expectValid(OutputSchemaSchema, {
+      type: "object",
+      properties: {
+        status: { type: "string", enum: ["active", "inactive"], default: "active" },
+        port: { type: "number", minimum: 1, maximum: 65535 },
+      },
+    }));
+  it("accepts schema with anyOf", () =>
+    expectValid(OutputSchemaSchema, {
+      anyOf: [{ type: "string", format: "date-time" }, { type: "null" }],
+    }));
+  it("accepts schema with pattern and length constraints", () =>
+    expectValid(OutputSchemaSchema, {
+      type: "string",
+      pattern: "^[a-z]+$",
+      minLength: 1,
+      maxLength: 64,
+    }));
 });

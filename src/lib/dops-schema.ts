@@ -46,6 +46,19 @@ export interface OutputSchemaShape {
   properties?: Record<string, OutputSchemaShape>;
   required?: string[];
   items?: OutputSchemaShape;
+  enum?: unknown[];
+  default?: unknown;
+  description?: string;
+  minLength?: number;
+  maxLength?: number;
+  minimum?: number;
+  maximum?: number;
+  pattern?: string;
+  minItems?: number;
+  maxItems?: number;
+  anyOf?: OutputSchemaShape[];
+  oneOf?: OutputSchemaShape[];
+  format?: string;
   [key: string]: unknown;
 }
 
@@ -56,6 +69,19 @@ export const OutputSchemaSchema: z.ZodType<OutputSchemaShape> = z.lazy(() =>
       properties: z.record(z.string(), OutputSchemaSchema).optional(),
       required: z.array(z.string()).optional(),
       items: OutputSchemaSchema.optional(),
+      enum: z.array(z.unknown()).optional(),
+      default: z.unknown().optional(),
+      description: z.string().optional(),
+      minLength: z.number().optional(),
+      maxLength: z.number().optional(),
+      minimum: z.number().optional(),
+      maximum: z.number().optional(),
+      pattern: z.string().optional(),
+      minItems: z.number().optional(),
+      maxItems: z.number().optional(),
+      anyOf: z.array(OutputSchemaSchema).optional(),
+      oneOf: z.array(OutputSchemaSchema).optional(),
+      format: z.string().optional(),
     })
     .passthrough(),
 );
@@ -95,16 +121,18 @@ export const MetaSchema = z.object({
     .min(1)
     .max(64)
     .regex(/^[a-z][a-z0-9-]*$/),
-  version: z
-    .string()
-    .min(1)
-    .regex(/^\d+\.\d+\.\d+([.\-+][a-zA-Z0-9.\-+]*)?$/, "Must be valid semver"),
+  version: z.string().min(1),
   description: z.string().min(1).max(500),
   author: z.string().optional(),
   license: z.string().optional(),
   tags: z.array(z.string()).optional(),
   repository: z.string().optional(),
-  icon: z.string().url().max(2048).optional(),
+  icon: z
+    .string()
+    .url()
+    .max(2048)
+    .refine((url) => url.startsWith("https://"), { message: "Icon URL must use HTTPS" })
+    .optional(),
 });
 
 // Risk
@@ -169,6 +197,12 @@ export const UpdateSchema = z.object({
   injectAs: z.string().default("existingContent"),
 });
 
+// Capabilities
+export const CapabilitiesSchema = z.object({
+  sideEffects: z.enum(["none", "filesystem", "network", "process"]).default("filesystem"),
+  runtime: z.enum(["short", "long"]).default("short"),
+});
+
 // Full frontmatter
 export const DopsFrontmatterSchema = z.object({
   dops: z.literal("v1"),
@@ -188,6 +222,7 @@ export const DopsFrontmatterSchema = z.object({
   risk: RiskSchema.optional(),
   execution: ExecutionSchema.optional(),
   update: UpdateSchema.optional(),
+  capabilities: CapabilitiesSchema.optional(),
 });
 
 export type DopsFrontmatter = z.infer<typeof DopsFrontmatterSchema>;
@@ -228,6 +263,7 @@ export const DopsFrontmatterV2Schema = z.object({
   risk: RiskSchema.optional(),
   execution: ExecutionSchema.optional(),
   update: UpdateSchema.optional(),
+  capabilities: CapabilitiesSchema.optional(),
 });
 
 export type DopsFrontmatterV2 = z.infer<typeof DopsFrontmatterV2Schema>;

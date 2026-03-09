@@ -41,11 +41,14 @@ export async function GET(
   const safeName = pkg.name.replaceAll(/[^\w.-]/g, "_");
   const safeVersion = ver.semver.replaceAll(/[^\w.-]/g, "_");
 
-  return new NextResponse(new Uint8Array(content), {
-    headers: {
-      "Content-Type": "application/octet-stream",
-      "Content-Disposition": `attachment; filename="${safeName}-${safeVersion}.dops"`,
-      "X-Checksum-Sha256": ver.sha256,
-    },
-  });
+  const headers: Record<string, string> = {
+    "Content-Type": "application/octet-stream",
+    "Content-Disposition": `attachment; filename="${safeName}-${safeVersion}.dops"`,
+    "X-Checksum-Sha256": ver.sha256,
+  };
+
+  if (ver.dopsVersion) headers["X-Dops-Version"] = ver.dopsVersion;
+  if (ver.riskLevel) headers["X-Risk-Level"] = ver.riskLevel;
+
+  return new NextResponse(new Uint8Array(content), { headers });
 }

@@ -124,28 +124,38 @@ function buildVersionData(
   isV2: boolean,
   opts: { changelog: string | null; bufferLength: number; hash: string },
 ) {
+  const fm = parsed.frontmatter;
+
   const data = {
-    semver: parsed.frontmatter.meta.version,
+    semver: fm.meta.version,
     changelog: opts.changelog,
     filePath: "",
     fileSize: opts.bufferLength,
     sha256: opts.hash,
-    riskLevel: parsed.frontmatter.risk?.level ?? null,
-    permissions: parsed.frontmatter.permissions ?? undefined,
-    fileSpecs: parsed.frontmatter.files ?? undefined,
+    riskLevel: fm.risk?.level ?? null,
+    permissions: fm.permissions ?? undefined,
+    fileSpecs: fm.files ?? undefined,
     dopsVersion: isV2 ? "v2" : "v1",
+    // Shared optional fields
+    detection: (fm.detection ?? undefined) as Prisma.InputJsonValue | undefined,
+    verification: (fm.verification ?? undefined) as Prisma.InputJsonValue | undefined,
+    scope: (fm.scope ?? undefined) as Prisma.InputJsonValue | undefined,
+    execution: (fm.execution ?? undefined) as Prisma.InputJsonValue | undefined,
+    updateConfig: (fm.update ?? undefined) as Prisma.InputJsonValue | undefined,
+    capabilities: (fm.capabilities ?? undefined) as Prisma.InputJsonValue | undefined,
+    // Version-specific fields
     inputFields: undefined as Prisma.InputJsonValue | undefined,
     outputSpec: undefined as Prisma.InputJsonValue | undefined,
     contextBlock: undefined as Prisma.InputJsonValue | undefined,
   };
 
   if (isV2) {
-    const fm = parsed.frontmatter as { context: unknown };
-    data.contextBlock = fm.context as Prisma.InputJsonValue;
+    const v2fm = fm as { context: unknown };
+    data.contextBlock = v2fm.context as Prisma.InputJsonValue;
   } else {
-    const fm = parsed.frontmatter as { input?: { fields: unknown }; output?: unknown };
-    data.inputFields = (fm.input?.fields ?? undefined) as Prisma.InputJsonValue | undefined;
-    data.outputSpec = (fm.output ?? undefined) as Prisma.InputJsonValue | undefined;
+    const v1fm = fm as { input?: { fields: unknown }; output?: unknown };
+    data.inputFields = (v1fm.input?.fields ?? undefined) as Prisma.InputJsonValue | undefined;
+    data.outputSpec = (v1fm.output ?? undefined) as Prisma.InputJsonValue | undefined;
   }
 
   return data;
