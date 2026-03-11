@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { parseDopsStringAny } from "@/lib/dops-parser";
-import { isV2Module } from "@/lib/dops-schema";
+import { parseDopsString } from "@/lib/dops-parser";
 import { saveDopsFile, sha256 } from "@/lib/storage";
 import { slugify } from "@/lib/utils";
 import { listPackages } from "@/lib/search";
@@ -77,19 +76,26 @@ export async function POST(req: NextRequest) {
   // Use the client-provided hash as the publisher attestation (or fall back to server-computed)
   const hash = clientHash || serverHash;
 
-  // Parse and validate (supports both v1 and v2 formats)
+  // Parse and validate (v2 only — v1 rejected by parser)
   let parsed;
   try {
-    parsed = parseDopsStringAny(content);
+    parsed = parseDopsString(content);
   } catch (err) {
     return NextResponse.json({ error: (err as Error).message }, { status: 400 });
   }
 
+  // Explicit v1 rejection (belt-and-suspenders — parser already rejects v1)
+  if (parsed.frontmatter.dops !== "v2") {
+    return NextResponse.json(
+      { error: "v1 .dops format is no longer supported. Please migrate to v2." },
+      { status: 400 },
+    );
+  }
+
   const { meta } = parsed.frontmatter;
   const slug = slugify(meta.name);
-  const isV2 = isV2Module(parsed);
 
-  const versionData = buildVersionData(parsed, isV2, {
+  const versionData = buildVersionData(parsed, {
     changelog,
     bufferLength: buffer.length,
     hash,
@@ -120,13 +126,12 @@ export async function POST(req: NextRequest) {
 }
 
 function buildVersionData(
-  parsed: ReturnType<typeof parseDopsStringAny>,
-  isV2: boolean,
+  parsed: ReturnType<typeof parseDopsString>,
   opts: { changelog: string | null; bufferLength: number; hash: string },
 ) {
   const fm = parsed.frontmatter;
 
-  const data = {
+  return {
     semver: fm.meta.version,
     changelog: opts.changelog,
     filePath: "",
@@ -135,7 +140,7 @@ function buildVersionData(
     riskLevel: fm.risk?.level ?? null,
     permissions: fm.permissions ?? undefined,
     fileSpecs: fm.files ?? undefined,
-    dopsVersion: isV2 ? "v2" : "v1",
+    dopsVersion: "v2",
     // Shared optional fields
     detection: (fm.detection ?? undefined) as Prisma.InputJsonValue | undefined,
     verification: (fm.verification ?? undefined) as Prisma.InputJsonValue | undefined,
@@ -143,22 +148,9 @@ function buildVersionData(
     execution: (fm.execution ?? undefined) as Prisma.InputJsonValue | undefined,
     updateConfig: (fm.update ?? undefined) as Prisma.InputJsonValue | undefined,
     capabilities: (fm.capabilities ?? undefined) as Prisma.InputJsonValue | undefined,
-    // Version-specific fields
-    inputFields: undefined as Prisma.InputJsonValue | undefined,
-    outputSpec: undefined as Prisma.InputJsonValue | undefined,
-    contextBlock: undefined as Prisma.InputJsonValue | undefined,
+    // v2 context block
+    contextBlock: fm.context as Prisma.InputJsonValue,
   };
-
-  if (isV2) {
-    const v2fm = fm as { context: unknown };
-    data.contextBlock = v2fm.context as Prisma.InputJsonValue;
-  } else {
-    const v1fm = fm as { input?: { fields: unknown }; output?: unknown };
-    data.inputFields = (v1fm.input?.fields ?? undefined) as Prisma.InputJsonValue | undefined;
-    data.outputSpec = (v1fm.output ?? undefined) as Prisma.InputJsonValue | undefined;
-  }
-
-  return data;
 }
 
 async function handleExistingPackage(

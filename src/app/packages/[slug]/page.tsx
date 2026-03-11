@@ -60,9 +60,9 @@ export default async function PackagePage({ params }: Props) {
   if (latestVersion) {
     try {
       const { readDopsFile } = await import("@/lib/storage");
-      const { parseDopsStringAny } = await import("@/lib/dops-parser");
+      const { parseDopsString } = await import("@/lib/dops-parser");
       const content = await readDopsFile(pkg.slug, latestVersion.semver);
-      const parsed = parseDopsStringAny(content.toString("utf-8"));
+      const parsed = parseDopsString(content.toString("utf-8"));
       sections = parsed.sections;
     } catch {
       // File might not exist or be unparseable

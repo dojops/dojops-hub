@@ -34,7 +34,7 @@ describe("storage - path traversal prevention", () => {
 
 describe("storage - round-trip", () => {
   it("saveDopsFile + readDopsFile round-trip works", async () => {
-    const testContent = Buffer.from("dops: v1\nmeta:\n  name: test-roundtrip");
+    const testContent = Buffer.from("dops: v2\nmeta:\n  name: test-roundtrip");
     const testSlug = `test-roundtrip-${Date.now()}`;
     const testVersion = "0.0.1";
 

@@ -1,17 +1,11 @@
 import * as yaml from "js-yaml";
-import {
-  DopsFrontmatterSchema,
-  DopsFrontmatterV2Schema,
-  type DopsModule,
-  type DopsModuleV2,
-  type DopsModuleAny,
-  type MarkdownSections,
-} from "./dops-schema";
+import { DopsFrontmatterSchema, type DopsModule, type MarkdownSections } from "./dops-schema";
 
 const FRONTMATTER_DELIMITER = "---";
 
 /**
- * Parse a .dops file from string content (v1 only, for backward compatibility).
+ * Parse a .dops file from string content (v2 only).
+ * Throws if the content is v1 format or invalid.
  */
 export function parseDopsString(content: string): DopsModule {
   const { frontmatterRaw, body } = splitFrontmatter(content);
@@ -21,6 +15,11 @@ export function parseDopsString(content: string): DopsModule {
     frontmatterData = yaml.load(frontmatterRaw, { schema: yaml.JSON_SCHEMA });
   } catch (err) {
     throw new Error(`Invalid YAML in frontmatter: ${(err as Error).message}`, { cause: err });
+  }
+
+  const version = (frontmatterData as Record<string, unknown>)?.dops;
+  if (version !== "v2") {
+    throw new Error("v1 .dops format is no longer supported. Please migrate to v2.");
   }
 
   const parseResult = DopsFrontmatterSchema.safeParse(frontmatterData);
@@ -36,41 +35,6 @@ export function parseDopsString(content: string): DopsModule {
     sections,
     raw: content,
   };
-}
-
-/**
- * Parse a .dops file from string content, auto-detecting v1 or v2 format.
- */
-export function parseDopsStringAny(content: string): DopsModuleAny {
-  const { frontmatterRaw, body } = splitFrontmatter(content);
-
-  let frontmatterData: unknown;
-  try {
-    frontmatterData = yaml.load(frontmatterRaw, { schema: yaml.JSON_SCHEMA });
-  } catch (err) {
-    throw new Error(`Invalid YAML in frontmatter: ${(err as Error).message}`, { cause: err });
-  }
-
-  const version = (frontmatterData as Record<string, unknown>)?.dops;
-
-  if (version === "v2") {
-    const parseResult = DopsFrontmatterV2Schema.safeParse(frontmatterData);
-    if (!parseResult.success) {
-      const errors = parseResult.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`);
-      throw new Error(`Invalid DOPS v2 frontmatter:\n  ${errors.join("\n  ")}`);
-    }
-    const sections = parseMarkdownSections(body);
-    return { frontmatter: parseResult.data, sections, raw: content } as DopsModuleV2;
-  }
-
-  // Default: v1
-  const parseResult = DopsFrontmatterSchema.safeParse(frontmatterData);
-  if (!parseResult.success) {
-    const errors = parseResult.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`);
-    throw new Error(`Invalid DOPS frontmatter:\n  ${errors.join("\n  ")}`);
-  }
-  const sections = parseMarkdownSections(body);
-  return { frontmatter: parseResult.data, sections, raw: content } as DopsModule;
 }
 
 function splitFrontmatter(content: string): {

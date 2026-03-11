@@ -4,12 +4,10 @@ import {
   MetaSchema,
   RiskSchema,
   DopsFrontmatterSchema,
-  DopsFrontmatterV2Schema,
   ContextBlockSchema,
   PermissionsSchema,
   FileSpecSchema,
   CapabilitiesSchema,
-  OutputSchemaSchema,
 } from "../dops-schema";
 
 // Helpers to reduce repetition
@@ -71,28 +69,7 @@ describe("PermissionsSchema", () => {
   });
 });
 
-describe("DopsFrontmatterSchema (v1)", () => {
-  const validV1 = {
-    dops: "v1",
-    meta: { name: "test-tool", version: "1.0.0", description: "A test tool" },
-    output: { type: "object" },
-    files: [{ path: "output.yaml", format: "yaml" }],
-  };
-
-  it("accepts a complete valid v1 object", () => expectValid(DopsFrontmatterSchema, validV1));
-  it("rejects if dops is not v1", () =>
-    expectInvalid(DopsFrontmatterSchema, { ...validV1, dops: "v2" }));
-  it("rejects if files is empty", () =>
-    expectInvalid(DopsFrontmatterSchema, { ...validV1, files: [] }));
-  it("rejects if meta is missing", () =>
-    expectInvalid(DopsFrontmatterSchema, {
-      dops: "v1",
-      output: { type: "object" },
-      files: [{ path: "output.yaml", format: "yaml" }],
-    }));
-});
-
-describe("DopsFrontmatterV2Schema", () => {
+describe("DopsFrontmatterSchema", () => {
   const validV2 = {
     dops: "v2",
     meta: { name: "test-tool-v2", version: "2.0.0", description: "A v2 test tool" },
@@ -105,13 +82,21 @@ describe("DopsFrontmatterV2Schema", () => {
     files: [{ path: "docker-compose.yml" }],
   };
 
-  it("accepts a complete valid v2 object", () => expectValid(DopsFrontmatterV2Schema, validV2));
+  it("accepts a complete valid v2 object", () => expectValid(DopsFrontmatterSchema, validV2));
   it("rejects if dops is not v2", () =>
-    expectInvalid(DopsFrontmatterV2Schema, { ...validV2, dops: "v1" }));
+    expectInvalid(DopsFrontmatterSchema, { ...validV2, dops: "v1" }));
   it("rejects if context is missing", () =>
-    expectInvalid(DopsFrontmatterV2Schema, {
+    expectInvalid(DopsFrontmatterSchema, {
       dops: "v2",
       meta: { name: "test-tool-v2", version: "2.0.0", description: "A v2 test tool" },
+      files: [{ path: "docker-compose.yml" }],
+    }));
+  it("rejects if files is empty", () =>
+    expectInvalid(DopsFrontmatterSchema, { ...validV2, files: [] }));
+  it("rejects if meta is missing", () =>
+    expectInvalid(DopsFrontmatterSchema, {
+      dops: "v2",
+      context: validV2.context,
       files: [{ path: "docker-compose.yml" }],
     }));
 });
@@ -149,9 +134,11 @@ describe("ContextBlockSchema", () => {
 });
 
 describe("FileSpecSchema", () => {
-  it("accepts valid file spec", () =>
-    expectValid(FileSpecSchema, { path: "output.yaml", format: "yaml" }));
-  it("rejects empty path", () => expectInvalid(FileSpecSchema, { path: "", format: "yaml" }));
+  it("accepts valid file spec with path only", () =>
+    expectValid(FileSpecSchema, { path: "docker-compose.yml" }));
+  it("accepts valid file spec with raw format", () =>
+    expectValid(FileSpecSchema, { path: "output.yaml", format: "raw" }));
+  it("rejects empty path", () => expectInvalid(FileSpecSchema, { path: "" }));
 });
 
 describe("CapabilitiesSchema", () => {
@@ -167,26 +154,4 @@ describe("CapabilitiesSchema", () => {
   });
   it("rejects invalid sideEffects", () =>
     expectInvalid(CapabilitiesSchema, { sideEffects: "database" }));
-});
-
-describe("OutputSchemaSchema", () => {
-  it("accepts schema with enum and format", () =>
-    expectValid(OutputSchemaSchema, {
-      type: "object",
-      properties: {
-        status: { type: "string", enum: ["active", "inactive"], default: "active" },
-        port: { type: "number", minimum: 1, maximum: 65535 },
-      },
-    }));
-  it("accepts schema with anyOf", () =>
-    expectValid(OutputSchemaSchema, {
-      anyOf: [{ type: "string", format: "date-time" }, { type: "null" }],
-    }));
-  it("accepts schema with pattern and length constraints", () =>
-    expectValid(OutputSchemaSchema, {
-      type: "string",
-      pattern: "^[a-z]+$",
-      minLength: 1,
-      maxLength: 64,
-    }));
 });
