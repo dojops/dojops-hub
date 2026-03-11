@@ -18,7 +18,7 @@ export function IntegrityHash({ hash }: Readonly<IntegrityHashProps>) {
   };
 
   return (
-    <div className="rounded border border-glass-border bg-surface-elevated/50 p-3">
+    <div className="rounded-sm border border-border-primary bg-bg-secondary p-3">
       <div className="flex items-center gap-2 mb-1">
         <svg
           width="14"
@@ -27,7 +27,7 @@ export function IntegrityHash({ hash }: Readonly<IntegrityHashProps>) {
           fill="none"
           stroke="currentColor"
           strokeWidth="2"
-          className="text-neon-green shrink-0"
+          className="text-success-fg shrink-0"
         >
           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
         </svg>
@@ -44,8 +44,8 @@ export function IntegrityHash({ hash }: Readonly<IntegrityHashProps>) {
           copied={copied}
           onCopy={handleCopy}
           size={14}
-          className="shrink-0 rounded px-2 py-1 text-xs text-text-secondary hover:text-text-primary hover:bg-glass-border/50 transition-colors cursor-pointer"
-          copiedIconClassName="text-neon-green"
+          className="shrink-0 rounded-sm px-2 py-1 text-xs text-text-tertiary hover:text-text-primary hover:bg-bg-card transition-colors cursor-pointer"
+          copiedIconClassName="text-success-fg"
           title="Copy full hash"
         />
       </div>

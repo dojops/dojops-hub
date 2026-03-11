@@ -24,10 +24,8 @@ export function DopsPreview({ sections }: Readonly<DopsPreviewProps>) {
       {parts.map(({ title, content }) => (
         <div key={title}>
           <h3 className="text-sm font-semibold text-text-primary mb-2">{title}</h3>
-          <div className="rounded-lg border border-glass-border bg-surface p-4">
-            <pre className="whitespace-pre-wrap font-mono text-xs text-text-secondary leading-relaxed">
-              {content}
-            </pre>
+          <div className="terminal">
+            <pre className="whitespace-pre-wrap text-xs leading-relaxed">{content}</pre>
           </div>
         </div>
       ))}

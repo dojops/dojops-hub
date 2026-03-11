@@ -23,10 +23,10 @@ interface PackageCardProps {
 export function PackageCard({ pkg }: Readonly<PackageCardProps>) {
   return (
     <Link href={`/packages/${pkg.slug}`}>
-      <GlowCard as="article" className="h-full">
+      <GlowCard as="article" className="h-full max-w-sm p-4">
         <div className="flex flex-col gap-3">
           <div>
-            <h3 className="font-mono text-sm font-semibold text-neon-cyan">{pkg.name}</h3>
+            <h3 className="font-mono text-sm font-semibold text-text-primary">{pkg.name}</h3>
             <p className="mt-1 text-sm text-text-secondary line-clamp-2">{pkg.description}</p>
           </div>
 
@@ -38,7 +38,7 @@ export function PackageCard({ pkg }: Readonly<PackageCardProps>) {
             </div>
           )}
 
-          <div className="mt-auto flex items-center justify-between pt-2 text-xs text-text-secondary">
+          <div className="mt-auto flex items-center justify-between pt-2 text-xs text-text-tertiary">
             <span className="flex items-center gap-1.5">
               {pkg.author.avatarUrl && (
                 <img

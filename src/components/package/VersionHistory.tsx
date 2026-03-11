@@ -14,7 +14,10 @@ export function VersionHistory({ versions }: Readonly<{ versions: Version[] }>) 
   return (
     <div className="space-y-3">
       {versions.map((v, i) => (
-        <div key={v.id} className="rounded-lg border border-glass-border bg-surface p-4">
+        <div
+          key={v.id}
+          className="rounded-lg border border-border-primary bg-bg-card p-4 hover:bg-bg-card-hover transition-colors"
+        >
           <div className="flex items-center gap-3">
             <Badge variant={i === 0 ? "cyan" : "default"}>v{v.semver}</Badge>
             <span className="text-xs text-text-secondary">{formatDate(v.createdAt)}</span>

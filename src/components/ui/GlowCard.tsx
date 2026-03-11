@@ -8,7 +8,9 @@ interface GlowCardProps {
 
 export function GlowCard({ children, className = "", as: Tag = "div" }: Readonly<GlowCardProps>) {
   return (
-    <Tag className={`glow-card rounded-xl border border-glass-border bg-surface p-6 ${className}`}>
+    <Tag
+      className={`bg-bg-card border border-border-primary rounded-[14px] shadow-[var(--shadow-sm)] hover:shadow-[var(--shadow-md)] hover:bg-bg-card-hover transition-all duration-200 ${className}`}
+    >
       {children}
     </Tag>
   );

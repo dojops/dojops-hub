@@ -14,8 +14,8 @@ export function InstallCommand({ name }: Readonly<{ name: string }>) {
   }
 
   return (
-    <div className="flex items-center gap-2 rounded-lg border border-glass-border bg-surface px-4 py-2.5">
-      <code className="flex-1 font-mono text-sm text-text-primary">$ {command}</code>
+    <div className="terminal flex items-center gap-2 px-4 py-2.5">
+      <code className="flex-1 font-mono text-sm">$ {command}</code>
       <CopyIconButton copied={copied} onCopy={handleCopy} ariaLabel="Copy install command" />
     </div>
   );

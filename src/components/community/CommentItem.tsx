@@ -19,7 +19,7 @@ interface CommentItemProps {
 
 export function CommentItem({ comment }: Readonly<CommentItemProps>) {
   return (
-    <div className="rounded-lg border border-glass-border bg-surface p-4">
+    <div className="rounded-lg border border-border-primary bg-bg-card p-4">
       <div className="flex items-center gap-2 mb-2">
         <Link href={`/users/${comment.user.username}`} className="flex items-center gap-2">
           {comment.user.avatarUrl && (

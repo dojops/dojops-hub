@@ -160,7 +160,7 @@ ALTER TABLE "Comment" ADD CONSTRAINT "Comment_packageId_fkey" FOREIGN KEY ("pack
 -- Full-text search trigger
 CREATE OR REPLACE FUNCTION package_search_vector_update() RETURNS trigger AS $$
 DECLARE
-  lang CONSTANT text := 'english';
+  lang CONSTANT regconfig := 'english';
 BEGIN
   NEW."searchVector" :=
     setweight(to_tsvector(lang, coalesce(NEW.name, '')), 'A') ||

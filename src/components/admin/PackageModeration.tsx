@@ -43,7 +43,7 @@ export function PackageModeration({
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
         <thead>
-          <tr className="border-b border-glass-border text-left text-text-secondary">
+          <tr className="border-b border-border-primary bg-bg-secondary text-left text-text-secondary font-semibold text-sm">
             <th className="pb-3 pr-4">Package</th>
             <th className="pb-3 pr-4">Author</th>
             <th className="pb-3 pr-4">Status</th>
@@ -53,8 +53,11 @@ export function PackageModeration({
         </thead>
         <tbody>
           {packages.map((pkg) => (
-            <tr key={pkg.id} className="border-b border-glass-border/50">
-              <td className="py-3 pr-4 font-mono text-neon-cyan">{pkg.name}</td>
+            <tr
+              key={pkg.id}
+              className="border-b border-border-primary bg-bg-card hover:bg-bg-card-hover transition-colors"
+            >
+              <td className="py-3 pr-4 font-mono text-text-primary">{pkg.name}</td>
               <td className="py-3 pr-4 text-text-secondary">{pkg.author.username}</td>
               <td className="py-3 pr-4">
                 <Badge variant={statusVariant(pkg.status) as "green" | "amber" | "red"}>

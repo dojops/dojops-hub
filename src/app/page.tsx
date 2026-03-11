@@ -24,33 +24,26 @@ export default async function HomePage() {
   ]);
 
   return (
-    <div>
+    <div className="bg-bg-primary">
       {/* Hero */}
-      <section className="relative overflow-hidden px-4 pb-16 pt-24 sm:px-6 lg:px-8">
+      <section className="px-4 pb-16 pt-24 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-4xl text-center">
-          <h1 className="animate-fade-in-up text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-            <span className="text-gradient-cyan">DojOps Modules</span>
+          <h1 className="text-4xl font-bold tracking-tight text-text-primary sm:text-5xl lg:text-6xl">
+            DojOps Modules
             <br />
-            <span className="text-text-primary">Marketplace</span>
+            <span className="text-accent">Marketplace</span>
           </h1>
-          <p
-            className="mx-auto mt-6 max-w-2xl text-lg text-text-secondary animate-fade-in-up"
-            style={{ animationDelay: "0.1s" }}
-          >
+          <p className="mx-auto mt-6 max-w-2xl text-lg text-text-secondary">
             Discover, publish, and install{" "}
-            <code className="font-mono text-neon-cyan-dim">.dops</code> modules for DojOps.
-            Community-driven DevOps automation.
+            <code className="rounded-sm bg-bg-secondary px-1.5 py-0.5 font-mono text-sm text-text-primary">
+              .dops
+            </code>{" "}
+            modules for DojOps. Community-driven DevOps automation.
           </p>
-          <div
-            className="relative z-10 mx-auto mt-8 max-w-md animate-fade-in-up"
-            style={{ animationDelay: "0.2s" }}
-          >
+          <div className="relative z-10 mx-auto mt-8 max-w-md">
             <SearchBar />
           </div>
-          <div
-            className="mt-6 flex items-center justify-center gap-4 animate-fade-in-up"
-            style={{ animationDelay: "0.3s" }}
-          >
+          <div className="mt-6 flex items-center justify-center gap-4">
             <Link href="/explore">
               <Button variant="primary" size="lg">
                 Explore Modules
@@ -62,15 +55,15 @@ export default async function HomePage() {
               </Button>
             </Link>
           </div>
-          <div className="mt-8 animate-fade-in-up" style={{ animationDelay: "0.4s" }}>
-            <code className="rounded-lg border border-glass-border bg-surface px-4 py-2 font-mono text-sm text-text-secondary">
+          <div className="mt-8">
+            <code className="rounded-md border border-border-primary bg-bg-secondary px-4 py-2 font-mono text-sm text-text-secondary">
               $ dojops modules install &lt;module-name&gt;
             </code>
           </div>
         </div>
       </section>
 
-      <div className="section-divider mx-auto max-w-5xl" />
+      <div className="mx-auto max-w-5xl border-t border-border-primary" />
 
       {/* Featured */}
       {featuredPackages.length > 0 && (
@@ -101,7 +94,7 @@ export default async function HomePage() {
       {/* Empty state for fresh installs */}
       {featuredPackages.length === 0 && recentPackages.length === 0 && (
         <section className="mx-auto max-w-7xl px-4 py-16 text-center sm:px-6 lg:px-8">
-          <div className="rounded-xl border border-glass-border bg-surface p-12">
+          <div className="rounded-lg border border-border-primary bg-bg-card p-12 shadow-[var(--shadow-sm)]">
             <h2 className="text-xl font-semibold text-text-primary">No modules yet</h2>
             <p className="mt-2 text-text-secondary">
               Be the first to publish a .dops module to the marketplace.

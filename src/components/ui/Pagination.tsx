@@ -37,7 +37,7 @@ export function Pagination({
       {currentPage > 1 && (
         <Link
           href={buildHref(currentPage - 1)}
-          className="rounded-md border border-glass-border px-3 py-1.5 text-sm text-text-secondary hover:border-glass-border-hover hover:text-text-primary"
+          className="rounded-md border border-border-primary px-3 py-1.5 text-sm text-text-secondary hover:bg-bg-card-hover hover:text-text-primary transition-colors"
         >
           Prev
         </Link>
@@ -53,8 +53,8 @@ export function Pagination({
             href={buildHref(item.value)}
             className={`rounded-md px-3 py-1.5 text-sm transition-colors ${
               item.value === currentPage
-                ? "border border-neon-cyan/30 bg-neon-cyan/10 text-neon-cyan"
-                : "border border-glass-border text-text-secondary hover:border-glass-border-hover hover:text-text-primary"
+                ? "bg-accent-subtle text-accent-text"
+                : "border border-border-primary text-text-secondary hover:bg-bg-card-hover hover:text-text-primary"
             }`}
           >
             {item.value}
@@ -64,7 +64,7 @@ export function Pagination({
       {currentPage < totalPages && (
         <Link
           href={buildHref(currentPage + 1)}
-          className="rounded-md border border-glass-border px-3 py-1.5 text-sm text-text-secondary hover:border-glass-border-hover hover:text-text-primary"
+          className="rounded-md border border-border-primary px-3 py-1.5 text-sm text-text-secondary hover:bg-bg-card-hover hover:text-text-primary transition-colors"
         >
           Next
         </Link>

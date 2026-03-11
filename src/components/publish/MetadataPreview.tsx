@@ -18,11 +18,11 @@ interface MetadataPreviewProps {
 
 export function MetadataPreview({ meta }: Readonly<MetadataPreviewProps>) {
   return (
-    <div className="rounded-lg border border-glass-border bg-surface p-4">
+    <div className="rounded-lg border border-border-primary bg-bg-card p-4">
       <h3 className="text-sm font-medium text-text-secondary mb-3">Preview</h3>
       <div className="space-y-2">
         <div className="flex items-center gap-2">
-          <span className="font-mono text-sm font-semibold text-neon-cyan">{meta.name}</span>
+          <span className="font-mono text-sm font-semibold text-text-primary">{meta.name}</span>
           <Badge variant="cyan">v{meta.version}</Badge>
           {meta.dopsVersion && <Badge variant="default">{meta.dopsVersion}</Badge>}
           {meta.riskLevel && <RiskBadge level={meta.riskLevel} />}

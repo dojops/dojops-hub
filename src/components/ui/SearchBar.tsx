@@ -76,18 +76,18 @@ export function SearchBar({ className = "" }: Readonly<{ className?: string }>) 
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search modules..."
-            className="w-full rounded-lg border border-glass-border bg-surface py-2 pl-10 pr-4 text-sm text-text-primary placeholder:text-text-secondary/50 focus:border-neon-cyan/30 focus:outline-none focus:ring-1 focus:ring-neon-cyan/20"
+            className="w-full bg-bg-card border border-border-secondary rounded-sm h-[38px] pl-10 pr-4 text-sm text-text-primary placeholder:text-text-tertiary focus:outline-none"
           />
         </div>
       </form>
       {open && results.length > 0 && (
-        <div className="absolute top-full z-50 mt-1 w-full rounded-lg border border-glass-border bg-surface-elevated shadow-lg">
+        <div className="absolute top-full z-50 mt-1 w-full bg-bg-card border border-border-primary rounded-lg shadow-[var(--shadow-md)]">
           {results.map((r) => (
             <Link
               key={r.slug}
               href={`/packages/${r.slug}`}
               onClick={() => setOpen(false)}
-              className="block px-4 py-3 transition-colors hover:bg-surface first:rounded-t-lg last:rounded-b-lg"
+              className="block px-4 py-3 transition-colors hover:bg-bg-card-hover first:rounded-t-lg last:rounded-b-lg"
             >
               <div className="text-sm font-medium text-text-primary">{r.name}</div>
               <div className="text-xs text-text-secondary line-clamp-1">{r.description}</div>

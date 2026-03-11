@@ -14,7 +14,7 @@ export function CopyIconButton({
   copied,
   onCopy,
   size = 16,
-  className = "shrink-0 text-text-secondary transition-colors hover:text-neon-cyan",
+  className = "shrink-0 text-text-secondary transition-colors hover:text-accent",
   copiedIconClassName,
   ariaLabel,
   title,

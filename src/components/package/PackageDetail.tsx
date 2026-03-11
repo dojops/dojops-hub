@@ -51,7 +51,7 @@ export function PackageDetail({ pkg, latestVersion, totalVersions }: Readonly<Pa
       <div>
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold font-mono text-neon-cyan">{pkg.name}</h1>
+            <h1 className="text-3xl font-bold font-mono text-text-primary">{pkg.name}</h1>
             <p className="mt-2 text-text-secondary">{pkg.description}</p>
           </div>
           <div className="flex items-center gap-4 text-sm text-text-secondary shrink-0">
@@ -118,7 +118,7 @@ export function PackageDetail({ pkg, latestVersion, totalVersions }: Readonly<Pa
 
       {/* Version info */}
       {latestVersion && (
-        <div className="rounded-lg border border-glass-border bg-surface p-4 space-y-3">
+        <div className="rounded-lg border border-border-primary bg-bg-card p-4 space-y-3">
           <div className="flex items-center gap-3">
             <Badge variant="cyan">v{latestVersion.semver}</Badge>
             {latestVersion.dopsVersion && (
@@ -200,7 +200,7 @@ export function PackageDetail({ pkg, latestVersion, totalVersions }: Readonly<Pa
                   {(latestVersion.fileSpecs as Array<{ path: string }>).map((f) => (
                     <code
                       key={f.path}
-                      className="rounded bg-surface-elevated px-2 py-0.5 font-mono text-xs text-neon-cyan-dim"
+                      className="rounded-sm bg-bg-secondary px-2 py-0.5 font-mono text-xs text-text-secondary"
                     >
                       {f.path}
                     </code>
@@ -212,7 +212,7 @@ export function PackageDetail({ pkg, latestVersion, totalVersions }: Readonly<Pa
           <div className="flex items-center gap-3">
             <Link
               href={`/packages/${pkg.slug}/versions`}
-              className="text-xs text-neon-cyan hover:underline"
+              className="text-xs text-accent hover:underline"
             >
               {totalVersions} version{totalVersions === 1 ? "" : "s"}
             </Link>

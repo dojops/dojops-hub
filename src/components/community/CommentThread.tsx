@@ -73,9 +73,9 @@ export function CommentThread({
             rows={3}
             maxLength={2000}
             placeholder="Leave a comment..."
-            className="w-full rounded-lg border border-glass-border bg-surface px-4 py-2 text-sm text-text-primary placeholder:text-text-secondary/50 focus:border-neon-cyan/30 focus:outline-none"
+            className="w-full rounded-lg border border-border-secondary bg-bg-card px-4 py-2 text-sm text-text-primary placeholder:text-text-tertiary focus:border-accent-border focus:outline-none transition-colors"
           />
-          {error && <p className="mt-1 text-xs text-red-400">{error}</p>}
+          {error && <p className="mt-1 text-xs text-error-fg">{error}</p>}
           <Button type="submit" size="sm" disabled={!body.trim() || loading} className="mt-2">
             {loading ? "Posting..." : "Post Comment"}
           </Button>

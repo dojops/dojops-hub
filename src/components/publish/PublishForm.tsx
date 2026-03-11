@@ -101,7 +101,7 @@ export function PublishForm() {
         <button
           type="button"
           onClick={() => fileRef.current?.click()}
-          className="w-full cursor-pointer rounded-lg border-2 border-dashed border-glass-border bg-surface p-8 text-center transition-colors hover:border-glass-border-hover"
+          className="w-full cursor-pointer rounded-lg border-2 border-dashed border-border-secondary bg-bg-secondary p-8 text-center transition-colors hover:border-border-primary hover:bg-bg-card"
         >
           <input
             ref={fileRef}
@@ -113,7 +113,7 @@ export function PublishForm() {
           />
           {file ? (
             <div>
-              <p className="font-mono text-sm text-neon-cyan">{file.name}</p>
+              <p className="font-mono text-sm text-accent">{file.name}</p>
               <p className="mt-1 text-xs text-text-secondary">{(file.size / 1024).toFixed(1)} KB</p>
             </div>
           ) : (
@@ -147,12 +147,12 @@ export function PublishForm() {
           onChange={(e) => setChangelog(e.target.value)}
           rows={3}
           placeholder="What changed in this version?"
-          className="w-full rounded-lg border border-glass-border bg-surface px-4 py-2 text-sm text-text-primary placeholder:text-text-secondary/50 focus:border-neon-cyan/30 focus:outline-none"
+          className="w-full rounded-lg border border-border-secondary bg-bg-card px-4 py-2 text-sm text-text-primary placeholder:text-text-tertiary focus:border-accent-border focus:outline-none transition-colors"
         />
       </div>
 
       {error && (
-        <div className="rounded-lg border border-red-500/20 bg-red-500/5 px-4 py-3 text-sm text-red-400">
+        <div className="rounded-lg border border-error-fg/20 bg-error-bg px-4 py-3 text-sm text-error-fg">
           {error}
         </div>
       )}

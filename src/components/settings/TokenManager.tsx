@@ -97,7 +97,7 @@ export function TokenManager({ initialTokens }: Readonly<TokenManagerProps>) {
   return (
     <div className="space-y-6">
       {/* Create form */}
-      <GlowCard>
+      <GlowCard className="p-4">
         <h2 className="mb-4 text-sm font-medium text-text-primary">Generate new token</h2>
         <form onSubmit={handleCreate} className="space-y-4">
           <div className="flex flex-col gap-4 sm:flex-row">
@@ -108,12 +108,12 @@ export function TokenManager({ initialTokens }: Readonly<TokenManagerProps>) {
               onChange={(e) => setName(e.target.value)}
               maxLength={50}
               required
-              className="flex-1 rounded-lg border border-glass-border bg-surface-elevated px-3 py-2 text-sm text-text-primary placeholder:text-text-secondary/50 focus:border-neon-cyan/30 focus:outline-none"
+              className="flex-1 rounded-lg border border-border-secondary bg-bg-secondary px-3 py-2 text-sm text-text-primary placeholder:text-text-tertiary focus:border-accent-border focus:outline-none transition-colors"
             />
             <select
               value={expiration}
               onChange={(e) => setExpiration(e.target.value)}
-              className="rounded-lg border border-glass-border bg-surface-elevated px-3 py-2 text-sm text-text-primary focus:border-neon-cyan/30 focus:outline-none"
+              className="rounded-lg border border-border-secondary bg-bg-secondary px-3 py-2 text-sm text-text-primary focus:border-accent-border focus:outline-none transition-colors"
             >
               <option value="1month">1 month</option>
               <option value="3months">3 months</option>
@@ -122,22 +122,22 @@ export function TokenManager({ initialTokens }: Readonly<TokenManagerProps>) {
             <button
               type="submit"
               disabled={creating || !name.trim()}
-              className="shrink-0 rounded-lg border border-neon-cyan/20 bg-neon-cyan/10 px-4 py-2 text-sm font-medium text-neon-cyan transition-all hover:bg-neon-cyan/20 disabled:cursor-not-allowed disabled:opacity-50"
+              className="shrink-0 rounded-lg border border-accent-border bg-accent-subtle px-4 py-2 text-sm font-medium text-accent-text transition-all hover:bg-accent/20 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {creating ? "Generating..." : "Generate token"}
             </button>
           </div>
-          {error && <p className="text-sm text-red-400">{error}</p>}
+          {error && <p className="text-sm text-error-fg">{error}</p>}
         </form>
       </GlowCard>
 
       {/* One-time token display */}
       {newRawToken && (
-        <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-4">
-          <p className="mb-2 text-sm font-medium text-emerald-400">
+        <div className="rounded-lg border border-success-fg/30 bg-success-bg p-4">
+          <p className="mb-2 text-sm font-medium text-success-fg">
             Copy this token now. You won&apos;t be able to see it again.
           </p>
-          <div className="flex items-center gap-2 rounded-lg border border-glass-border bg-surface px-4 py-2.5">
+          <div className="flex items-center gap-2 rounded-lg border border-border-primary bg-bg-secondary px-4 py-2.5">
             <code className="flex-1 break-all font-mono text-sm text-text-primary">
               {newRawToken}
             </code>
@@ -149,7 +149,7 @@ export function TokenManager({ initialTokens }: Readonly<TokenManagerProps>) {
           </div>
           <p className="mt-2 text-xs text-text-secondary">
             Use this token with:{" "}
-            <code className="text-neon-cyan/80">
+            <code className="font-mono text-text-secondary">
               export DOJOPS_HUB_TOKEN=&quot;{newRawToken.slice(0, 12)}...&quot;
             </code>
           </p>
@@ -160,7 +160,7 @@ export function TokenManager({ initialTokens }: Readonly<TokenManagerProps>) {
       {tokens.length > 0 ? (
         <div className="space-y-3">
           {tokens.map((token) => (
-            <GlowCard key={token.id}>
+            <GlowCard key={token.id} className="p-4">
               <div className="flex items-start justify-between gap-4">
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
@@ -169,7 +169,7 @@ export function TokenManager({ initialTokens }: Readonly<TokenManagerProps>) {
                   </div>
                   <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-xs text-text-secondary">
                     <span>
-                      <code className="text-neon-cyan/60">{token.tokenPrefix}...</code>
+                      <code className="font-mono text-text-tertiary">{token.tokenPrefix}...</code>
                     </span>
                     <span>Created {formatDate(new Date(token.createdAt))}</span>
                     {token.lastUsedAt && (
@@ -181,7 +181,7 @@ export function TokenManager({ initialTokens }: Readonly<TokenManagerProps>) {
                 <button
                   onClick={() => handleRevoke(token.id)}
                   disabled={revoking === token.id}
-                  className="shrink-0 rounded-lg border border-red-500/20 px-3 py-1.5 text-xs font-medium text-red-400 transition-all hover:bg-red-500/10 disabled:opacity-50"
+                  className="shrink-0 rounded-lg bg-error-fg px-3 py-1.5 text-xs font-medium text-white transition-all hover:opacity-90 disabled:opacity-50"
                 >
                   {revoking === token.id ? "Revoking..." : "Revoke"}
                 </button>

@@ -23,7 +23,7 @@ export function UserProfile({ user, starCount }: Readonly<UserProfileProps>) {
           alt={user.username}
           width={80}
           height={80}
-          className="rounded-full border border-glass-border"
+          className="rounded-full border border-border-primary"
         />
       )}
       <div>
