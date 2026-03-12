@@ -297,6 +297,25 @@ body {
   animation: pulse-skeleton 1.5s ease-in-out infinite;
 }
 
+/* ======== NAV LINK HOVER ======== */
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 1px;
+  background: var(--accent);
+  transition:
+    width 0.25s ease,
+    left 0.25s ease;
+}
+.nav-link:hover::after {
+  width: 60%;
+  left: 20%;
+}
+
 /* ======== SCROLLBAR ======== */
 
 * {
@@ -330,6 +349,9 @@ body {
   .animate-slide-down {
     animation: none !important;
     opacity: 1 !important;
+  }
+  .nav-link::after {
+    transition: none !important;
   }
   * {
     transition-duration: 0.01ms !important;
