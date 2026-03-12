@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     template: "%s | DojOps Hub",
   },
   description:
-    "Discover, publish, and install .dops DevOps modules for DojOps. The community marketplace for AI-powered infrastructure automation.",
+    "Find and share .dops modules for DojOps. Open-source DevOps automation, ready to install.",
   keywords: ["DojOps", "DevOps", "modules", "marketplace", "automation", "infrastructure"],
   icons: { icon: "/dojops-favicon.png" },
 };

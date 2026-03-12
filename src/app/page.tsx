@@ -34,11 +34,11 @@ export default async function HomePage() {
             <span className="text-gradient-brand">Marketplace</span>
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-sm text-text-secondary sm:mt-6 sm:text-lg">
-            Discover, publish, and install{" "}
+            Find, share, and install{" "}
             <code className="rounded-sm bg-bg-secondary px-1.5 py-0.5 font-mono text-xs text-text-primary sm:text-sm">
               .dops
             </code>{" "}
-            modules for DojOps. Community-driven DevOps automation.
+            modules for DojOps.
           </p>
           <div className="relative z-10 mx-auto mt-6 max-w-md sm:mt-8">
             <SearchBar />
@@ -68,7 +68,7 @@ export default async function HomePage() {
       {/* Featured */}
       {featuredPackages.length > 0 && (
         <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-          <SectionHeading title="Featured Modules" subtitle="Most starred by the community" />
+          <SectionHeading title="Featured Modules" subtitle="Most starred" />
           <PackageGrid packages={featuredPackages} />
           <div className="mt-8 text-center">
             <Link href="/explore?sort=stars">
@@ -81,7 +81,7 @@ export default async function HomePage() {
       {/* Recent */}
       {recentPackages.length > 0 && (
         <section className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
-          <SectionHeading title="Recently Published" subtitle="Latest modules from the community" />
+          <SectionHeading title="Recently Published" subtitle="Just added" />
           <PackageGrid packages={recentPackages} />
           <div className="mt-8 text-center">
             <Link href="/explore?sort=recent">
