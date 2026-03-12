@@ -54,4 +54,5 @@ export const RATE_LIMITS = {
   comment: { maxRequests: 10, windowMs: 60_000 }, // 10/min
   search: { maxRequests: 60, windowMs: 60_000 }, // 60/min
   tokenCreate: { maxRequests: 5, windowMs: 3_600_000 }, // 5/hour
+  newsletter: { maxRequests: 5, windowMs: 3_600_000 }, // 5/hour
 } as const;

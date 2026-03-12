@@ -25,6 +25,12 @@ services:
       NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
       GITHUB_ID: ${GITHUB_ID}
       GITHUB_SECRET: ${GITHUB_SECRET}
+      SMTP_HOST: ${SMTP_HOST:-mail.privateemail.com}
+      SMTP_PORT: ${SMTP_PORT:-465}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASS: ${SMTP_PASS}
+      SMTP_FROM: ${SMTP_FROM:-${SMTP_USER}}
+      CORS_ORIGIN: ${CORS_ORIGIN:-https://dojops.ai}
     volumes:
       - uploads:/app/uploads
     depends_on:

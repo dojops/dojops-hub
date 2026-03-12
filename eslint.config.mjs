@@ -12,6 +12,10 @@ export default tseslint.config(
     rules: { ...nextPlugin.configs.recommended.rules },
   },
   {
+    files: ["*.config.mjs", "*.config.js"],
+    languageOptions: { globals: { process: "readonly" } },
+  },
+  {
     ignores: ["**/node_modules/", ".next/", "out/", "prisma/migrations/", "next-env.d.ts"],
   },
 );
