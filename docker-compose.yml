@@ -29,7 +29,7 @@ services:
       SMTP_PORT: ${SMTP_PORT:-465}
       SMTP_USER: ${SMTP_USER}
       SMTP_PASS: ${SMTP_PASS}
-      SMTP_FROM: ${SMTP_FROM:-${SMTP_USER}}
+      SMTP_FROM: ${SMTP_FROM:-contact@dojops.ai}
       CORS_ORIGIN: ${CORS_ORIGIN:-https://dojops.ai}
     volumes:
       - uploads:/app/uploads
