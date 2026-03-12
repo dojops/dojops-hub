@@ -18,7 +18,7 @@ export async function sendWelcomeEmail(to: string): Promise<void> {
   await transport.sendMail({
     from: `"DojOps" <${FROM}>`,
     to,
-    subject: "Welcome to DojOps — You're In!",
+    subject: "Welcome to DojOps You're In!",
     html: welcomeHtml(),
     text: welcomeText(),
   });
@@ -60,7 +60,7 @@ function welcomeHtml(): string {
             Welcome to DojOps!
           </h1>
           <p style="margin:0 0 24px;font-size:15px;line-height:1.6;color:#7b8ba3;text-align:center">
-            Thanks for subscribing. You'll receive updates on new modules, provider integrations, and releases — straight to your inbox.
+            Thanks for subscribing. You'll receive updates on new modules, provider integrations, and releases straight to your inbox.
           </p>
           <!-- Install box -->
           <div style="background:#161921;border:1px solid #2a2d37;border-radius:10px;padding:16px 20px;margin-bottom:24px">
