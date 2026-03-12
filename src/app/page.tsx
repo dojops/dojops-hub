@@ -26,37 +26,37 @@ export default async function HomePage() {
   return (
     <div className="bg-bg-primary">
       {/* Hero */}
-      <section className="px-4 pb-16 pt-24 sm:px-6 lg:px-8">
+      <section className="px-4 pb-12 pt-16 sm:pb-16 sm:pt-24 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-4xl text-center">
-          <h1 className="text-4xl font-bold tracking-tight text-text-primary sm:text-5xl lg:text-6xl">
+          <h1 className="text-2xl font-bold tracking-tight text-text-primary sm:text-4xl lg:text-5xl">
             DojOps Modules
             <br />
-            <span className="text-accent">Marketplace</span>
+            <span className="text-gradient-brand">Marketplace</span>
           </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-text-secondary">
+          <p className="mx-auto mt-4 max-w-2xl text-sm text-text-secondary sm:mt-6 sm:text-lg">
             Discover, publish, and install{" "}
-            <code className="rounded-sm bg-bg-secondary px-1.5 py-0.5 font-mono text-sm text-text-primary">
+            <code className="rounded-sm bg-bg-secondary px-1.5 py-0.5 font-mono text-xs text-text-primary sm:text-sm">
               .dops
             </code>{" "}
             modules for DojOps. Community-driven DevOps automation.
           </p>
-          <div className="relative z-10 mx-auto mt-8 max-w-md">
+          <div className="relative z-10 mx-auto mt-6 max-w-md sm:mt-8">
             <SearchBar />
           </div>
-          <div className="mt-6 flex items-center justify-center gap-4">
+          <div className="mt-4 flex items-center justify-center gap-3 sm:mt-6 sm:gap-4">
             <Link href="/explore">
-              <Button variant="primary" size="lg">
+              <Button variant="primary" size="sm" className="sm:!h-11 sm:!px-5 sm:!text-base">
                 Explore Modules
               </Button>
             </Link>
             <Link href="/publish">
-              <Button variant="secondary" size="lg">
+              <Button variant="secondary" size="sm" className="sm:!h-11 sm:!px-5 sm:!text-base">
                 Publish a Module
               </Button>
             </Link>
           </div>
-          <div className="mt-8">
-            <code className="rounded-md border border-border-primary bg-bg-secondary px-4 py-2 font-mono text-sm text-text-secondary">
+          <div className="mt-6 sm:mt-8">
+            <code className="rounded-md border border-border-primary bg-bg-secondary px-3 py-1.5 font-mono text-xs text-text-secondary sm:px-4 sm:py-2 sm:text-sm">
               $ dojops modules install &lt;module-name&gt;
             </code>
           </div>

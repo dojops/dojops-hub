@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { GlowCard } from "@/components/ui/GlowCard";
 import { Badge } from "@/components/ui/Badge";
 import { timeAgo } from "@/lib/utils";
@@ -41,7 +42,7 @@ export function PackageCard({ pkg }: Readonly<PackageCardProps>) {
           <div className="mt-auto flex items-center justify-between pt-2 text-xs text-text-tertiary">
             <span className="flex items-center gap-1.5">
               {pkg.author.avatarUrl && (
-                <img
+                <Image
                   src={pkg.author.avatarUrl}
                   alt=""
                   width={16}
