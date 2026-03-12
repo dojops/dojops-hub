@@ -39,6 +39,7 @@ COPY --from=deps /app/node_modules ./prisma-migrate/node_modules
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 RUN chown -R nextjs:nodejs .next && chmod -R 555 .next && \
+    mkdir -p /app/.next/cache && chown nextjs:nodejs /app/.next/cache && chmod 755 /app/.next/cache && \
     mkdir -p /app/uploads && chown nextjs:nodejs /app/uploads
 
 EXPOSE 3000
