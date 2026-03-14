@@ -11,7 +11,7 @@ export default function SignInPage() {
           <div className="mb-8 text-center">
             <Image src="/icon.png" alt="DojOps" width={48} height={48} className="mx-auto mb-4" />
             <h1 className="text-2xl font-bold text-text-primary">Sign in to DojOps Hub</h1>
-            <p className="mt-2 text-sm text-text-secondary">Find and publish .dops modules</p>
+            <p className="mt-2 text-sm text-text-secondary">Find and publish .dops skills</p>
           </div>
           <button
             onClick={() => signIn("github", { callbackUrl: "/" })}

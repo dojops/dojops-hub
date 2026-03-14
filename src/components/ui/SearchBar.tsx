@@ -75,7 +75,7 @@ export function SearchBar({ className = "" }: Readonly<{ className?: string }>) 
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search modules..."
+            placeholder="Search skills..."
             className="w-full bg-bg-card border border-border-secondary rounded-sm h-[38px] pl-10 pr-4 text-sm text-text-primary placeholder:text-text-tertiary focus:outline-none"
           />
         </div>

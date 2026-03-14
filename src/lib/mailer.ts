@@ -27,7 +27,7 @@ export async function sendWelcomeEmail(to: string): Promise<void> {
 function welcomeText(): string {
   return `Welcome to DojOps!
 
-Thanks for subscribing. You'll receive updates on new modules, provider integrations, and releases.
+Thanks for subscribing. You'll receive updates on new skills, provider integrations, and releases.
 
 Get started:
   npm i -g @dojops/cli
@@ -60,7 +60,7 @@ function welcomeHtml(): string {
             Welcome to DojOps!
           </h1>
           <p style="margin:0 0 24px;font-size:15px;line-height:1.6;color:#7b8ba3;text-align:center">
-            Thanks for subscribing. You'll receive updates on new modules, provider integrations, and releases straight to your inbox.
+            Thanks for subscribing. You'll receive updates on new skills, provider integrations, and releases straight to your inbox.
           </p>
           <!-- Install box -->
           <div style="background:#161921;border:1px solid #2a2d37;border-radius:10px;padding:16px 20px;margin-bottom:24px">

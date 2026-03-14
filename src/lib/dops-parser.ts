@@ -1,5 +1,5 @@
 import * as yaml from "js-yaml";
-import { DopsFrontmatterSchema, type DopsModule, type MarkdownSections } from "./dops-schema";
+import { DopsFrontmatterSchema, type DopsSkill, type MarkdownSections } from "./dops-schema";
 
 const FRONTMATTER_DELIMITER = "---";
 
@@ -7,7 +7,7 @@ const FRONTMATTER_DELIMITER = "---";
  * Parse a .dops file from string content (v2 only).
  * Throws if the content is v1 format or invalid.
  */
-export function parseDopsString(content: string): DopsModule {
+export function parseDopsString(content: string): DopsSkill {
   const { frontmatterRaw, body } = splitFrontmatter(content);
 
   let frontmatterData: unknown;

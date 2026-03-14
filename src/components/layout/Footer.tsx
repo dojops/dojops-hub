@@ -13,7 +13,7 @@ export function Footer() {
                   href="/explore"
                   className="text-xs text-accent-text hover:text-text-primary transition-colors sm:text-sm"
                 >
-                  Explore Modules
+                  Explore Skills
                 </Link>
               </li>
               <li>

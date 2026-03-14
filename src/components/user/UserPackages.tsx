@@ -21,7 +21,7 @@ interface UserPackagesProps {
 
 export function UserPackages({ packages }: Readonly<UserPackagesProps>) {
   if (packages.length === 0) {
-    return <EmptyState title="No modules published yet" />;
+    return <EmptyState title="No skills published yet" />;
   }
   return <PackageGrid packages={packages} />;
 }

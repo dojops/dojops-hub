@@ -29,7 +29,7 @@ export default async function HomePage() {
       <section className="px-4 pb-12 pt-16 sm:pb-16 sm:pt-24 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-4xl text-center">
           <h1 className="text-2xl font-bold tracking-tight text-text-primary sm:text-4xl lg:text-5xl">
-            DojOps Modules
+            DojOps Skills
             <br />
             <span className="text-gradient-brand">Marketplace</span>
           </h1>
@@ -38,7 +38,7 @@ export default async function HomePage() {
             <code className="rounded-sm bg-bg-secondary px-1.5 py-0.5 font-mono text-xs text-text-primary sm:text-sm">
               .dops
             </code>{" "}
-            modules for DojOps.
+            skills for DojOps.
           </p>
           <div className="relative z-10 mx-auto mt-6 max-w-md sm:mt-8">
             <SearchBar />
@@ -46,18 +46,18 @@ export default async function HomePage() {
           <div className="mt-4 flex items-center justify-center gap-3 sm:mt-6 sm:gap-4">
             <Link href="/explore">
               <Button variant="primary" size="sm" className="sm:!h-11 sm:!px-5 sm:!text-base">
-                Explore Modules
+                Explore Skills
               </Button>
             </Link>
             <Link href="/publish">
               <Button variant="secondary" size="sm" className="sm:!h-11 sm:!px-5 sm:!text-base">
-                Publish a Module
+                Publish a Skill
               </Button>
             </Link>
           </div>
           <div className="mt-6 sm:mt-8">
             <code className="rounded-md border border-border-primary bg-bg-secondary px-3 py-1.5 font-mono text-xs text-text-secondary sm:px-4 sm:py-2 sm:text-sm">
-              $ dojops modules install &lt;module-name&gt;
+              $ dojops skills install &lt;skill-name&gt;
             </code>
           </div>
         </div>
@@ -68,7 +68,7 @@ export default async function HomePage() {
       {/* Featured */}
       {featuredPackages.length > 0 && (
         <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-          <SectionHeading title="Featured Modules" subtitle="Most starred" />
+          <SectionHeading title="Featured Skills" subtitle="Most starred" />
           <PackageGrid packages={featuredPackages} />
           <div className="mt-8 text-center">
             <Link href="/explore?sort=stars">
@@ -95,12 +95,12 @@ export default async function HomePage() {
       {featuredPackages.length === 0 && recentPackages.length === 0 && (
         <section className="mx-auto max-w-7xl px-4 py-16 text-center sm:px-6 lg:px-8">
           <div className="rounded-lg border border-border-primary bg-bg-card p-12 shadow-[var(--shadow-sm)]">
-            <h2 className="text-xl font-semibold text-text-primary">No modules yet</h2>
+            <h2 className="text-xl font-semibold text-text-primary">No skills yet</h2>
             <p className="mt-2 text-text-secondary">
-              Be the first to publish a .dops module to the marketplace.
+              Be the first to publish a .dops skill to the marketplace.
             </p>
             <Link href="/publish" className="mt-4 inline-block">
-              <Button>Publish your first module</Button>
+              <Button>Publish your first skill</Button>
             </Link>
           </div>
         </section>

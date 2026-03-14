@@ -1,6 +1,6 @@
 # Contributing
 
-Contributions to DojOps Hub are welcome! This is the module marketplace for the [DojOps](https://github.com/dojops/dojops) ecosystem.
+Contributions to DojOps Hub are welcome! This is the skill marketplace for the [DojOps](https://github.com/dojops/dojops) ecosystem.
 
 ## Development Setup
 

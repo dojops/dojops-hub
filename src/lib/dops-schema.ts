@@ -146,8 +146,8 @@ export interface MarkdownSections {
   keywords: string;
 }
 
-// Complete module
-export interface DopsModule {
+// Complete skill
+export interface DopsSkill {
   frontmatter: DopsFrontmatter;
   sections: MarkdownSections;
   raw: string;

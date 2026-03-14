@@ -5,7 +5,7 @@ import { CopyIconButton } from "@/components/ui/CopyIconButton";
 
 export function InstallCommand({ name }: Readonly<{ name: string }>) {
   const [copied, setCopied] = useState(false);
-  const command = `dojops modules install ${name}`;
+  const command = `dojops skills install ${name}`;
 
   async function handleCopy() {
     await navigator.clipboard.writeText(command);

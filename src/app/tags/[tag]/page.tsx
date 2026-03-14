@@ -39,11 +39,11 @@ export default async function TagPage({ params, searchParams }: Props) {
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
       <SectionHeading
         title={`#${tag}`}
-        subtitle={`${total} module${total === 1 ? "" : "s"} tagged with "${tag}"`}
+        subtitle={`${total} skill${total === 1 ? "" : "s"} tagged with "${tag}"`}
       />
 
       {packages.length === 0 ? (
-        <EmptyState title="No modules with this tag" />
+        <EmptyState title="No skills with this tag" />
       ) : (
         <>
           <PackageGrid packages={packages} />
