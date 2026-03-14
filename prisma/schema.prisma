@@ -166,10 +166,24 @@ model Comment {
   @@index([packageId])
 }
 
+enum SubscriberStatus {
+  PENDING
+  ACTIVE
+  UNSUBSCRIBED
+  BOUNCED
+}
+
 model Subscriber {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  createdAt DateTime @default(now())
+  id               String           @id @default(cuid())
+  email            String           @unique
+  status           SubscriberStatus @default(PENDING)
+  verified         Boolean          @default(false)
+  verifyToken      String           @unique
+  unsubscribeToken String           @unique
+  verifiedAt       DateTime?
+  createdAt        DateTime         @default(now())
 
   @@index([email])
+  @@index([verifyToken])
+  @@index([unsubscribeToken])
 }

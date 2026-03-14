@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
+import { randomBytes } from "node:crypto";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
-import { sendWelcomeEmail } from "@/lib/mailer";
+import { sendVerificationEmail } from "@/lib/mailer";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 
 const RATE_LIMIT = { maxRequests: 5, windowMs: 3_600_000 }; // 5/hour per IP
@@ -16,6 +17,10 @@ function corsHeaders() {
     "Access-Control-Allow-Methods": "POST, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type",
   };
+}
+
+function generateToken(): string {
+  return randomBytes(32).toString("hex");
 }
 
 export async function OPTIONS() {
@@ -53,21 +58,61 @@ export async function POST(req: NextRequest) {
 
   const { email } = parsed.data;
 
-  // Upsert subscriber (idempotent — re-subscribing is a no-op)
+  // Uniform response to prevent email enumeration.
+  // Regardless of email state, return the same message.
+  const uniformResponse = NextResponse.json(
+    { message: "Check your inbox to verify your subscription." },
+    { status: 200, headers },
+  );
+
   const existing = await prisma.subscriber.findUnique({ where: { email } });
 
   if (existing) {
-    return NextResponse.json({ message: "You're already subscribed!" }, { status: 200, headers });
+    if (existing.status === "PENDING") {
+      // Resend verification email (best-effort)
+      try {
+        await sendVerificationEmail(email, existing.verifyToken, existing.unsubscribeToken);
+      } catch (err) {
+        console.error("Failed to resend verification email:", err);
+      }
+    }
+    if (existing.status === "UNSUBSCRIBED") {
+      // Re-subscribe: reset to PENDING with fresh tokens
+      const verifyToken = generateToken();
+      const unsubscribeToken = generateToken();
+      await prisma.subscriber.update({
+        where: { email },
+        data: {
+          status: "PENDING",
+          verified: false,
+          verifyToken,
+          unsubscribeToken,
+          verifiedAt: null,
+        },
+      });
+      try {
+        await sendVerificationEmail(email, verifyToken, unsubscribeToken);
+      } catch (err) {
+        console.error("Failed to send verification email:", err);
+      }
+    }
+    // ACTIVE or BOUNCED: silently return — no information leak
+    return uniformResponse;
   }
 
-  await prisma.subscriber.create({ data: { email } });
+  // New subscriber
+  const verifyToken = generateToken();
+  const unsubscribeToken = generateToken();
 
-  // Send welcome email (best-effort — don't fail the request)
+  await prisma.subscriber.create({
+    data: { email, verifyToken, unsubscribeToken },
+  });
+
   try {
-    await sendWelcomeEmail(email);
+    await sendVerificationEmail(email, verifyToken, unsubscribeToken);
   } catch (err) {
-    console.error("Failed to send welcome email:", err);
+    console.error("Failed to send verification email:", err);
   }
 
-  return NextResponse.json({ message: "Successfully subscribed!" }, { status: 201, headers });
+  return uniformResponse;
 }
