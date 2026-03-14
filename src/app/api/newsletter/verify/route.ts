@@ -9,7 +9,7 @@ function htmlPage(title: string, message: string, success: boolean): string {
 <title>${title} — DojOps</title></head>
 <body style="margin:0;padding:0;background:#050508;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh">
   <div style="text-align:center;max-width:420px;padding:40px">
-    <img src="https://dojops.ai/icons/dojops-new-icon.png" width="64" height="64" alt="DojOps" style="border-radius:12px;margin-bottom:24px">
+    <img src="/dojops-new-icon.png" width="64" height="64" alt="DojOps" style="border-radius:12px;margin-bottom:24px">
     <h1 style="font-size:24px;color:${color};margin:0 0 12px">${title}</h1>
     <p style="font-size:15px;color:#7b8ba3;line-height:1.6;margin:0 0 24px">${message}</p>
     <a href="https://dojops.ai" style="display:inline-block;padding:10px 24px;background:linear-gradient(135deg,#06b6d4,#3b82f6);color:#fff;font-size:14px;font-weight:600;text-decoration:none;border-radius:8px">
