@@ -43,7 +43,14 @@ export async function POST(req: NextRequest) {
   const webhookSecret = process.env.BROADCAST_WEBHOOK_SECRET;
   const signature = req.headers.get("x-broadcast-signature");
 
-  if (webhookSecret && signature) {
+  if (signature) {
+    // Reject webhook calls when secret is not configured — never allow unverified signatures
+    if (!webhookSecret) {
+      console.warn(
+        "[broadcast] Webhook signature provided but BROADCAST_WEBHOOK_SECRET is not set",
+      );
+      return NextResponse.json({ error: "Webhook auth not configured." }, { status: 500 });
+    }
     if (!verifyWebhookSignature(rawBody, signature, webhookSecret)) {
       return NextResponse.json({ error: "Invalid webhook signature." }, { status: 401 });
     }

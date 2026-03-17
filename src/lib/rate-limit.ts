@@ -1,9 +1,16 @@
 import { NextRequest } from "next/server";
 
-/** Extract client IP from trusted proxy headers (first hop only) */
+/**
+ * Extract client IP from proxy headers using the rightmost-hop strategy.
+ * The last entry in X-Forwarded-For is set by the closest trusted reverse proxy
+ * and cannot be spoofed by the client (unlike the first entry).
+ */
 export function getClientIp(req: NextRequest): string {
   const xff = req.headers.get("x-forwarded-for");
-  if (xff) return xff.split(",")[0].trim();
+  if (xff) {
+    const hops = xff.split(",");
+    return hops[hops.length - 1].trim();
+  }
   return req.headers.get("x-real-ip") || "unknown";
 }
 

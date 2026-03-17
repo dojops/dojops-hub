@@ -37,9 +37,9 @@ function makeReq(headers: Record<string, string>) {
 }
 
 describe("getClientIp", () => {
-  it("extracts first hop from x-forwarded-for", () => {
+  it("extracts rightmost hop from x-forwarded-for (trusted proxy IP)", () => {
     const req = makeReq({ "x-forwarded-for": `${IP_A}, ${IP_B}` });
-    expect(getClientIp(req)).toBe(IP_A);
+    expect(getClientIp(req)).toBe(IP_B);
   });
 
   it("handles single IP in x-forwarded-for", () => {
@@ -48,8 +48,8 @@ describe("getClientIp", () => {
   });
 
   it("trims whitespace from XFF entries", () => {
-    const req = makeReq({ "x-forwarded-for": `  ${IP_A}  , ${IP_B}` });
-    expect(getClientIp(req)).toBe(IP_A);
+    const req = makeReq({ "x-forwarded-for": `${IP_A} , ${IP_B}  ` });
+    expect(getClientIp(req)).toBe(IP_B);
   });
 
   it("falls back to x-real-ip", () => {

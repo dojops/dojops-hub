@@ -40,10 +40,12 @@ export async function GET(
 
   const safeName = pkg.name.replaceAll(/[^\w.-]/g, "_");
   const safeVersion = ver.semver.replaceAll(/[^\w.-]/g, "_");
+  const filename = `${safeName}-${safeVersion}.dops`;
 
   const headers: Record<string, string> = {
     "Content-Type": "application/octet-stream",
-    "Content-Disposition": `attachment; filename="${safeName}-${safeVersion}.dops"`,
+    // RFC 5987 filename* for non-ASCII support, ASCII fallback in filename
+    "Content-Disposition": `attachment; filename="${filename}"; filename*=UTF-8''${encodeURIComponent(filename)}`,
     "X-Checksum-Sha256": ver.sha256,
   };
 
