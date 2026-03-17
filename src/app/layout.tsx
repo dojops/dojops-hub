@@ -20,7 +20,7 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL("https://hub.dojops.ai"),
   title: {
-    default: "DojOps Hub — Skill Marketplace",
+    default: "DojOps Hub Skill Marketplace",
     template: "%s | DojOps Hub",
   },
   description:
