@@ -19,10 +19,27 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const pkg = await prisma.package.findUnique({
     where: { slug },
-    select: { name: true, description: true },
+    select: { name: true, description: true, tags: true },
   });
   if (!pkg) return { title: "Not Found" };
-  return { title: pkg.name, description: pkg.description };
+  const url = `https://hub.dojops.ai/packages/${slug}`;
+  return {
+    title: pkg.name,
+    description: pkg.description || `${pkg.name} — a DojOps DevOps automation skill.`,
+    keywords: pkg.tags,
+    alternates: { canonical: url },
+    openGraph: {
+      title: `${pkg.name} | DojOps Hub`,
+      description: pkg.description || `${pkg.name} — a DojOps DevOps automation skill.`,
+      url,
+      type: "website",
+    },
+    twitter: {
+      card: "summary",
+      title: `${pkg.name} | DojOps Hub`,
+      description: pkg.description || `${pkg.name} — a DojOps DevOps automation skill.`,
+    },
+  };
 }
 
 export default async function PackagePage({ params }: Props) {
@@ -69,8 +86,29 @@ export default async function PackagePage({ params }: Props) {
     }
   }
 
+  // JSON-LD structured data — values from validated DB fields, JSON.stringify auto-escapes
+  const jsonLd = JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: pkg.name,
+    description: pkg.description,
+    applicationCategory: "DeveloperApplication",
+    operatingSystem: "Linux, macOS, Windows",
+    offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+    author: { "@type": "Person", name: pkg.author.displayName || pkg.author.username },
+    ...(pkg.starCount > 0 && {
+      aggregateRating: {
+        "@type": "AggregateRating",
+        ratingCount: pkg.starCount,
+        bestRating: 1,
+        worstRating: 0,
+      },
+    }),
+  });
+
   return (
     <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd }} />
       <PackageDetail
         pkg={pkg}
         latestVersion={

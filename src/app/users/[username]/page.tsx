@@ -12,7 +12,30 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { username } = await params;
-  return { title: `${username}` };
+  const user = await prisma.user.findUnique({
+    where: { username },
+    select: { bio: true, _count: { select: { packages: true } } },
+  });
+  const description =
+    user?.bio ||
+    `${username}'s profile on DojOps Hub — ${user?._count.packages ?? 0} published skills.`;
+  const url = `https://hub.dojops.ai/users/${username}`;
+  return {
+    title: username,
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      title: `${username} | DojOps Hub`,
+      description,
+      url,
+      type: "profile",
+    },
+    twitter: {
+      card: "summary",
+      title: `${username} | DojOps Hub`,
+      description,
+    },
+  };
 }
 
 export default async function UserPage({ params }: Props) {

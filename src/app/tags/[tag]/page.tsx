@@ -11,8 +11,27 @@ interface Props {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { tag } = await params;
-  return { title: `#${decodeURIComponent(tag)}` };
+  const { tag: rawTag } = await params;
+  const tag = decodeURIComponent(rawTag);
+  const count = await prisma.package.count({ where: { status: "ACTIVE", tags: { has: tag } } });
+  const description = `Browse ${count} DojOps skill${count === 1 ? "" : "s"} tagged with "${tag}". DevOps automation, ready to install.`;
+  const url = `https://hub.dojops.ai/tags/${rawTag}`;
+  return {
+    title: `#${tag}`,
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      title: `#${tag} Skills | DojOps Hub`,
+      description,
+      url,
+      type: "website",
+    },
+    twitter: {
+      card: "summary",
+      title: `#${tag} Skills | DojOps Hub`,
+      description,
+    },
+  };
 }
 
 export default async function TagPage({ params, searchParams }: Props) {

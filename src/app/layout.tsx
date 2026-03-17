@@ -20,13 +20,40 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL("https://hub.dojops.ai"),
   title: {
-    default: "DojOps Hub Skill Marketplace",
+    default: "DojOps Hub — Skill Marketplace",
     template: "%s | DojOps Hub",
   },
   description:
-    "Find and share .dops skills for DojOps. Open-source DevOps automation, ready to install.",
+    "Find and share .dops skills for DojOps. Open-source DevOps automation skills, ready to install.",
   keywords: ["DojOps", "DevOps", "skills", "marketplace", "automation", "infrastructure"],
   icons: { icon: "/dojops-favicon.png" },
+  openGraph: {
+    title: "DojOps Hub — Skill Marketplace",
+    description:
+      "Browse, install, and publish DevOps automation skills for DojOps. Terraform, Kubernetes, CI/CD, and more.",
+    url: "https://hub.dojops.ai",
+    siteName: "DojOps Hub",
+    locale: "en_US",
+    type: "website",
+    images: [
+      {
+        url: "/dojops-favicon.png",
+        width: 128,
+        height: 128,
+        alt: "DojOps Hub — Skill Marketplace",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary",
+    title: "DojOps Hub — Skill Marketplace",
+    description:
+      "Browse, install, and publish DevOps automation skills for DojOps. Terraform, Kubernetes, CI/CD, and more.",
+    images: ["/dojops-favicon.png"],
+  },
+  alternates: {
+    canonical: "https://hub.dojops.ai",
+  },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
