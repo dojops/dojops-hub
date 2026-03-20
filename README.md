@@ -5,8 +5,8 @@
 <h1 align="center">DojOps Hub</h1>
 
 <p align="center">
-  <strong>Skill marketplace for <a href="https://github.com/dojops/dojops">DojOps</a>.</strong><br />
-  Discover, publish, and install <code>.dops</code> DevOps skills for the AI DevOps Automation Engine.
+  Skill marketplace for <a href="https://github.com/dojops/dojops">DojOps</a>.<br />
+  Publish, install, and browse <code>.dops</code> DevOps skills.
 </p>
 
 <p align="center">
@@ -25,30 +25,28 @@
   <a href="https://sonarcloud.io/summary/new_code?id=dojops_dojops-hub"><img src="https://sonarcloud.io/api/project_badges/measure?project=dojops_dojops-hub&metric=alert_status" alt="Quality Gate Status" /></a>
 </p>
 
-## Tech Stack
+## Stack
 
-- **Next.js 15.2** (App Router, standalone output)
-- **React 19** + **TypeScript 5.7**
-- **PostgreSQL 16** + **Prisma 6.4** (ORM + migrations)
-- **NextAuth.js 4.24** (GitHub OAuth)
-- **Tailwind CSS v4** (cyberpunk dark theme)
-- **Zod 3.24** (schema validation)
+- Next.js 15.2 (App Router, standalone output)
+- React 19 + TypeScript 5.7
+- PostgreSQL 16 + Prisma 6.4 (ORM + migrations)
+- NextAuth.js 4.24 (GitHub OAuth)
+- Tailwind CSS v4 (cyberpunk dark theme)
+- Zod 3.24 (schema validation)
 
-## Features
+## What it does
 
-- **Package registry** — Publish, version, and download `.dops` skill files
-- **Full-text search** — PostgreSQL `tsvector` + GIN index with `ts_rank` ranking
-- **GitHub OAuth** — Sign in with GitHub, role-based access (USER / ADMIN)
-- **API tokens** — `dojops_` prefixed tokens with SHA-256 hashing, max 10 per user
-- **Integrity verification** — SHA-256 publisher attestation on publish/install
-- **Community** — Star packages, post comments, user profiles
-- **Admin moderation** — Flag or remove packages
-- **Rate limiting** — In-memory rate limiter on publish, star, comment, search, and token creation
-- **CLI integration** — `dojops skills publish` / `dojops skills install` authenticate via Bearer token
+Users sign in with GitHub, publish `.dops` skill files, and install skills published by others. The CLI handles both ends: `dojops skills publish` uploads a file with a SHA-256 hash, and `dojops skills install` downloads it and verifies the hash matches. If it doesn't, the install aborts.
+
+Search uses PostgreSQL full-text search (`tsvector` + GIN index, ranked by `ts_rank`). Packages can be starred, commented on, and moderated by admins.
+
+API tokens use a `dojops_` prefix with SHA-256 hashing. Max 10 per user.
+
+Rate limiting is in-memory, applied to publish (5/hr), star (30/min), comment (10/min), search (60/min), and token creation (5/hr).
 
 ## Pages
 
-| Route                      | Description                               |
+| Route                      | What's there                              |
 | -------------------------- | ----------------------------------------- |
 | `/`                        | Homepage with recent packages             |
 | `/explore`                 | Browse all packages (sort, filter by tag) |
@@ -60,9 +58,9 @@
 | `/settings/tokens`         | API token management                      |
 | `/admin`                   | Package moderation (admin only)           |
 
-## API Endpoints
+## API
 
-| Method | Route                          | Auth    | Description                                   |
+| Method | Route                          | Auth    | What it does                                  |
 | ------ | ------------------------------ | ------- | --------------------------------------------- |
 | GET    | `/api/packages`                | No      | List packages (pagination, sort, tag filter)  |
 | POST   | `/api/packages`                | Yes     | Publish package (multipart, max 1MB, SHA-256) |
@@ -79,26 +77,21 @@
 | POST   | `/api/tokens`                  | Session | Create API token                              |
 | DELETE | `/api/tokens/:id`              | Session | Revoke API token                              |
 
-## Database Models
+## Database
 
-**8 models** in PostgreSQL:
+8 models in PostgreSQL:
 
-- **User** — GitHub OAuth (githubId, username, role: USER/ADMIN, bio)
-- **Account** / **Session** / **VerificationToken** — NextAuth internals
-- **Package** — name, slug, description, tags, status (ACTIVE/FLAGGED/REMOVED), starCount, downloadCount, searchVector
-- **Version** — semver, filePath, fileSize, sha256, riskLevel, permissions, inputFields, outputSpec, fileSpecs
-- **Star** — Unique per user+package, atomic starCount increment
-- **Comment** — User comments on packages
-- **ApiToken** — SHA-256 hashed, `dojops_` + 40 hex chars, optional expiry
+- User — GitHub OAuth (githubId, username, role: USER/ADMIN, bio)
+- Account / Session / VerificationToken — NextAuth internals
+- Package — name, slug, description, tags, status (ACTIVE/FLAGGED/REMOVED), starCount, downloadCount, searchVector
+- Version — semver, filePath, fileSize, sha256, riskLevel, permissions, inputFields, outputSpec, fileSpecs
+- Star — unique per user+package, atomic starCount increment
+- Comment — user comments on packages
+- ApiToken — SHA-256 hashed, `dojops_` + 40 hex chars, optional expiry
 
 ## Development
 
-### Prerequisites
-
-- Node.js >= 20
-- PostgreSQL 16 (or use Docker)
-
-### Setup
+Requires Node.js >= 20 and PostgreSQL 16 (or use Docker).
 
 ```bash
 git clone https://github.com/dojops/dojops-hub.git
@@ -119,9 +112,9 @@ npx prisma migrate dev
 npm run dev
 ```
 
-### Environment Variables
+### Environment variables
 
-| Variable          | Description                             |
+| Variable          | What it's for                           |
 | ----------------- | --------------------------------------- |
 | `DATABASE_URL`    | PostgreSQL connection string            |
 | `NEXTAUTH_URL`    | Base URL (e.g. `http://localhost:3000`) |
@@ -150,29 +143,29 @@ docker-compose up --build
 # App available at http://localhost:3000
 ```
 
-**Dockerfile**: Multi-stage build (node:20-slim). Runs `prisma migrate deploy` on startup, then drops to non-root user (`nextjs:1001`). Uploads stored at `/app/uploads` volume.
+Multi-stage build (node:20-slim). Runs `prisma migrate deploy` on startup, then drops to non-root user (`nextjs:1001`). Uploads stored at `/app/uploads` volume.
 
-## Publish/Install Integrity
+## Integrity
 
-1. **Publish**: CLI computes SHA-256 client-side, sends as multipart field. Hub verifies hash matches uploaded file.
-2. **Install**: CLI downloads `.dops` file, receives publisher hash via `X-Checksum-Sha256` header, recomputes locally. Mismatch aborts with integrity error.
+1. On publish, the CLI computes a SHA-256 hash client-side and sends it with the file. The hub verifies the hash matches what was uploaded.
+2. On install, the CLI downloads the `.dops` file and gets the publisher's hash from the `X-Checksum-Sha256` header. It recomputes locally. If the hashes don't match, the install aborts.
 
 ## Components
 
-31 components organized by domain:
+31 components, organized by what they do:
 
-- **Layout** (3): Navbar, Footer, Sidebar
-- **UI** (8): GlowCard, Button, Badge, SearchBar, Pagination, SectionHeading, Spinner, EmptyState
-- **Package** (9): PackageCard, PackageDetail, PackageGrid, DopsPreview, VersionHistory, RiskBadge, PermissionBadges, IntegrityHash, InstallCommand
-- **Community** (4): StarButton, CommentThread, CommentItem, AuthorBadge
-- **Publish** (2): PublishForm, MetadataPreview
-- **User** (3): UserProfile, UserPackages, UserStars
-- **Admin** (1): PackageModeration
-- **Settings** (1): TokenManager
+- Layout (3): Navbar, Footer, Sidebar
+- UI (8): GlowCard, Button, Badge, SearchBar, Pagination, SectionHeading, Spinner, EmptyState
+- Package (9): PackageCard, PackageDetail, PackageGrid, DopsPreview, VersionHistory, RiskBadge, PermissionBadges, IntegrityHash, InstallCommand
+- Community (4): StarButton, CommentThread, CommentItem, AuthorBadge
+- Publish (2): PublishForm, MetadataPreview
+- User (3): UserProfile, UserPackages, UserStars
+- Admin (1): PackageModeration
+- Settings (1): TokenManager
 
-## Related Repos
+## Related repos
 
-| Repo                                                      | Description                                       |
+| Repo                                                      | What it is                                        |
 | --------------------------------------------------------- | ------------------------------------------------- |
 | [dojops/dojops](https://github.com/dojops/dojops)         | Main monorepo — CLI, API, all @dojops/\* packages |
 | [dojops/dojops.ai](https://github.com/dojops/dojops.ai)   | Marketing website                                 |
