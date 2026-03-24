@@ -25,19 +25,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const url = `https://hub.dojops.ai/packages/${slug}`;
   return {
     title: pkg.name,
-    description: pkg.description || `${pkg.name} — a DojOps DevOps automation skill.`,
+    description: pkg.description || `${pkg.name} — a DojOps automation skill.`,
     keywords: pkg.tags,
     alternates: { canonical: url },
     openGraph: {
       title: `${pkg.name} | DojOps Hub`,
-      description: pkg.description || `${pkg.name} — a DojOps DevOps automation skill.`,
+      description: pkg.description || `${pkg.name} — a DojOps automation skill.`,
       url,
       type: "website",
     },
     twitter: {
       card: "summary",
       title: `${pkg.name} | DojOps Hub`,
-      description: pkg.description || `${pkg.name} — a DojOps DevOps automation skill.`,
+      description: pkg.description || `${pkg.name} — a DojOps automation skill.`,
     },
   };
 }
