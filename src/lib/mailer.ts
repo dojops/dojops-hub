@@ -76,7 +76,7 @@ function verificationHtml(verifyUrl: string, unsubscribeToken: string): string {
     <tr><td align="center">
       <table width="560" cellpadding="0" cellspacing="0" style="background:#0d1117;border-radius:16px;overflow:hidden;border:1px solid #1e2432">
         <tr><td style="padding:40px 40px 24px;text-align:center">
-          <img src="https://dojops.ai/icons/dojops-new-icon.png" width="64" height="64" alt="DojOps" style="border-radius:12px">
+          <img src="https://dojops.ai/icons/dojops-new-logo.png" width="64" height="64" alt="DojOps" style="border-radius:12px">
         </td></tr>
         <tr><td style="padding:0 40px 32px">
           <h1 style="margin:0 0 16px;font-size:24px;font-weight:700;color:#e8edf5;text-align:center">
@@ -132,7 +132,7 @@ function releaseText(subject: string, body: string, unsubscribeToken: string): s
 ${body}
 
 Links:
-  Docs: https://docs.dojops.ai
+  Docs: https://doc.dojops.ai
   GitHub: https://github.com/dojops/dojops
   npm: https://www.npmjs.com/package/@dojops/cli
 ${unsubscribeFooterText(unsubscribeToken)}`;
@@ -150,7 +150,7 @@ function releaseHtml(subject: string, safeBody: string, unsubscribeToken: string
     <tr><td align="center">
       <table width="560" cellpadding="0" cellspacing="0" style="background:#0d1117;border-radius:16px;overflow:hidden;border:1px solid #1e2432">
         <tr><td style="padding:40px 40px 24px;text-align:center">
-          <img src="https://dojops.ai/icons/dojops-new-icon.png" width="64" height="64" alt="DojOps" style="border-radius:12px">
+          <img src="https://dojops.ai/icons/dojops-new-logo.png" width="64" height="64" alt="DojOps" style="border-radius:12px">
         </td></tr>
         <tr><td style="padding:0 40px 32px">
           <h1 style="margin:0 0 16px;font-size:24px;font-weight:700;color:#e8edf5;text-align:center">
@@ -164,7 +164,7 @@ function releaseHtml(subject: string, safeBody: string, unsubscribeToken: string
           <table width="100%" cellpadding="0" cellspacing="0">
             <tr>
               <td align="center" style="padding:4px">
-                <a href="https://docs.dojops.ai" style="display:inline-block;padding:10px 24px;background:linear-gradient(135deg,#06b6d4,#3b82f6);color:#fff;font-size:14px;font-weight:600;text-decoration:none;border-radius:8px">
+                <a href="https://doc.dojops.ai" style="display:inline-block;padding:10px 24px;background:linear-gradient(135deg,#06b6d4,#3b82f6);color:#fff;font-size:14px;font-weight:600;text-decoration:none;border-radius:8px">
                   Read the Docs
                 </a>
               </td>
