@@ -42,3 +42,8 @@ prisma/migrations/migration_lock.toml
 
 # docker
 pgdata/
+
+# Claude Code
+.claude/
+CLAUDE.md
+.mcp.json
