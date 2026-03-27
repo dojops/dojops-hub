@@ -187,3 +187,18 @@ model Subscriber {
   @@index([verifyToken])
   @@index([unsubscribeToken])
 }
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  company   String?
+  subject   String
+  message   String
+  ip        String?
+  createdAt DateTime @default(now())
+
+  @@index([email])
+  @@index([createdAt])
+  @@index([ip])
+}

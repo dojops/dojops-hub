@@ -25,6 +25,11 @@ function escapeHtml(str: string): string {
     .replace(/'/g, "&#39;");
 }
 
+/** Strip CR/LF to prevent SMTP header injection. */
+function sanitizeHeader(value: string): string {
+  return value.replace(/[\r\n]+/g, " ").trim();
+}
+
 function unsubscribeFooterHtml(unsubscribeToken: string): string {
   const url = `${HUB_URL}/api/newsletter/unsubscribe?token=${unsubscribeToken}`;
   return `<tr><td style="padding:24px 40px;border-top:1px solid #1e2432;text-align:center">
@@ -97,6 +102,105 @@ function verificationHtml(verifyUrl: string, unsubscribeToken: string): string {
           </p>
         </td></tr>
         ${unsubscribeFooterHtml(unsubscribeToken)}
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+}
+
+// ── Contact form notification ───────────────────────────────────────────
+
+const CONTACT_TO = process.env.CONTACT_EMAIL || process.env.SMTP_USER || "contact@dojops.ai";
+
+export async function sendContactNotification(data: {
+  name: string;
+  email: string;
+  company?: string;
+  subject: string;
+  message: string;
+}): Promise<void> {
+  const { name, email, company, subject, message } = data;
+
+  await transport.sendMail({
+    from: `"DojOps Contact" <${FROM}>`,
+    to: CONTACT_TO,
+    replyTo: sanitizeHeader(email),
+    subject: sanitizeHeader(`[Contact] ${subject}`),
+    text: contactText(name, email, company || "", subject, message),
+    html: contactHtml({ name, email, company: company || null, subject, message }),
+  });
+}
+
+function contactText(
+  name: string,
+  email: string,
+  company: string,
+  subject: string,
+  message: string,
+): string {
+  return `New contact form submission
+
+Name: ${name}
+Email: ${email}${company ? `\nCompany: ${company}` : ""}
+Subject: ${subject}
+
+Message:
+${message}`;
+}
+
+/** Escaping is done internally — always pass raw values. */
+function contactHtml(data: {
+  name: string;
+  email: string;
+  company: string | null;
+  subject: string;
+  message: string;
+}): string {
+  const name = escapeHtml(data.name);
+  const email = escapeHtml(data.email);
+  const company = data.company ? escapeHtml(data.company) : null;
+  const subject = escapeHtml(data.subject);
+  const message = escapeHtml(data.message).replace(/\n/g, "<br>");
+  return `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#050508;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#050508;padding:40px 20px">
+    <tr><td align="center">
+      <table width="560" cellpadding="0" cellspacing="0" style="background:#0d1117;border-radius:16px;overflow:hidden;border:1px solid #1e2432">
+        <tr><td style="padding:40px 40px 24px;text-align:center">
+          <img src="https://dojops.ai/icons/dojops-new-logo.png" width="64" height="64" alt="DojOps" style="border-radius:12px">
+        </td></tr>
+        <tr><td style="padding:0 40px 32px">
+          <h1 style="margin:0 0 16px;font-size:24px;font-weight:700;color:#e8edf5;text-align:center">
+            New contact message
+          </h1>
+          <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:20px">
+            <tr><td style="padding:8px 0;font-size:13px;color:#5a6478;width:80px;vertical-align:top">Name</td>
+                <td style="padding:8px 0;font-size:14px;color:#e8edf5">${name}</td></tr>
+            <tr><td style="padding:8px 0;font-size:13px;color:#5a6478;vertical-align:top">Email</td>
+                <td style="padding:8px 0;font-size:14px;color:#e8edf5"><a href="mailto:${email}" style="color:#06b6d4;text-decoration:none">${email}</a></td></tr>
+            ${company ? `<tr><td style="padding:8px 0;font-size:13px;color:#5a6478;vertical-align:top">Company</td><td style="padding:8px 0;font-size:14px;color:#e8edf5">${company}</td></tr>` : ""}
+            <tr><td style="padding:8px 0;font-size:13px;color:#5a6478;vertical-align:top">Subject</td>
+                <td style="padding:8px 0;font-size:14px;color:#e8edf5">${subject}</td></tr>
+          </table>
+          <div style="background:#161921;border:1px solid #2a2d37;border-radius:10px;padding:20px">
+            <p style="margin:0;font-size:14px;line-height:1.7;color:#b0b8c8">${message}</p>
+          </div>
+          <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:24px">
+            <tr><td align="center">
+              <a href="mailto:${email}" style="display:inline-block;padding:12px 28px;background:linear-gradient(135deg,#06b6d4,#3b82f6);color:#fff;font-size:14px;font-weight:600;text-decoration:none;border-radius:8px">
+                Reply to ${name}
+              </a>
+            </td></tr>
+          </table>
+        </td></tr>
+        <tr><td style="padding:24px 40px;border-top:1px solid #1e2432;text-align:center">
+          <p style="margin:0;font-size:12px;color:#5a6478">
+            Sent from the contact form on dojops.ai
+          </p>
+        </td></tr>
       </table>
     </td></tr>
   </table>
