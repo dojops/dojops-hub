@@ -33,37 +33,82 @@ function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-export async function POST(req: NextRequest) {
-  // ── Authentication: admin session/token OR HMAC webhook ──────────
-
-  const rawBody = await req.text();
-  let authenticated = false;
-
-  // Path 1: HMAC webhook signature (from release workflow)
-  const webhookSecret = process.env.BROADCAST_WEBHOOK_SECRET;
+/** Authenticate via HMAC webhook signature or admin session/token. Returns an error response or null on success. */
+async function authenticateRequest(
+  req: NextRequest,
+  rawBody: string,
+): Promise<NextResponse | null> {
   const signature = req.headers.get("x-broadcast-signature");
 
   if (signature) {
-    // Reject webhook calls when secret is not configured — never allow unverified signatures
-    if (!webhookSecret) {
-      console.warn(
-        "[broadcast] Webhook signature provided but BROADCAST_WEBHOOK_SECRET is not set",
-      );
-      return NextResponse.json({ error: "Webhook auth not configured." }, { status: 500 });
-    }
-    if (!verifyWebhookSignature(rawBody, signature, webhookSecret)) {
-      return NextResponse.json({ error: "Invalid webhook signature." }, { status: 401 });
-    }
-    authenticated = true;
+    return verifyWebhookAuth(rawBody, signature);
   }
 
-  // Path 2: Admin session or API token
-  if (!authenticated) {
-    const user = await getAuthenticatedUser(req);
-    if (user?.role !== "ADMIN") {
-      return NextResponse.json({ error: "Admin access required." }, { status: 403 });
+  // Fall back to admin session or API token
+  const user = await getAuthenticatedUser(req);
+  if (user?.role !== "ADMIN") {
+    return NextResponse.json({ error: "Admin access required." }, { status: 403 });
+  }
+  return null;
+}
+
+/** Verify HMAC webhook auth. Returns an error response or null on success. */
+function verifyWebhookAuth(rawBody: string, signature: string): NextResponse | null {
+  const webhookSecret = process.env.BROADCAST_WEBHOOK_SECRET;
+
+  if (!webhookSecret) {
+    console.warn("[broadcast] Webhook signature provided but BROADCAST_WEBHOOK_SECRET is not set");
+    return NextResponse.json({ error: "Webhook auth not configured." }, { status: 500 });
+  }
+
+  if (!verifyWebhookSignature(rawBody, signature, webhookSecret)) {
+    return NextResponse.json({ error: "Invalid webhook signature." }, { status: 401 });
+  }
+
+  return null;
+}
+
+/** Send emails in batches, tallying successes and failures. */
+async function sendBatched(
+  subscribers: { email: string; unsubscribeToken: string }[],
+  subject: string,
+  emailBody: string,
+): Promise<{ sent: number; failed: number }> {
+  let sent = 0;
+  let failed = 0;
+
+  for (let i = 0; i < subscribers.length; i += BATCH_SIZE) {
+    const batch = subscribers.slice(i, i + BATCH_SIZE);
+
+    const results = await Promise.allSettled(
+      batch.map((sub) =>
+        sendReleaseNotification(sub.email, subject, emailBody, sub.unsubscribeToken),
+      ),
+    );
+
+    for (const r of results) {
+      if (r.status === "fulfilled") sent++;
+      else {
+        failed++;
+        console.error("Broadcast email failed:", r.reason);
+      }
+    }
+
+    if (i + BATCH_SIZE < subscribers.length) {
+      await sleep(BATCH_DELAY_MS);
     }
   }
+
+  return { sent, failed };
+}
+
+export async function POST(req: NextRequest) {
+  const rawBody = await req.text();
+
+  // ── Authentication: admin session/token OR HMAC webhook ──────────
+
+  const authError = await authenticateRequest(req, rawBody);
+  if (authError) return authError;
 
   // ── Rate limit (keyed globally, not per-user) ────────────────────
 
@@ -105,31 +150,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ sent: 0, failed: 0, message: "No active subscribers." });
   }
 
-  let sent = 0;
-  let failed = 0;
-
-  for (let i = 0; i < subscribers.length; i += BATCH_SIZE) {
-    const batch = subscribers.slice(i, i + BATCH_SIZE);
-
-    const results = await Promise.allSettled(
-      batch.map((sub) =>
-        sendReleaseNotification(sub.email, subject, emailBody, sub.unsubscribeToken),
-      ),
-    );
-
-    for (const r of results) {
-      if (r.status === "fulfilled") sent++;
-      else {
-        failed++;
-        console.error("Broadcast email failed:", r.reason);
-      }
-    }
-
-    // Delay between batches (except the last one)
-    if (i + BATCH_SIZE < subscribers.length) {
-      await sleep(BATCH_DELAY_MS);
-    }
-  }
+  const { sent, failed } = await sendBatched(subscribers, subject, emailBody);
 
   console.log(`[broadcast] sent=${sent} failed=${failed} subject="${subject}"`);
 
