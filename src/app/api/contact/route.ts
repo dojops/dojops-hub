@@ -12,14 +12,14 @@ const contactSchema = z.object({
     .string()
     .min(1)
     .max(100)
-    .transform((s) => s.replace(/[\r\n]+/g, " ")),
+    .transform((s) => s.replaceAll(/[\r\n]+/g, " ")),
   email: z.string().email().max(254),
   company: z.string().max(100).optional().default(""),
   subject: z
     .string()
     .min(1)
     .max(200)
-    .transform((s) => s.replace(/[\r\n]+/g, " ")),
+    .transform((s) => s.replaceAll(/[\r\n]+/g, " ")),
   message: z.string().min(1).max(5000),
 });
 

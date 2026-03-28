@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
   // Path 2: Admin session or API token
   if (!authenticated) {
     const user = await getAuthenticatedUser(req);
-    if (!user || user.role !== "ADMIN") {
+    if (user?.role !== "ADMIN") {
       return NextResponse.json({ error: "Admin access required." }, { status: 403 });
     }
   }

@@ -23,7 +23,7 @@ function htmlPage(title: string, message: string, success: boolean): string {
 export async function GET(req: NextRequest) {
   const token = req.nextUrl.searchParams.get("token");
 
-  if (!token || token.length !== 64) {
+  if (token?.length !== 64) {
     return new NextResponse(htmlPage("Invalid Link", "This verification link is invalid.", false), {
       status: 400,
       headers: { "Content-Type": "text/html; charset=utf-8" },

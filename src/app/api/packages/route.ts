@@ -155,12 +155,12 @@ function buildVersionData(
     fileSpecs: fm.files ?? undefined,
     dopsVersion: "v2",
     // Shared optional fields
-    detection: (fm.detection ?? undefined) as Prisma.InputJsonValue | undefined,
-    verification: (fm.verification ?? undefined) as Prisma.InputJsonValue | undefined,
-    scope: (fm.scope ?? undefined) as Prisma.InputJsonValue | undefined,
-    execution: (fm.execution ?? undefined) as Prisma.InputJsonValue | undefined,
-    updateConfig: (fm.update ?? undefined) as Prisma.InputJsonValue | undefined,
-    capabilities: (fm.capabilities ?? undefined) as Prisma.InputJsonValue | undefined,
+    detection: fm.detection ?? undefined,
+    verification: fm.verification ?? undefined,
+    scope: fm.scope ?? undefined,
+    execution: fm.execution ?? undefined,
+    updateConfig: fm.update ?? undefined,
+    capabilities: fm.capabilities ?? undefined,
     // v2 context block
     contextBlock: fm.context as Prisma.InputJsonValue,
   };

@@ -136,8 +136,8 @@ export function Navbar() {
         <Link href="/" className="flex items-center gap-2.5 shrink-0">
           <Image src="/icon.png" alt="DojOps" width={26} height={26} />
           <span className="font-bold text-[15px] text-text-primary tracking-tight">
-            DojOps
-            <span className="text-text-secondary ml-1 text-[13px] font-normal">Hub</span>
+            {"DojOps "}
+            <span className="text-text-secondary text-[13px] font-normal">Hub</span>
           </span>
         </Link>
 
@@ -322,7 +322,7 @@ export function Navbar() {
                   className="w-1 h-1 rounded-full shrink-0"
                   style={{ background: "var(--accent-border)" }}
                 />
-                Publish
+                {"Publish"}
               </Link>
               <Link
                 href={`/users/${session.user.username}`}
@@ -333,7 +333,7 @@ export function Navbar() {
                   className="w-1 h-1 rounded-full shrink-0"
                   style={{ background: "var(--accent-border)" }}
                 />
-                Profile
+                {"Profile"}
               </Link>
               <Link
                 href="/settings/tokens"
@@ -344,7 +344,7 @@ export function Navbar() {
                   className="w-1 h-1 rounded-full shrink-0"
                   style={{ background: "var(--accent-border)" }}
                 />
-                Settings
+                {"Settings"}
               </Link>
               <button
                 onClick={() => signOut()}
@@ -354,7 +354,7 @@ export function Navbar() {
                   className="w-1 h-1 rounded-full shrink-0"
                   style={{ background: "var(--accent-border)" }}
                 />
-                Sign out
+                {"Sign out"}
               </button>
             </>
           )}

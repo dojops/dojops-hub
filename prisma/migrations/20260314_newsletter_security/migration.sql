@@ -13,7 +13,7 @@ UPDATE "Subscriber" SET "verifyToken" = gen_random_uuid()::TEXT WHERE "verifyTok
 UPDATE "Subscriber" SET "unsubscribeToken" = gen_random_uuid()::TEXT WHERE "unsubscribeToken" IS NULL;
 
 -- Grandfather existing subscribers as verified + active
-UPDATE "Subscriber" SET "status" = 'ACTIVE', "verified" = true, "verifiedAt" = "createdAt";
+UPDATE "Subscriber" SET "status" = 'ACTIVE', "verified" = true, "verifiedAt" = "createdAt"; -- NOSONAR: intentionally updates all existing rows to grandfather them as verified
 
 -- Make token columns NOT NULL
 ALTER TABLE "Subscriber" ALTER COLUMN "verifyToken" SET NOT NULL;

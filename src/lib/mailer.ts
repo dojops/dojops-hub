@@ -18,16 +18,16 @@ const HUB_URL = process.env.NEXTAUTH_URL || "https://hub.dojops.ai";
 /** Escape HTML entities to prevent injection in emails. */
 function escapeHtml(str: string): string {
   return str
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
 }
 
 /** Strip CR/LF to prevent SMTP header injection. */
 function sanitizeHeader(value: string): string {
-  return value.replace(/[\r\n]+/g, " ").trim();
+  return value.replaceAll(/[\r\n]+/g, " ").trim();
 }
 
 function unsubscribeFooterHtml(unsubscribeToken: string): string {
@@ -161,7 +161,7 @@ function contactHtml(data: {
   const email = escapeHtml(data.email);
   const company = data.company ? escapeHtml(data.company) : null;
   const subject = escapeHtml(data.subject);
-  const message = escapeHtml(data.message).replace(/\n/g, "<br>");
+  const message = escapeHtml(data.message).replaceAll("\n", "<br>");
   return `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
@@ -244,7 +244,7 @@ ${unsubscribeFooterText(unsubscribeToken)}`;
 
 function releaseHtml(subject: string, safeBody: string, unsubscribeToken: string): string {
   // Convert newlines to <br> for display (content is already HTML-escaped)
-  const formattedBody = safeBody.replace(/\n/g, "<br>");
+  const formattedBody = safeBody.replaceAll("\n", "<br>");
 
   return `<!DOCTYPE html>
 <html lang="en">
