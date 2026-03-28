@@ -17,11 +17,17 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     return NextResponse.json({ error: "Invalid status" }, { status: 400 });
   }
 
-  const pkg = await prisma.package.update({
-    where: { id },
-    data: { status },
-    select: { id: true, name: true, slug: true, status: true, updatedAt: true },
-  });
-
-  return NextResponse.json(pkg);
+  try {
+    const pkg = await prisma.package.update({
+      where: { id },
+      data: { status },
+      select: { id: true, name: true, slug: true, status: true, updatedAt: true },
+    });
+    return NextResponse.json(pkg);
+  } catch (err) {
+    if (err && typeof err === "object" && "code" in err && err.code === "P2025") {
+      return NextResponse.json({ error: "Package not found" }, { status: 404 });
+    }
+    throw err;
+  }
 }

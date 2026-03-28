@@ -157,7 +157,7 @@ export default async function PackagePage({ params }: Props) {
             body: c.body,
             createdAt: c.createdAt,
             user: c.user,
-            isAuthor: c.user.username === pkg.author.username,
+            isAuthor: !!session && c.user.username === session.user?.username,
           }))}
           isAuthenticated={!!session}
         />

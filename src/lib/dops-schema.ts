@@ -121,7 +121,7 @@ export const FileSpecSchema = z.object({
 // Full frontmatter (v2 only)
 export const DopsFrontmatterSchema = z.object({
   dops: z.literal("v2"),
-  kind: z.enum(["tool"]).default("tool"),
+  kind: z.enum(["skill", "tool"]).default("skill"),
   meta: MetaSchema,
   context: ContextBlockSchema,
   files: z.array(FileSpecSchema).min(1),

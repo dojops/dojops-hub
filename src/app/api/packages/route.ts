@@ -13,7 +13,11 @@ export async function GET(req: NextRequest) {
   const { searchParams } = req.nextUrl;
   const page = Math.max(1, Number(searchParams.get("page")) || 1);
   const pageSize = Math.min(50, Math.max(1, Number(searchParams.get("limit")) || 20));
-  const sort = (searchParams.get("sort") || "recent") as "recent" | "stars" | "downloads";
+  const VALID_SORTS = ["recent", "stars", "downloads"] as const;
+  const rawSort = searchParams.get("sort") || "recent";
+  const sort = (VALID_SORTS as readonly string[]).includes(rawSort)
+    ? (rawSort as (typeof VALID_SORTS)[number])
+    : "recent";
   const tag = searchParams.get("tag") || undefined;
 
   const result = await listPackages({ page, pageSize, sort, tag });
@@ -62,7 +66,17 @@ export async function POST(req: NextRequest) {
   // Compute server-side hash and verify against client-provided hash
   const serverHash = sha256(buffer);
 
-  if (clientHash && clientHash !== serverHash) {
+  if (!clientHash) {
+    return NextResponse.json(
+      {
+        error:
+          "SHA-256 hash is required for publish integrity. Compute the hash client-side and include it as the 'sha256' form field.",
+      },
+      { status: 400 },
+    );
+  }
+
+  if (clientHash !== serverHash) {
     return NextResponse.json(
       {
         error: "Integrity check failed: SHA-256 hash from client does not match uploaded file.",
@@ -73,8 +87,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Use the client-provided hash as the publisher attestation (or fall back to server-computed)
-  const hash = clientHash || serverHash;
+  const hash = clientHash;
 
   // Parse and validate (v2 only — v1 rejected by parser)
   let parsed;

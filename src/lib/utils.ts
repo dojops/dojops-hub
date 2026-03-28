@@ -26,20 +26,26 @@ export function formatDate(date: Date): string {
  * Compare two semver strings. Returns negative if a < b, positive if a > b, 0 if equal.
  */
 export function compareSemver(a: string, b: string): number {
-  const pa = a.split(".").map(Number);
-  const pb = b.split(".").map(Number);
+  const clean = (v: string) => v.replace(/[-+].*$/, "");
+  const pa = clean(a).split(".").map(Number);
+  const pb = clean(b).split(".").map(Number);
   for (let i = 0; i < 3; i++) {
     const diff = (pa[i] || 0) - (pb[i] || 0);
     if (diff !== 0) return diff;
   }
+  // Pre-release versions sort before their release: 1.0.0-beta < 1.0.0
+  const aHasPre = a.includes("-");
+  const bHasPre = b.includes("-");
+  if (aHasPre && !bHasPre) return -1;
+  if (!aHasPre && bHasPre) return 1;
   return 0;
 }
 
 /**
- * Sort versions array in-place by semver descending (latest first).
+ * Return a copy of the versions array sorted by semver descending (latest first).
  */
 export function sortVersionsDesc<T extends { semver: string }>(versions: T[]): T[] {
-  return versions.sort((a, b) => compareSemver(b.semver, a.semver));
+  return [...versions].sort((a, b) => compareSemver(b.semver, a.semver));
 }
 
 export function timeAgo(date: Date): string {

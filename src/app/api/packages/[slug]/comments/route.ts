@@ -7,7 +7,10 @@ import { getAuthenticatedUser } from "@/lib/api-auth";
 export async function GET(_req: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
 
-  const pkg = await prisma.package.findUnique({ where: { slug }, select: { id: true } });
+  const pkg = await prisma.package.findUnique({
+    where: { slug, status: "ACTIVE" },
+    select: { id: true },
+  });
   if (!pkg) {
     return NextResponse.json({ error: "Package not found" }, { status: 404 });
   }
@@ -34,7 +37,10 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ slu
   }
 
   const { slug } = await params;
-  const pkg = await prisma.package.findUnique({ where: { slug }, select: { id: true } });
+  const pkg = await prisma.package.findUnique({
+    where: { slug, status: "ACTIVE" },
+    select: { id: true },
+  });
   if (!pkg) {
     return NextResponse.json({ error: "Package not found" }, { status: 404 });
   }

@@ -16,7 +16,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ slu
   }
 
   const { slug } = await params;
-  const pkg = await prisma.package.findUnique({ where: { slug } });
+  const pkg = await prisma.package.findUnique({ where: { slug, status: "ACTIVE" } });
   if (!pkg) {
     return NextResponse.json({ error: "Package not found" }, { status: 404 });
   }
@@ -27,25 +27,27 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ slu
 
   if (existing) {
     // Unstar
-    await prisma.$transaction([
+    const [, updated] = await prisma.$transaction([
       prisma.star.delete({ where: { id: existing.id } }),
       prisma.package.update({
         where: { id: pkg.id },
         data: { starCount: { decrement: 1 } },
+        select: { starCount: true },
       }),
     ]);
-    return NextResponse.json({ starred: false, starCount: pkg.starCount - 1 });
+    return NextResponse.json({ starred: false, starCount: updated.starCount });
   } else {
     // Star
-    await prisma.$transaction([
+    const [, updated] = await prisma.$transaction([
       prisma.star.create({
         data: { userId: user.id, packageId: pkg.id },
       }),
       prisma.package.update({
         where: { id: pkg.id },
         data: { starCount: { increment: 1 } },
+        select: { starCount: true },
       }),
     ]);
-    return NextResponse.json({ starred: true, starCount: pkg.starCount + 1 });
+    return NextResponse.json({ starred: true, starCount: updated.starCount });
   }
 }

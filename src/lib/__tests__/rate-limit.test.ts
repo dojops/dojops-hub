@@ -37,9 +37,9 @@ function makeReq(headers: Record<string, string>) {
 }
 
 describe("getClientIp", () => {
-  it("extracts rightmost hop from x-forwarded-for (trusted proxy IP)", () => {
+  it("extracts leftmost hop from x-forwarded-for (original client IP)", () => {
     const req = makeReq({ "x-forwarded-for": `${IP_A}, ${IP_B}` });
-    expect(getClientIp(req)).toBe(IP_B);
+    expect(getClientIp(req)).toBe(IP_A);
   });
 
   it("handles single IP in x-forwarded-for", () => {
@@ -49,12 +49,17 @@ describe("getClientIp", () => {
 
   it("trims whitespace from XFF entries", () => {
     const req = makeReq({ "x-forwarded-for": `${IP_A} , ${IP_B}  ` });
-    expect(getClientIp(req)).toBe(IP_B);
+    expect(getClientIp(req)).toBe(IP_A);
   });
 
-  it("falls back to x-real-ip", () => {
-    const req = makeReq({ "x-real-ip": IP_REAL });
+  it("prefers x-real-ip over x-forwarded-for (set by edge proxy)", () => {
+    const req = makeReq({ "x-real-ip": IP_REAL, "x-forwarded-for": `${IP_A}, ${IP_B}` });
     expect(getClientIp(req)).toBe(IP_REAL);
+  });
+
+  it("falls back to x-forwarded-for when no x-real-ip", () => {
+    const req = makeReq({ "x-forwarded-for": IP_A });
+    expect(getClientIp(req)).toBe(IP_A);
   });
 
   it('returns "unknown" when no headers present', () => {

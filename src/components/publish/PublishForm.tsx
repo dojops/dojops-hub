@@ -68,8 +68,16 @@ export function PublishForm() {
     setError(null);
 
     try {
+      // Compute client-side SHA-256 for publisher attestation
+      const arrayBuffer = await file.arrayBuffer();
+      const hashBuffer = await crypto.subtle.digest("SHA-256", arrayBuffer);
+      const hashHex = Array.from(new Uint8Array(hashBuffer))
+        .map((b) => b.toString(16).padStart(2, "0"))
+        .join("");
+
       const formData = new FormData();
       formData.append("file", file);
+      formData.append("sha256", hashHex);
       if (changelog) formData.append("changelog", changelog);
 
       const res = await fetch("/api/packages", {
