@@ -1,4 +1,5 @@
-FROM node:20-slim AS base
+# node:20-slim
+FROM node:20-slim@sha256:1e85773c98c31d4fe5b545e4cb17379e617b348832fb3738b22a08f68dec30f3 AS base
 RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
 
 # --- Dependencies ---
@@ -48,6 +49,9 @@ ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
 USER nextjs
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+  CMD node -e "fetch('http://localhost:3000/').then(r => {if(!r.ok) process.exit(1)}).catch(() => process.exit(1))"
 
 # Run migrations then start app (both as nextjs user — migrate deploy only needs DB access, not FS writes)
 CMD ["sh", "-c", "node prisma-migrate/node_modules/prisma/build/index.js migrate deploy --schema=./prisma/schema.prisma && node server.js"]
