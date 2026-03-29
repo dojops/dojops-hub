@@ -29,6 +29,11 @@ function base64urlDecode(encoded: string): Buffer {
   return Buffer.from(padded, "base64");
 }
 
+// Expected issuer and audience for Hub tokens.
+// The issuer must match the dojops-api server and the audience must include "hub".
+const EXPECTED_ISSUER = process.env.AUTH_ISSUER_URL || "http://localhost:3000";
+const EXPECTED_AUDIENCE = "hub";
+
 /** Verify a dojops_auth_ JWT using the Ed25519 public key. */
 export function verifyAccessToken(token: string): JwtPayload | null {
   const prefix = "dojops_auth_";
@@ -66,7 +71,14 @@ export function verifyAccessToken(token: string): JwtPayload | null {
     return null;
   }
 
+  // Reject expired tokens
   if (payload.exp <= Math.floor(Date.now() / 1000)) return null;
+
+  // Validate issuer — prevents tokens from other deployments being replayed here
+  if (payload.iss !== EXPECTED_ISSUER) return null;
+
+  // Validate audience — token must be scoped for the Hub
+  if (!Array.isArray(payload.aud) || !payload.aud.includes(EXPECTED_AUDIENCE)) return null;
 
   return payload;
 }

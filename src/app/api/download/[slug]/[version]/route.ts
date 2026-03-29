@@ -2,12 +2,21 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { readDopsFile } from "@/lib/storage";
 
+// Safe patterns mirroring the Zod schema constraints: slug must be a-z0-9-,
+// version must start with alphanumeric and contain only a-z A-Z 0-9 . _ + -
+const SLUG_RE = /^[a-z][a-z0-9-]{0,63}$/;
+const VERSION_RE = /^[a-zA-Z0-9][a-zA-Z0-9._+-]{0,127}$/;
+
 // GET /api/download/:slug/:version — serve .dops file
 export async function GET(
   _req: NextRequest,
   { params }: { params: Promise<{ slug: string; version: string }> },
 ) {
   const { slug, version } = await params;
+
+  if (!SLUG_RE.test(slug) || !VERSION_RE.test(version)) {
+    return NextResponse.json({ error: "Invalid slug or version format" }, { status: 400 });
+  }
 
   const pkg = await prisma.package.findUnique({
     where: { slug, status: "ACTIVE" },

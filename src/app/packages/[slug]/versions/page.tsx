@@ -28,7 +28,7 @@ export default async function VersionsPage({ params }: Props) {
 
   if (!pkg) notFound();
 
-  sortVersionsDesc(pkg.versions);
+  const sortedVersions = sortVersionsDesc(pkg.versions);
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-12 sm:px-6 lg:px-8">
@@ -38,7 +38,7 @@ export default async function VersionsPage({ params }: Props) {
         </Link>
         <h1 className="mt-2 text-2xl font-bold text-text-primary">Version History</h1>
       </div>
-      <VersionHistory versions={pkg.versions} />
+      <VersionHistory versions={sortedVersions} />
     </div>
   );
 }

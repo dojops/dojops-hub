@@ -14,11 +14,20 @@ export const MetaSchema = z.object({
     .min(1)
     .max(64)
     .regex(/^[a-z][a-z0-9-]*$/),
-  version: z.string().min(1),
+  // Semver with optional pre-release / build metadata. Reject path-like characters
+  // that could be exploited when the version string is used as a filename component.
+  version: z
+    .string()
+    .min(1)
+    .max(128)
+    .regex(/^[a-zA-Z0-9][a-zA-Z0-9._+-]*$/, {
+      message:
+        "Version must start with an alphanumeric character and contain only a-z, A-Z, 0-9, ., _, +, -",
+    }),
   description: z.string().min(1).max(500),
   author: z.string().optional(),
   license: z.string().optional(),
-  tags: z.array(z.string()).optional(),
+  tags: z.array(z.string().min(1).max(50)).max(20).optional(),
   repository: z.string().optional(),
   icon: z
     .string()

@@ -31,6 +31,17 @@ describe("MetaSchema", () => {
   it("accepts partial version (1.0)", () =>
     expectValid(MetaSchema, { ...validMeta, version: "1.0" }));
   it("rejects empty version", () => expectInvalid(MetaSchema, { ...validMeta, version: "" }));
+  // Security: versions become filename components — path separators must be rejected
+  it("rejects version with path traversal (../)", () =>
+    expectInvalid(MetaSchema, { ...validMeta, version: "../../etc/passwd" }));
+  it("rejects version with forward slash", () =>
+    expectInvalid(MetaSchema, { ...validMeta, version: "1.0/evil" }));
+  it("rejects version starting with dot", () =>
+    expectInvalid(MetaSchema, { ...validMeta, version: ".hidden" }));
+  it("rejects version with spaces", () =>
+    expectInvalid(MetaSchema, { ...validMeta, version: "1.0 evil" }));
+  it("accepts version starting with letter (e.g. v1.0.0)", () =>
+    expectValid(MetaSchema, { ...validMeta, version: "v1.0.0" }));
   it("accepts valid slug name", () =>
     expectValid(MetaSchema, { ...validMeta, name: "terraform-aws" }));
   it("rejects name with uppercase", () =>
@@ -43,6 +54,16 @@ describe("MetaSchema", () => {
     expectValid(MetaSchema, { ...validMeta, icon: "https://example.com/icon.png" }));
   it("rejects HTTP icon URL", () =>
     expectInvalid(MetaSchema, { ...validMeta, icon: "http://example.com/icon.png" }));
+  it("accepts a reasonable tags array", () =>
+    expectValid(MetaSchema, { ...validMeta, tags: ["terraform", "aws", "ci-cd"] }));
+  it("rejects more than 20 tags", () =>
+    expectInvalid(MetaSchema, {
+      ...validMeta,
+      tags: Array.from({ length: 21 }, (_, i) => `tag${i}`),
+    }));
+  it("rejects a tag longer than 50 characters", () =>
+    expectInvalid(MetaSchema, { ...validMeta, tags: ["a".repeat(51)] }));
+  it("rejects an empty string tag", () => expectInvalid(MetaSchema, { ...validMeta, tags: [""] }));
 });
 
 describe("RiskSchema", () => {

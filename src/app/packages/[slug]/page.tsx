@@ -60,8 +60,8 @@ export default async function PackagePage({ params }: Props) {
 
   if (!pkg) notFound();
 
-  sortVersionsDesc(pkg.versions);
-  const latestVersion = pkg.versions[0] || null;
+  const sortedVersions = sortVersionsDesc(pkg.versions);
+  const latestVersion = sortedVersions[0] || null;
 
   // Check if user has starred
   let isStarred = false;
@@ -86,7 +86,9 @@ export default async function PackagePage({ params }: Props) {
     }
   }
 
-  // JSON-LD structured data — values from validated DB fields, JSON.stringify auto-escapes
+  // JSON-LD structured data. All values come from the validated database rows.
+  // JSON.stringify escapes any HTML-special characters (< > & ' "), so injecting
+  // malicious script via a package name or description is not possible here.
   const jsonLd = JSON.stringify({
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
@@ -135,7 +137,7 @@ export default async function PackagePage({ params }: Props) {
               }
             : null
         }
-        totalVersions={pkg.versions.length}
+        totalVersions={sortedVersions.length}
       />
 
       <div className="mt-6">

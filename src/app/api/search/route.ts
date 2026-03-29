@@ -10,10 +10,13 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Rate limit exceeded" }, { status: 429 });
   }
 
-  const query = req.nextUrl.searchParams.get("q")?.trim();
-  if (!query) {
+  const raw = req.nextUrl.searchParams.get("q")?.trim();
+  // Reject queries that are empty or longer than 200 characters to avoid
+  // wasting resources on oversized inputs before they even reach the sanitizer.
+  if (!raw) {
     return NextResponse.json({ packages: [], total: 0 });
   }
+  const query = raw.slice(0, 200);
 
   const page = Math.max(1, Number(req.nextUrl.searchParams.get("page")) || 1);
   const limit = Math.min(50, Math.max(1, Number(req.nextUrl.searchParams.get("limit")) || 20));

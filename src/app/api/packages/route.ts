@@ -18,7 +18,9 @@ export async function GET(req: NextRequest) {
   const sort = (VALID_SORTS as readonly string[]).includes(rawSort)
     ? (rawSort as (typeof VALID_SORTS)[number])
     : "recent";
-  const tag = searchParams.get("tag") || undefined;
+  // Limit tag length to prevent oversized queries
+  const rawTag = searchParams.get("tag") || undefined;
+  const tag = rawTag ? rawTag.slice(0, 100) : undefined;
 
   const result = await listPackages({ page, pageSize, sort, tag });
   return NextResponse.json({
@@ -44,8 +46,11 @@ export async function POST(req: NextRequest) {
 
   const formData = await req.formData();
   const file = formData.get("file") as File | null;
-  const changelog = (formData.get("changelog") as string) || null;
+  const rawChangelog = (formData.get("changelog") as string) || null;
   const clientHash = (formData.get("sha256") as string) || null;
+
+  // Enforce a reasonable changelog length (32 KB)
+  const changelog = rawChangelog && rawChangelog.length > 32_768 ? null : rawChangelog;
 
   if (!file) {
     return NextResponse.json({ error: "No file provided" }, { status: 400 });
@@ -79,9 +84,8 @@ export async function POST(req: NextRequest) {
   if (clientHash !== serverHash) {
     return NextResponse.json(
       {
-        error: "Integrity check failed: SHA-256 hash from client does not match uploaded file.",
-        expected: clientHash,
-        actual: serverHash,
+        error:
+          "Integrity check failed: SHA-256 hash from client does not match uploaded file. Re-compute the hash and try again.",
       },
       { status: 400 },
     );

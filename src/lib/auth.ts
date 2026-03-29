@@ -3,6 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "./prisma";
 import { verifyAccessToken } from "./jwt-verify";
+import { sanitizeAvatarUrl } from "./security";
 import type { Adapter } from "next-auth/adapters";
 
 export const authOptions: NextAuthOptions = {
@@ -21,14 +22,17 @@ export const authOptions: NextAuthOptions = {
         const payload = verifyAccessToken(credentials.token);
         if (!payload) return null;
 
-        // Upsert shadow user from JWT claims
+        // Upsert shadow user from JWT claims.
+        // avatarUrl is sanitized against an allowlist of known-safe hostnames
+        // before being stored; anything else is silently dropped.
+        const safeAvatarUrl = sanitizeAvatarUrl(payload.avatarUrl);
         const user = await prisma.user.upsert({
           where: { externalId: payload.sub },
           update: {
             email: payload.email,
             username: payload.username || payload.email.split("@")[0],
             displayName: payload.name,
-            avatarUrl: payload.avatarUrl,
+            avatarUrl: safeAvatarUrl,
             role: payload.role === "ADMIN" ? "ADMIN" : "USER",
           },
           create: {
@@ -36,7 +40,7 @@ export const authOptions: NextAuthOptions = {
             email: payload.email,
             username: payload.username || payload.email.split("@")[0],
             displayName: payload.name,
-            avatarUrl: payload.avatarUrl,
+            avatarUrl: safeAvatarUrl,
             role: payload.role === "ADMIN" ? "ADMIN" : "USER",
           },
         });
