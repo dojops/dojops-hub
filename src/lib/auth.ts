@@ -1,39 +1,75 @@
 import type { NextAuthOptions } from "next-auth";
-import GitHubProvider from "next-auth/providers/github";
+import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "./prisma";
+import { verifyAccessToken } from "./jwt-verify";
 import type { Adapter } from "next-auth/adapters";
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma) as Adapter,
+  session: { strategy: "jwt" },
   providers: [
-    GitHubProvider({
-      clientId: process.env.GITHUB_ID!,
-      clientSecret: process.env.GITHUB_SECRET!,
-      profile(profile) {
+    CredentialsProvider({
+      id: "dojops-jwt",
+      name: "DojOps",
+      credentials: {
+        token: { type: "hidden" },
+      },
+      async authorize(credentials) {
+        if (!credentials?.token) return null;
+
+        const payload = verifyAccessToken(credentials.token);
+        if (!payload) return null;
+
+        // Upsert shadow user from JWT claims
+        const user = await prisma.user.upsert({
+          where: { externalId: payload.sub },
+          update: {
+            email: payload.email,
+            username: payload.username || payload.email.split("@")[0],
+            displayName: payload.name,
+            avatarUrl: payload.avatarUrl,
+            role: payload.role === "ADMIN" ? "ADMIN" : "USER",
+          },
+          create: {
+            externalId: payload.sub,
+            email: payload.email,
+            username: payload.username || payload.email.split("@")[0],
+            displayName: payload.name,
+            avatarUrl: payload.avatarUrl,
+            role: payload.role === "ADMIN" ? "ADMIN" : "USER",
+          },
+        });
+
         return {
-          id: String(profile.id),
-          githubId: profile.id,
-          username: profile.login,
-          displayName: profile.name || profile.login,
-          email: profile.email,
-          avatarUrl: profile.avatar_url,
-          role: "USER" as const,
+          id: user.id,
+          name: user.displayName,
+          email: user.email,
+          image: user.avatarUrl,
         };
       },
     }),
   ],
   callbacks: {
-    async session({ session, user }) {
-      const dbUser = await prisma.user.findUnique({
-        where: { id: user.id },
-        select: { id: true, username: true, role: true, avatarUrl: true },
-      });
-      if (dbUser) {
-        session.user.id = dbUser.id;
-        session.user.username = dbUser.username;
-        session.user.role = dbUser.role;
-        session.user.avatarUrl = dbUser.avatarUrl;
+    async jwt({ token, user }) {
+      if (user) {
+        token.sub = user.id;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      const userId = token?.sub as string;
+      if (session.user && userId) {
+        const dbUser = await prisma.user.findUnique({
+          where: { id: userId },
+          select: { id: true, username: true, role: true, avatarUrl: true },
+        });
+        if (dbUser) {
+          session.user.id = dbUser.id;
+          session.user.username = dbUser.username;
+          session.user.role = dbUser.role;
+          session.user.avatarUrl = dbUser.avatarUrl;
+        }
       }
       return session;
     },
