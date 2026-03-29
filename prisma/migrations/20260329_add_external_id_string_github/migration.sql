@@ -8,7 +8,7 @@ CREATE INDEX "User_externalId_idx" ON "User"("externalId");
 -- First, create a temp column, copy data, drop old, rename
 ALTER TABLE "User" ADD COLUMN "githubId_new" TEXT;
 UPDATE "User" SET "githubId_new" = "githubId"::TEXT;
-ALTER TABLE "User" DROP CONSTRAINT "User_githubId_key";
+DROP INDEX IF EXISTS "User_githubId_key";
 ALTER TABLE "User" DROP COLUMN "githubId";
 ALTER TABLE "User" RENAME COLUMN "githubId_new" TO "githubId";
 CREATE UNIQUE INDEX "User_githubId_key" ON "User"("githubId");
