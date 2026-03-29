@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useState, useEffect, useSyncExternalStore } from "react";
 
 function SunIcon() {
@@ -98,6 +99,7 @@ const NAV_ITEMS = [
 
 export function Navbar() {
   const { data: session } = useSession();
+  const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -209,7 +211,7 @@ export function Navbar() {
             </>
           ) : (
             <button
-              onClick={() => signIn("github")}
+              onClick={() => router.push("/auth/signin")}
               className="nav-cta group relative text-[13px] font-medium px-4 py-1.5 rounded-lg text-white transition-all duration-200 overflow-hidden"
             >
               <span
@@ -362,7 +364,7 @@ export function Navbar() {
           {!session && (
             <div className="mt-3 pt-3 border-t border-border-primary">
               <button
-                onClick={() => signIn("github")}
+                onClick={() => router.push("/auth/signin")}
                 className="text-sm font-medium px-4 py-2.5 rounded-lg text-white text-center transition-all w-full flex items-center justify-center gap-2"
                 style={{
                   background: "linear-gradient(135deg, #06b6d4, #3b82f6, #8b5cf6)",
