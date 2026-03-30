@@ -26,10 +26,6 @@ export const metadata: Metadata = {
   description:
     "Find and share .dops skills for DojOps. Open-source automation skills, ready to install.",
   keywords: ["DojOps", "DevOps", "skills", "marketplace", "automation", "infrastructure"],
-  icons: {
-    icon: [{ url: "/dojops-favicon.png", sizes: "64x64", type: "image/png" }],
-    apple: [{ url: "/dojops-new-icon.png", sizes: "180x180", type: "image/png" }],
-  },
   openGraph: {
     title: "DojOps Hub — Skill Marketplace",
     description:
