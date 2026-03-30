@@ -5,7 +5,15 @@ import { PublishForm } from "@/components/publish/PublishForm";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Publish",
+  title: "Publish a skill",
+  description:
+    "Publish your custom DevOps skill to the DojOps Hub marketplace. Share automation with the community.",
+  openGraph: {
+    title: "Publish a skill | DojOps Hub",
+    description: "Publish your custom DevOps skill to the DojOps Hub marketplace.",
+    url: "https://hub.dojops.ai/publish",
+    siteName: "DojOps Hub",
+  },
 };
 
 export default async function PublishPage() {

@@ -28,6 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: `${username} | DojOps Hub`,
       description,
       url,
+      siteName: "DojOps Hub",
       type: "profile",
     },
     twitter: {

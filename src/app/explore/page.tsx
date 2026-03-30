@@ -8,7 +8,17 @@ import { Button } from "@/components/ui/Button";
 import Link from "next/link";
 import type { Metadata } from "next";
 
-export const metadata: Metadata = { title: "Explore" };
+export const metadata: Metadata = {
+  title: "Explore skills",
+  description:
+    "Browse and discover DevOps skills for DojOps. Filter by category, search by name, and find the right automation skill for your infrastructure.",
+  openGraph: {
+    title: "Explore skills | DojOps Hub",
+    description: "Browse and discover DevOps skills for DojOps.",
+    url: "https://hub.dojops.ai/explore",
+    siteName: "DojOps Hub",
+  },
+};
 
 interface Props {
   readonly searchParams: Promise<{ [key: string]: string | undefined }>;

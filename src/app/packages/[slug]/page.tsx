@@ -32,6 +32,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: `${pkg.name} | DojOps Hub`,
       description: pkg.description || `${pkg.name} — a DojOps automation skill.`,
       url,
+      siteName: "DojOps Hub",
       type: "website",
     },
     twitter: {
