@@ -32,9 +32,9 @@ function base64urlDecode(encoded: string): Buffer {
 }
 
 // Expected issuer and audience for Hub tokens.
-// The issuer is the public API URL (what the API signs into JWTs via API_BASE_URL).
-// AUTH_ISSUER_URL is the internal Docker URL for server-to-server calls, not for JWT validation.
-const EXPECTED_ISSUER = process.env.AUTH_ISSUER_PUBLIC_URL || "https://api.dojops.ai";
+// The issuer is the public API URL (what the API signs into JWTs via API_PUBLIC_URL).
+// API_INTERNAL_URL is the Docker internal URL for server-to-server calls, not for JWT validation.
+const EXPECTED_ISSUER = process.env.API_PUBLIC_URL || "https://api.dojops.ai";
 const EXPECTED_AUDIENCE = ["hub.dojops.ai", "console.dojops.ai", "api.dojops.ai"];
 
 /** Verify a dojops_auth_ JWT using the Ed25519 public key. */

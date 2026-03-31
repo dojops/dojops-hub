@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useState, useEffect } from "react";
 
-const AUTH_URL = process.env.NEXT_PUBLIC_AUTH_URL || "https://api.dojops.ai";
+const AUTH_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.dojops.ai";
 
 export default function SignInPage() {
   const [hubUrl, setHubUrl] = useState("https://hub.dojops.ai");
