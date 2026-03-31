@@ -32,9 +32,10 @@ function base64urlDecode(encoded: string): Buffer {
 }
 
 // Expected issuer and audience for Hub tokens.
-// The issuer must match the dojops-api server and the audience must include "hub".
-const EXPECTED_ISSUER = process.env.AUTH_ISSUER_URL || "http://localhost:3000";
-const EXPECTED_AUDIENCE = "hub";
+// The issuer is the public API URL (what the API signs into JWTs via API_BASE_URL).
+// AUTH_ISSUER_URL is the internal Docker URL for server-to-server calls, not for JWT validation.
+const EXPECTED_ISSUER = process.env.AUTH_ISSUER_PUBLIC_URL || "https://api.dojops.ai";
+const EXPECTED_AUDIENCE = ["hub.dojops.ai", "console.dojops.ai", "api.dojops.ai"];
 
 /** Verify a dojops_auth_ JWT using the Ed25519 public key. */
 export function verifyAccessToken(token: string): JwtPayload | null {
@@ -79,8 +80,9 @@ export function verifyAccessToken(token: string): JwtPayload | null {
   // Validate issuer — prevents tokens from other deployments being replayed here
   if (payload.iss !== EXPECTED_ISSUER) return null;
 
-  // Validate audience — token must be scoped for the Hub
-  if (!Array.isArray(payload.aud) || !payload.aud.includes(EXPECTED_AUDIENCE)) return null;
+  // Validate audience — token must include at least one expected audience
+  if (!Array.isArray(payload.aud) || !payload.aud.some((a) => EXPECTED_AUDIENCE.includes(a)))
+    return null;
 
   return payload;
 }
