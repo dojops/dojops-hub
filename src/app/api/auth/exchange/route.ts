@@ -15,7 +15,9 @@ function validateIssuerUrl(raw: string): URL {
     parsed.protocol === "http:" &&
     (parsed.hostname === "localhost" || parsed.hostname === "127.0.0.1");
   const isDojopsApi = parsed.protocol === "https:" && parsed.hostname.endsWith(".dojops.ai");
-  if (!isLocalhost && !isDojopsApi) {
+  // Allow Docker Compose internal service name (http://api:3000)
+  const isDockerInternal = parsed.protocol === "http:" && parsed.hostname === "api";
+  if (!isLocalhost && !isDojopsApi && !isDockerInternal) {
     throw new Error(
       `AUTH_ISSUER_URL "${raw}" is not an allowed issuer. Must be http://localhost or https://*.dojops.ai`,
     );
