@@ -17,8 +17,10 @@ let _publicKey: KeyObject | null = null;
 
 function getPublicKey(): KeyObject | null {
   if (_publicKey) return _publicKey;
-  const pem = process.env.ED25519_PUBLIC_KEY;
-  if (!pem) return null;
+  const raw = process.env.ED25519_PUBLIC_KEY;
+  if (!raw) return null;
+  // .env files store PEM keys with literal \n — restore real newlines
+  const pem = raw.replace(/\\n/g, "\n");
   _publicKey = createPublicKey({ key: pem, format: "pem", type: "spki" });
   return _publicKey;
 }
