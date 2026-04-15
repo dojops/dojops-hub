@@ -31,7 +31,7 @@ export default async function HomePage() {
           <h1 className="text-2xl font-bold tracking-tight text-text-primary sm:text-4xl lg:text-5xl">
             DojOps Skills
             <br />
-            <span className="text-gradient-brand">Marketplace</span>
+            <span className="text-[#3b82f6]">Marketplace</span>
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-sm text-text-secondary sm:mt-6 sm:text-lg">
             Find, share, and install{" "}

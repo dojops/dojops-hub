@@ -58,26 +58,11 @@ export function checkRateLimit(
   return { allowed: true, remaining: config.maxRequests - entry.count, resetAt: entry.resetAt };
 }
 
-function envLimit(name: string, fallback: number): number {
-  const raw = process.env[name];
-  if (!raw) return fallback;
-  const n = Number(raw);
-  return Number.isFinite(n) && n > 0 ? Math.floor(n) : fallback;
-}
-
-// Pre-configured rate limiters.
-// Publish and token-create limits can be overridden via env vars for bulk
-// bootstrap operations (e.g. seeding the hub with all built-in skills).
+// Pre-configured rate limiters
 export const RATE_LIMITS = {
-  publish: {
-    maxRequests: envLimit("DOJOPS_HUB_PUBLISH_LIMIT", 5),
-    windowMs: 3_600_000,
-  }, // default 5/hour
+  publish: { maxRequests: 5, windowMs: 3_600_000 }, // 5/hour
   star: { maxRequests: 30, windowMs: 60_000 }, // 30/min
   comment: { maxRequests: 10, windowMs: 60_000 }, // 10/min
   search: { maxRequests: 60, windowMs: 60_000 }, // 60/min
-  tokenCreate: {
-    maxRequests: envLimit("DOJOPS_HUB_TOKEN_CREATE_LIMIT", 5),
-    windowMs: 3_600_000,
-  }, // default 5/hour
+  tokenCreate: { maxRequests: 5, windowMs: 3_600_000 }, // 5/hour
 } as const;
